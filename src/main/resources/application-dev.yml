@@ -1,0 +1,36 @@
+management :
+  endpoints:
+    web:
+      exposure:
+        include:  '*'
+  endpoint:
+    health:
+      show-details : always
+
+org:
+  apache:
+    cxf:
+      logging:
+        enable : true
+
+spring:
+  config.import: vault://
+  cloud:
+    vault:
+      kubernetes:
+        kubernetes-path: kubernetes/preprod/fss
+      kv:
+        backend: kv/preprod/fss
+  mvc:
+    log-request-details : true
+
+virksomhet:
+  person:
+    v3:
+      endpointurl: https://app-q1.adeo.no/tpsws-aura/ws/Person/v3
+
+securitytokenservice:
+  url: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
+
+sts:
+  uri: https://security-token-service.nais.preprod.local/rest/v1/sts/token?grant_type=client_credentials&scope=openid

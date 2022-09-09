@@ -1,0 +1,55 @@
+management:
+  endpoint:
+    health:
+      show-details : never
+  metrics:
+    web:
+      server:
+        request:
+          autotime:
+            enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:  env, configprops, info, health, metrics, prometheus
+  health :
+    diskspace:
+      enabled: false
+    jms:
+      enabled: false
+server:
+  servlet:
+    context-path: /api
+spring:
+  application:
+    name: fp-ws-proxy
+  config.import: vault://
+  cloud:
+    vault:
+      reactive:
+        enabled: false
+      enabled: true
+      uri: https://vault.adeo.no
+      authentication: KUBERNETES
+      kubernetes:
+        role: fp-ws-proxy
+        service-account-token-file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      kv:
+        application-name: fp-ws-proxy/teamforeldrepenger
+        default-context: fp-ws-proxy/teamforeldrepenger
+
+
+virksomhet:
+  person:
+    v3:
+      endpointurl: https://app.adeo.no/tpsws-aura/ws/Person/v3
+
+securitytokenservice:
+  username: ${fpselvbetjening.username}
+  password : ${fpselvbetjening.password}
+  url: https://sts.adeo.no/SecurityTokenServiceProvider/
+
+springdoc:
+  packages-to-scan: no.nav.foreldrepenger.oppslag
+  swagger-ui:
+    disable-swagger-default-url: true

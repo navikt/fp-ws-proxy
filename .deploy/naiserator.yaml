@@ -1,0 +1,39 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: fp-ws-proxy
+  namespace: teamforeldrepenger
+  labels:
+    team: teamforeldrepenger
+spec:
+  tokenx:
+    enabled: true
+  accessPolicy:
+    inbound:
+      rules:
+        - application: fpsoknad-mottak
+  image: {{image}}
+  port: 8080
+  replicas:
+    min: 2
+    max: 2
+  liveness:
+    path: /api/actuator/health/liveness
+    initialDelay: 60
+  readiness:
+    path: /api/actuator/health/readiness
+    initialDelay: 60
+  prometheus:
+    enabled: true
+    path: /api/actuator/prometheus
+  ingresses:
+  {{#each ingresses as |url|}}
+     - {{url}}
+  {{/each}}
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2048Mi
+    requests:
+      cpu: 50m
+      memory: 512Mi

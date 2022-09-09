@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    vault:
+      kubernetes:
+        kubernetes-path: kubernetes/prod/fss
+      kv:
+        backend: kv/prod/fss
