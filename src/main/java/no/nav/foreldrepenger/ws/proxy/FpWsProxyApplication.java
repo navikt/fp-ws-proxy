@@ -23,7 +23,7 @@ import org.springframework.util.ReflectionUtils;
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation;
 
 @EnableRetry
-@EnableCaching
+//@EnableCaching
 @EnableJwtTokenValidation
 @ConfigurationPropertiesScan("no.nav.foreldrepenger.ws.proxy")
 @SpringBootApplication

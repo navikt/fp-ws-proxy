@@ -9,3 +9,30 @@ spring:
   cloud:
     vault:
       enabled: false
+
+no.nav.security.jwt:
+  client:
+    registration:
+      fpfordel:
+        well-known-url: http://localhost:8060/rest/v1/sts/.well-known/openid-configuration
+        grant-type: client_credentials
+        scope: openid
+        authentication:
+          client-id: fp-ws-proxy
+          client-jwk: src/test/resources/tokenx/jwk.json
+          client-auth-method: client_secret_post
+      fpsak:
+        well-known-url: http://localhost:8060/rest/v1/sts/.well-known/openid-configuration
+        grant-type: urn:ietf:params:oauth:grant-type:token-exchange
+        authentication:
+          client-id: fp-ws-proxy
+          client-jwk: src/test/resources/tokenx/jwk.json
+          client-auth-method: private_key_jwt
+  issuer:
+    sts-rs:
+      discoveryurl: http://localhost:8060/rest/v1/sts/.well-known/openid-configuration
+      accepted_audience: srvFPABAKUS, srvfpoppdrag, srvfptilbake
+#    sts-ws: # TODO:
+#      discoveryurl: http://localhost:8060/soap/SecurityTokenServiceProvider/
+#      accepted_audience: srvGOSYS
+

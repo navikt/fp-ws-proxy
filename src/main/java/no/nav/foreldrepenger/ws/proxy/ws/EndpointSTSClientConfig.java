@@ -36,14 +36,6 @@ public class EndpointSTSClientConfig {
         return port;
     }
 
-    public <T> T configureRequestSamlTokenOnBehalfOfOidc(T port, OnBehalfOfOutInterceptor onBehalfOfOutInterceptor) {
-        var client = ClientProxy.getClient(port);
-        client.getOutInterceptors().add(onBehalfOfOutInterceptor);
-        // want to cache the token with the OnBehalfOfToken, not per proxy
-        configureEndpointWithPolicyForSTS(stsClient, client, STS_REQUEST_SAML_POLICY, false);
-        return port;
-    }
-
     private static void configureEndpointWithPolicyForSTS(STSClient stsClient, Client client, String policyReference,
             boolean cacheTokenInEndpoint) {
         client.getRequestContext().put(STS_CLIENT, stsClient);

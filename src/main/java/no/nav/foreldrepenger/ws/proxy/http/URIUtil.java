@@ -1,0 +1,31 @@
+package no.nav.foreldrepenger.ws.proxy.http;
+
+import java.net.URI;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.util.UriComponentsBuilder;
+
+public final class URIUtil {
+    private URIUtil() {
+    }
+
+    public static URI uri(String base, String path) {
+        return uri(URI.create(base), path);
+    }
+
+    public static URI uri(URI base, String path) {
+        return uri(base, path, null);
+    }
+
+    public static URI uri(URI base, String path, HttpHeaders queryParams) {
+        return builder(base, path, queryParams)
+            .build()
+            .toUri();
+    }
+    public static UriComponentsBuilder builder(URI base, String path, org.springframework.http.HttpHeaders queryParams) {
+        return UriComponentsBuilder
+            .fromUri(base)
+            .pathSegment(path)
+            .queryParams(queryParams);
+    }
+}
