@@ -17,12 +17,19 @@ spring:
   config.import: vault://
   cloud:
     vault:
+      reactive:
+        enabled: false
+      enabled: true
+      uri: https://vault.adeo.no
+      authentication: KUBERNETES
       kubernetes:
+        role: fp-ws-proxy
         kubernetes-path: kubernetes/preprod/fss
+        service-account-token-file: /var/run/secrets/kubernetes.io/serviceaccount/token
       kv:
+        application-name: fp-ws-proxy/teamforeldrepenger
         backend: kv/preprod/fss
-  mvc:
-    log-request-details : true
+        default-context: fp-ws-proxy/teamforeldrepenger
 
 virksomhet:
   person:

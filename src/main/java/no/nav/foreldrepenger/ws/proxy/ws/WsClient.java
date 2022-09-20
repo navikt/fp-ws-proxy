@@ -4,32 +4,23 @@ import static no.nav.boot.conditionals.EnvUtil.isDevOrLocal;
 
 import java.util.Objects;
 
-import javax.inject.Inject;
-
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.ext.logging.LoggingInInterceptor;
 import org.apache.cxf.ext.logging.LoggingOutInterceptor;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
-public class WsClient<T> implements EnvironmentAware {
+public class WsClient<T> {
 
-    @Inject
-    private EndpointSTSClientConfig endpointStsClientConfig;
+    private final EndpointSTSClientConfig endpointStsClientConfig;
+    private final Environment env;
 
-    @Inject
-    private OnBehalfOfOutInterceptor onBehalfOfOutInterceptor;
-
-    private Environment env;
-
-    public T createPortForExternalUser(String serviceUrl, Class<?> portType) {
-        T port = createAndConfigurePort(serviceUrl, portType);
-        endpointStsClientConfig.configureRequestSamlTokenOnBehalfOfOidc(port, onBehalfOfOutInterceptor);
-        return port;
+    public WsClient(EndpointSTSClientConfig endpointStsClientConfig, Environment env) {
+        this.endpointStsClientConfig = endpointStsClientConfig;
+        this.env = env;
     }
 
     public T createPortForSystemUser(String serviceUrl, Class<?> portType) {
@@ -54,8 +45,4 @@ public class WsClient<T> implements EnvironmentAware {
         return port;
     }
 
-    @Override
-    public void setEnvironment(Environment env) {
-        this.env = env;
-    }
 }

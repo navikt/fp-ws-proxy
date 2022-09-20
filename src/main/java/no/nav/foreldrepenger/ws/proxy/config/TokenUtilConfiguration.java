@@ -9,10 +9,12 @@ import no.nav.security.token.support.core.context.TokenValidationContextHolder;
 @Configuration
 public class TokenUtilConfiguration {
 
-    public static final String STS = "sts";
+    public static final String STS_RS = "sts-rs";
+    public static final String STS_WS = "sts-ws";
+
 
     @Bean
     public TokenUtil tokenUtil(TokenValidationContextHolder contextHolder) {
-        return new TokenUtil(contextHolder, STS, "SAML"); // TODO
+        return new TokenUtil(contextHolder, "STS", STS_RS, STS_WS); // TODO
     }
 }

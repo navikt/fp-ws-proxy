@@ -1,29 +1,55 @@
 package no.nav.foreldrepenger.ws.proxy.api.arena;
 
 import static no.nav.foreldrepenger.ws.proxy.api.arena.ArenaController.ARENA_PATH;
-import static no.nav.foreldrepenger.ws.proxy.config.TokenUtilConfiguration.STS;
+import static no.nav.foreldrepenger.ws.proxy.api.arena.mapper.ArenaMapperWS.tilWSRequest;
+import static no.nav.foreldrepenger.ws.proxy.config.TokenUtilConfiguration.STS_RS;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import no.nav.foreldrepenger.ws.proxy.api.arena.dto.ArenaRequestDto;
+import no.nav.foreldrepenger.ws.proxy.api.arena.dto.MeldekortUtbetalingsgrunnlagSak;
+import no.nav.foreldrepenger.ws.proxy.api.arena.mapper.ArenaMapperWS;
 import no.nav.security.token.support.spring.ProtectedRestController;
+import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.FinnMeldekortUtbetalingsgrunnlagListeResponse;
 
-@ProtectedRestController(issuer = STS, value = ARENA_PATH)
+/**
+ * Skal erstatte Meldekorttjenesten i fpabakus: https://github.com/navikt/fp-abakus/blob/master/domenetjenester/iay/src/main/java/no/nav/foreldrepenger/abakus/registerdata/ytelse/arena/MeldekortTjeneste.java
+ */
+@Validated
+@ProtectedRestController(issuer = STS_RS, value = ARENA_PATH)
 public class ArenaController {
     private static final Logger LOG = LoggerFactory.getLogger(ArenaController.class);
     public static final String ARENA_PATH = "/arena";
 
-    private final ArenaTjeneste arenaTjeneste;
+    private final ArenaKlientWs arenaKlientWs;
 
-    public ArenaController(ArenaTjeneste arenaTjeneste) {
-        this.arenaTjeneste = arenaTjeneste;
+    public ArenaController(ArenaKlientWs arenaKlientWs) {
+        this.arenaKlientWs = arenaKlientWs;
     }
 
     @PostMapping
-    public void sendTilArena(ArenaDto arenaDto) {
-        LOG.info("Sender request til arena");
-        var arenaWSRequest = ArenaMapperWS.tilWS(arenaDto);
-        arenaTjeneste.sendWSRequest(arenaWSRequest);
+    public List<MeldekortUtbetalingsgrunnlagSak> sendTilArena(ArenaRequestDto arenaDto) {
+        LOG.info("Sender request {} til arena", arenaDto);
+        var arenaWSRequest = tilWSRequest(arenaDto);
+
+        var meldekortUtbetalingsgrunnlagListe = Optional.ofNullable(arenaKlientWs.finnMeldekortUtbetalingsgrunnlagListe(arenaWSRequest))
+            .map(FinnMeldekortUtbetalingsgrunnlagListeResponse::getMeldekortUtbetalingsgrunnlagListe)
+            .orElse(List.of())
+            .stream()
+            .map(ArenaMapperWS::oversettArenaSak)
+            .flatMap(Collection::stream)
+            .toList();
+
+        LOG.info("Mottok følgende respons fra Arena {}", meldekortUtbetalingsgrunnlagListe);
+        return meldekortUtbetalingsgrunnlagListe;
     }
+
+
 }

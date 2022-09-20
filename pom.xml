@@ -37,6 +37,7 @@
 
 
         <fpsoknad-felles.version>0.8.14</fpsoknad-felles.version>
+        <felles.version>4.1.39</felles.version>
         <token-validation-version>2.1.2</token-validation-version>
         <boot-conditionals.version>3.1.0</boot-conditionals.version>
         <cxf.version>3.5.3</cxf.version>
@@ -115,6 +116,14 @@
     </dependencyManagement>
     <dependencies>
         <!--    NAV INTERNE AVHENGIGHETER    -->
+        <!-- ARENA -->
+        <dependency>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
+            <artifactId>nav-meldekortUtbetalingsgrunnlag-v1-tjenestespesifikasjon</artifactId>
+            <version>1.2021.02.22-10.45-4201aaea72fb</version>
+        </dependency>
+
+        <!-- SIMULERING -->
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>tilbakekreving-v1-tjenestespesifikasjon</artifactId>
@@ -126,14 +135,22 @@
             <version>2594.7c3ac50 </version>
         </dependency>
         <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>nav-meldekortUtbetalingsgrunnlag-v1-tjenestespesifikasjon</artifactId>
-            <version>1.2021.02.22-10.45-4201aaea72fb</version>
+            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
+            <artifactId>okonomistotte-v1</artifactId>
+            <version>2.0_20190412163011_bb51d0e</version>
+            <classifier>jaxb</classifier>
+            <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>no.nav.foreldrepenger</groupId>
             <artifactId>fpsoknad-felles</artifactId>
             <version>${fpsoknad-felles.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.felles</groupId>
+            <artifactId>felles-xmlutils</artifactId>
+            <version>${felles.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.boot</groupId>
@@ -142,6 +159,10 @@
         </dependency>
 
         <!--   EKSTERNE AVHENGIGHETER (må ryddes opp i) TODO     -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-properties-migrator</artifactId>
@@ -163,30 +184,6 @@
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.neovisionaries</groupId>
-            <artifactId>nv-i18n</artifactId>
-            <version>1.29</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
@@ -227,6 +224,8 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jetty</artifactId>
         </dependency>
+
+        <!--   WS     -->
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
@@ -260,6 +259,17 @@
         <dependency>
             <groupId>org.springframework.retry</groupId>
             <artifactId>spring-retry</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-ws-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

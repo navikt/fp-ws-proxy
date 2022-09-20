@@ -23,33 +23,38 @@ server:
 spring:
   application:
     name: fp-ws-proxy
-  config.import: vault://
-  cloud:
-    vault:
-      reactive:
-        enabled: false
-      enabled: true
-      uri: https://vault.adeo.no
-      authentication: KUBERNETES
-      kubernetes:
-        role: fp-ws-proxy
-        service-account-token-file: /var/run/secrets/kubernetes.io/serviceaccount/token
-      kv:
-        application-name: fp-ws-proxy/teamforeldrepenger
-        default-context: fp-ws-proxy/teamforeldrepenger
+  mvc:
+    log-request-details: true
 
+no.nav.security.jwt:
+  client:
+    registration:
+      fpfordel:
+        well-known-url: http://security-token-service.default/rest/v1/sts/.well-known/openid-configuration
+        grant-type: client_credentials
+        scope: openid
+        authentication:
+          client-id: ${token.x.client.id}
+          client-jwk: ${token.x.private.jwk}
+          client-auth-method: client_secret_post
+      fpsak:
+        well-known-url: http://security-token-service.default/rest/v1/sts/.well-known/openid-configuration
+        grant-type: urn:ietf:params:oauth:grant-type:token-exchange
+        authentication:
+          client-id: ${token.x.client.id}
+          client-jwk: ${token.x.private.jwk}
+          client-auth-method: private_key_jwt
+  issuer:
+    sts-rs:
+      discoveryurl: http://security-token-service.default/rest/v1/sts/.well-known/openid-configuration
+      accepted_audience: srvFPABAKUS, srvfpoppdrag, srvfptilbake
+#    sts-ws: # TODO:
+#      discoveryurl: https://sts.adeo.no/SecurityTokenServiceProvider/TODO/.well-known/openid-configuration
+#      accepted_audience: srvGOSYS
 
-virksomhet:
-  person:
-    v3:
-      endpointurl: https://app.adeo.no/tpsws-aura/ws/Person/v3
-
+# SOAP/WS
 securitytokenservice:
   username: ${fpselvbetjening.username}
   password : ${fpselvbetjening.password}
   url: https://sts.adeo.no/SecurityTokenServiceProvider/
 
-springdoc:
-  packages-to-scan: no.nav.foreldrepenger.oppslag
-  swagger-ui:
-    disable-swagger-default-url: true

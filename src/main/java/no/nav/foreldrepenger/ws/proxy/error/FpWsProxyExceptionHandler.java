@@ -9,7 +9,6 @@ import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 
 import org.slf4j.Logger;
@@ -33,10 +32,13 @@ import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnaut
 @ControllerAdvice
 public class FpWsProxyExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @Inject
-    TokenUtil tokenUtil;
+    private final TokenUtil tokenUtil;
 
     private static final Logger LOG = LoggerFactory.getLogger(FpWsProxyExceptionHandler.class);
+
+    public FpWsProxyExceptionHandler(TokenUtil tokenUtil) {
+        this.tokenUtil = tokenUtil;
+    }
 
     @ExceptionHandler(HttpStatusCodeException.class)
     public ResponseEntity<Object> handleHttpStatusCodeException(HttpStatusCodeException e, WebRequest request) {
