@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.ws.proxy.ws;
+package no.nav.foreldrepenger.ws.proxy.http.ws;
 
 import static no.nav.foreldrepenger.common.util.Constants.NAV_CALL_ID;
 

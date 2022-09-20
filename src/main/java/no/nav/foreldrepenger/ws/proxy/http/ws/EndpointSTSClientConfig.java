@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.ws.proxy.ws;
+package no.nav.foreldrepenger.ws.proxy.http.ws;
 
 import static org.apache.cxf.rt.security.SecurityConstants.CACHE_ISSUED_TOKEN_IN_ENDPOINT;
 import static org.apache.cxf.rt.security.SecurityConstants.STS_CLIENT;

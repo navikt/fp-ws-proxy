@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
-import no.nav.foreldrepenger.ws.proxy.ws.EndpointSTSClientConfig;
-import no.nav.foreldrepenger.ws.proxy.ws.WsClient;
+import no.nav.foreldrepenger.ws.proxy.http.ws.EndpointSTSClientConfig;
+import no.nav.foreldrepenger.ws.proxy.http.ws.WsClient;
 import no.nav.okonomi.tilbakekrevingservice.TilbakekrevingPortType;
 
 @Configuration

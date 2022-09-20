@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.ws.proxy.http;
+package no.nav.foreldrepenger.ws.proxy.http.rs;
 
 import static no.nav.boot.conditionals.EnvUtil.isDevOrLocal;
 import static no.nav.foreldrepenger.common.util.Constants.NAV_CALL_ID;
@@ -24,8 +24,6 @@ import org.springframework.web.reactive.function.client.WebClient.Builder;
 import no.nav.foreldrepenger.common.util.MDCUtil;
 import no.nav.foreldrepenger.ws.proxy.api.gosys.FordelConfig;
 import no.nav.foreldrepenger.ws.proxy.api.gosys.FpsakConfig;
-import no.nav.foreldrepenger.ws.proxy.sts.STSConfig;
-import no.nav.foreldrepenger.ws.proxy.sts.SystemTokenTjeneste;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.resources.ConnectionProvider;
 
@@ -53,7 +51,7 @@ public class WebClientConfiguration {
 
     @Bean
     @Qualifier(STS)
-    public WebClient webClientSTS(Builder builder, STSConfig cfg) {
+    public WebClient webClientSTS(Builder builder, STSRSConfig cfg) {
         return builder
             .baseUrl(cfg.getBaseUri().toString())
             .defaultHeaders(h -> h.setBasicAuth(cfg.getUsername(), cfg.getPassword()))

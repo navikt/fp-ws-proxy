@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.ws.proxy.sts;
+package no.nav.foreldrepenger.ws.proxy.http.rs;
 
 import static no.nav.foreldrepenger.common.util.StringUtil.limit;
 import static no.nav.foreldrepenger.common.util.TimeUtil.localDateTime;

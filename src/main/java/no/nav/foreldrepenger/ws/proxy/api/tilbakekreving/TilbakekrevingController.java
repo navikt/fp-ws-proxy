@@ -27,6 +27,10 @@ import no.nav.security.token.support.spring.ProtectedRestController;
 import no.nav.tilbakekreving.kravgrunnlag.annuller.v1.AnnullerKravgrunnlagDto;
 import no.nav.tilbakekreving.typer.v1.MmelDto;
 
+/**
+ * Skal på sikt ersatte WS kall fra fptilbake til økonomi som gjøres i
+ * https://github.com/navikt/fptilbake/blob/master/integrasjontjenester/oekonomi-tilbakekreving-klient/src/main/java/no/nav/foreldrepenger/tilbakekreving/integrasjon/økonomi/ØkonomiConsumerImpl.java
+ */
 @Validated
 @ProtectedRestController(issuer = STS_RS, value = TILBAKEKREVING_PATH)
 class TilbakekrevingController {
@@ -42,6 +46,7 @@ class TilbakekrevingController {
 
     // TODO: fptilbake kjører med RunWithSavepoint og aggerer på kvitteringen. Returnere kvittering?
     //  Hvem skal reaguere på kvitteringene? fp-ws-proxy eller fptilbake?
+    //  Hvis det skal her, mulig flytt det inn i klienten?
     @PostMapping
     public TilbakekrevingsvedtakResponse tilbakekrevingsvedtak(TilbakekrevingVedtakDto tilbakekrevingDto) {
         LOG.info("Sender request til tilbakekrevingsvedtak til økonomi");

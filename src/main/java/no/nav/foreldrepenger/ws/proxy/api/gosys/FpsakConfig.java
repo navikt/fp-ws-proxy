@@ -4,7 +4,7 @@ import java.net.URI;
 
 import org.springframework.stereotype.Component;
 
-import no.nav.foreldrepenger.ws.proxy.http.AbstractConfig;
+import no.nav.foreldrepenger.ws.proxy.http.rs.AbstractConfig;
 
 @Component
 public class FpsakConfig extends AbstractConfig {

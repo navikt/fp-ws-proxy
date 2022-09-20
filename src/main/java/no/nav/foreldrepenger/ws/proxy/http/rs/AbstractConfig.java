@@ -1,6 +1,8 @@
-package no.nav.foreldrepenger.ws.proxy.http;
+package no.nav.foreldrepenger.ws.proxy.http.rs;
 
 import java.net.URI;
+
+import no.nav.foreldrepenger.ws.proxy.util.URIUtil;
 
 public class AbstractConfig {
     private final URI baseUri;

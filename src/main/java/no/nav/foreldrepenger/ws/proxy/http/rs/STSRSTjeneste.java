@@ -1,16 +1,16 @@
-package no.nav.foreldrepenger.ws.proxy.sts;
+package no.nav.foreldrepenger.ws.proxy.http.rs;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class STSTjeneste implements SystemTokenTjeneste {
-    private static final Logger LOG = LoggerFactory.getLogger(STSTjeneste.class);
-    private final STSConnection connection;
+public class STSRSTjeneste implements SystemTokenTjeneste {
+    private static final Logger LOG = LoggerFactory.getLogger(STSRSTjeneste.class);
+    private final STSRSConnection connection;
     private SystemToken systemToken;
 
-    public STSTjeneste(STSConnection connection) {
+    public STSRSTjeneste(STSRSConnection connection) {
         this.connection = connection;
         LOG.info("System token {}", connection.refresh());
     }

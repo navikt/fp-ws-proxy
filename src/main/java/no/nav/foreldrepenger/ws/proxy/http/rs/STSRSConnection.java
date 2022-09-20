@@ -1,6 +1,6 @@
-package no.nav.foreldrepenger.ws.proxy.sts;
+package no.nav.foreldrepenger.ws.proxy.http.rs;
 
-import static no.nav.foreldrepenger.ws.proxy.http.WebClientConfiguration.STS;
+import static no.nav.foreldrepenger.ws.proxy.http.rs.WebClientConfiguration.STS;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
-public class STSConnection {
+public class STSRSConnection {
 
-    private static final Logger LOG = LoggerFactory.getLogger(STSConnection.class);
-    private final STSConfig cfg;
+    private static final Logger LOG = LoggerFactory.getLogger(STSRSConnection.class);
+    private final STSRSConfig cfg;
     private final WebClient webClient;
 
-    public STSConnection(@Qualifier(STS) WebClient webClient, STSConfig cfg) {
+    public STSRSConnection(@Qualifier(STS) WebClient webClient, STSRSConfig cfg) {
         this.webClient = webClient;
         this.cfg = cfg;
     }

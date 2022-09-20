@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.ws.proxy.http;
+package no.nav.foreldrepenger.ws.proxy.util;
 
 import java.net.URI;
 

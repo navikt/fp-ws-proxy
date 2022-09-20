@@ -29,6 +29,7 @@ import no.nav.foreldrepenger.common.util.TokenUtil;
 import no.nav.security.token.support.core.exceptions.JwtTokenValidatorException;
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException;
 
+// TODO: Fiks denne!
 @ControllerAdvice
 public class FpWsProxyExceptionHandler extends ResponseEntityExceptionHandler {
 

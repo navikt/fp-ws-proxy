@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.ws.proxy.http.interceptors;
+package no.nav.foreldrepenger.ws.proxy.http.rs.interceptors;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR;

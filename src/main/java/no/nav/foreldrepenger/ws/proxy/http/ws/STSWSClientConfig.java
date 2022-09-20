@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.ws.proxy.ws;
+package no.nav.foreldrepenger.ws.proxy.http.ws;
 
 import static org.apache.cxf.rt.security.SecurityConstants.PASSWORD;
 import static org.apache.cxf.rt.security.SecurityConstants.USERNAME;
@@ -13,7 +13,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.context.annotation.Bean;
 
 @ConfigurationProperties(prefix = "securitytokenservice")
-public class STSClientConfig {
+public class STSWSClientConfig {
     private static final String POLICY_PATH = "classpath:policy/";
     private static final String STS_CLIENT_AUTHENTICATION_POLICY = POLICY_PATH + "untPolicy.xml";
 
@@ -22,7 +22,7 @@ public class STSClientConfig {
     private final String password;
 
     @ConstructorBinding
-    public STSClientConfig(URI url, String username, String password) {
+    public STSWSClientConfig(URI url, String username, String password) {
         this.url = url;
         this.username = username;
         this.password = password;

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.ws.proxy.sts;
+package no.nav.foreldrepenger.ws.proxy.http.rs;
 
 import static com.nimbusds.oauth2.sdk.GrantType.CLIENT_CREDENTIALS;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
@@ -13,10 +13,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters.FormInserter;
 import org.springframework.web.util.UriBuilder;
 
-import no.nav.foreldrepenger.ws.proxy.http.AbstractConfig;
+import no.nav.foreldrepenger.ws.proxy.http.rs.AbstractConfig;
 
 @ConfigurationProperties(prefix = "sts")
-public class STSConfig extends AbstractConfig {
+public class STSRSConfig extends AbstractConfig {
 
     private static final String GRANT_TYPE = "grant_type";
     private static final String DEFAULT_PATH = "/rest/v1/sts/token";
@@ -29,13 +29,13 @@ public class STSConfig extends AbstractConfig {
     private final String stsPath;
 
     @ConstructorBinding
-    public STSConfig(URI baseUri,
-                     @DefaultValue(DEFAULT_SLACK) Duration slack,
-                     String username,
-                     String password,
-                     @DefaultValue(PING_PATH) String pingPath,
-                     @DefaultValue("true") boolean enabled,
-                     @DefaultValue(DEFAULT_PATH) String stsPath) {
+    public STSRSConfig(URI baseUri,
+                       @DefaultValue(DEFAULT_SLACK) Duration slack,
+                       String username,
+                       String password,
+                       @DefaultValue(PING_PATH) String pingPath,
+                       @DefaultValue("true") boolean enabled,
+                       @DefaultValue(DEFAULT_PATH) String stsPath) {
         super(baseUri, pingPath, enabled);
         this.stsPath = stsPath;
         this.slack = slack;
