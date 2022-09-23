@@ -4,15 +4,32 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.Kravgrunnlag431Dto;
+import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.KravgrunnlagHentDetaljResponsDto;
+import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.Kvittering;
+import no.nav.okonomi.tilbakekrevingservice.KravgrunnlagHentDetaljResponse;
 import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.DetaljertKravgrunnlagDto;
+import no.nav.tilbakekreving.typer.v1.MmelDto;
 
 
 public class HentKravgrunnlagMapper {
 
     private static final Logger LOG = LoggerFactory.getLogger(HentKravgrunnlagMapper.class);
 
+    public static KravgrunnlagHentDetaljResponsDto mapTilDto(KravgrunnlagHentDetaljResponse response) {
+        return new KravgrunnlagHentDetaljResponsDto(
+            mapTilDto(response.getDetaljertkravgrunnlag()),
+            tilKvitteringDto(response.getMmel()));
+    }
 
-    public static Kravgrunnlag431Dto mapTilDto(DetaljertKravgrunnlagDto dto) {
+    public static Kvittering tilKvitteringDto(MmelDto mmel) {
+        if (mmel == null) {
+            return new Kvittering(null, null, null);
+        }
+        return new Kvittering(mmel.getAlvorlighetsgrad(), mmel.getKodeMelding(), mmel.getBeskrMelding());
+
+    }
+
+    private static Kravgrunnlag431Dto mapTilDto(DetaljertKravgrunnlagDto dto) {
 //        Kravgrunnlag431Dto kravgrunnlag431 = formKravgrunnlag431(dto);
 //        LOG.info("Referanse etter mapping: {}", kravgrunnlag431.getReferanse());
 //        for (DetaljertKravgrunnlagPeriodeDto periodeDto : dto.getTilbakekrevingsPeriode()) {

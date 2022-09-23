@@ -50,7 +50,7 @@ public class OppdragMapper {
     public static Oppdrag unmarshalOppdragOgKonverter(String oppdrag) {
         try {
             var fpOppdrag = JaxbHelper.unmarshalAndValidateXMLWithStAX(
-                OppdragSkjemaConstants.JAXB_CLASS, oppdrag, OppdragSkjemaConstants.XSD_LOCATION);
+                OppdragSkjemaConstants.JAXB_CLASS, oppdrag, OppdragSkjemaConstants.XSD_LOCATION); // TODO: Gjøre dette uten JaxbHelper?
             return OppdragMapper.mapTilSimuleringOppdrag(fpOppdrag.getOppdrag110());
         } catch (JAXBException | SAXException | XMLStreamException e) {
             throw new TekniskException("FPO-832562", "Kunne ikke tolke mottatt oppdrag XML", e);

@@ -17,40 +17,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-class ApiError {
-
-    private final HttpStatus status;
-    @JsonFormat(shape = STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-    private final LocalDateTime timestamp;
-    @JsonFormat(with = WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED)
-    private final List<String> messages;
-    private final String uuid;
-
-    ApiError(HttpStatus status, Throwable t) {
-        this(status, t, List.of());
-    }
+public record ApiError(HttpStatus status,
+                       @JsonFormat(shape = STRING, pattern = "dd-MM-yyyy hh:mm:ss") LocalDateTime timestamp,
+                       @JsonFormat(with = WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED) List<String> messages,
+                       String uuid) {
 
     ApiError(HttpStatus status, Throwable t, List<Object> objects) {
-        this.timestamp = LocalDateTime.now();
-        this.status = status;
-        this.messages = messages(t, objects);
-        this.uuid = callId();
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public HttpStatus getStatus() {
-        return status;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public List<String> getMessages() {
-        return messages;
+        this(status, LocalDateTime.now(), messages(t, objects), callId());
     }
 
     private static String getRootCauseMessage(Throwable e) {
@@ -67,7 +40,7 @@ class ApiError {
                 .addAll(objects.stream()
                         .filter(Objects::nonNull)
                         .map(Object::toString)
-                        .collect(toList()))
+                        .toList())
                 .build();
     }
 

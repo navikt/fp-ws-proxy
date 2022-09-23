@@ -25,6 +25,6 @@ class TilbakekrevingKlientWs {
     }
 
     public KravgrunnlagAnnulerResponse kravgrunnlagAnnuler(KravgrunnlagAnnulerRequest request) {
-        return klient.kravgrunnlagAnnuler(request); // TODO: Egen definer response dto!
+        return klient.kravgrunnlagAnnuler(request);
     }
 }

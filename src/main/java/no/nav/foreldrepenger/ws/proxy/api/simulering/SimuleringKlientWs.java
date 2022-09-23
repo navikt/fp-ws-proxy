@@ -2,12 +2,17 @@ package no.nav.foreldrepenger.ws.proxy.api.simulering;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.nav.system.os.eksponering.simulerfpservicewsbinding.SimulerBeregningFeilUnderBehandling;
 import no.nav.system.os.eksponering.simulerfpservicewsbinding.SimulerFpService;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpservicegrensesnitt.SimulerBeregningRequest;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpservicegrensesnitt.SimulerBeregningResponse;
+import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.Oppdragslinje;
 
 class SimuleringKlientWs {
+    private static final Logger LOG = LoggerFactory.getLogger(SimuleringKlientWs.class); // TODO: Secure loggs!
 
     private final SimulerFpService klient;
 
@@ -23,10 +28,22 @@ class SimuleringKlientWs {
 
     public SimulerBeregningResponse simulerBeregning(SimulerBeregningRequest request) {
         try {
+            LOG.info("Simulerer ");
             return klient.simulerBeregning(request);
-        } catch (SimulerBeregningFeilUnderBehandling e) {
-            // TODO!
+        } catch (Exception e) {
+            LOG.info("Simulering feilet for request={}", anonymiser(request));
+            return null; // TODO: Hvordan reagere på feilet simulering? Returnere null?
         }
-        return null;
+    }
+
+    private SimulerBeregningRequest anonymiser(SimulerBeregningRequest request) {
+        request.getRequest().getOppdrag().setOppdragGjelderId(" *** ");
+        request.getRequest().getOppdrag().getOppdragslinje().forEach(this::anonymiser);
+        return request;
+    }
+
+    private void anonymiser(Oppdragslinje ol) {
+        if (ol.getRefusjonsInfo() != null) {
+            ol.getRefusjonsInfo().setRefunderesId(" *** ");}
     }
 }

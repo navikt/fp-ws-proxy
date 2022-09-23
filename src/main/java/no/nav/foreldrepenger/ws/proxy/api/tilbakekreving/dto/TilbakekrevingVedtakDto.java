@@ -4,5 +4,5 @@ import java.util.List;
 
 public record TilbakekrevingVedtakDto(Kravgrunnlag431Dto kravgrunnlag,
                                       List<TilbakekrevingPeriodeDto> tilbakekrevingPerioder,
-                                      String saksbehandlerid) {
+                                      String saksbehandlerid) { // SubjectHandler.getSubjectHandler().getUid() fra fptilbake
 }

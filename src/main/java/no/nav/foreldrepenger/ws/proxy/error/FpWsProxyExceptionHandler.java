@@ -1,9 +1,7 @@
 package no.nav.foreldrepenger.ws.proxy.error;
 
-import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
@@ -28,85 +26,74 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import no.nav.foreldrepenger.common.util.TokenUtil;
 import no.nav.security.token.support.core.exceptions.JwtTokenValidatorException;
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException;
+import no.nav.vedtak.exception.IntegrasjonException;
 
-// TODO: Fiks denne!
 @ControllerAdvice
 public class FpWsProxyExceptionHandler extends ResponseEntityExceptionHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(FpWsProxyExceptionHandler.class);
 
     private final TokenUtil tokenUtil;
-
-    private static final Logger LOG = LoggerFactory.getLogger(FpWsProxyExceptionHandler.class);
 
     public FpWsProxyExceptionHandler(TokenUtil tokenUtil) {
         this.tokenUtil = tokenUtil;
     }
 
-    @ExceptionHandler(HttpStatusCodeException.class)
-    public ResponseEntity<Object> handleHttpStatusCodeException(HttpStatusCodeException e, WebRequest request) {
-        if (e.getStatusCode().equals(UNAUTHORIZED) || e.getStatusCode().equals(FORBIDDEN)) {
-            return logAndRespond(e.getStatusCode(), e, request);
-        }
-        return logAndRespond(e.getStatusCode(), e, request);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e,
-            HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return logAndRespond(UNPROCESSABLE_ENTITY, e, request, validationErrors(e));
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> handleValidationException(ConstraintViolationException e, WebRequest req) {
+    /**
+     * Handle custom exceptions
+     */
+    @ExceptionHandler
+    public ResponseEntity<Object> handleIntegrasjonException(IntegrasjonException e, WebRequest req) {
         return logAndRespond(UNPROCESSABLE_ENTITY, e, req);
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<Object> handleNotFoundException(NotFoundException e, WebRequest req) {
-        return logAndRespond(NOT_FOUND, e, req);
-    }
-
-    @ExceptionHandler(JwtTokenUnauthorizedException.class)
+    @ExceptionHandler
     public ResponseEntity<Object> handleJwtUnauthorizedException(JwtTokenUnauthorizedException e, WebRequest req) {
         return logAndRespond(UNAUTHORIZED, e, req);
     }
 
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<Object> handleUnauthorizedException(UnauthorizedException e, WebRequest req) {
-        return logAndRespond(UNAUTHORIZED, e, req, "Token utløper " + e.getExpiryDate());
-    }
-
-    @ExceptionHandler(JwtTokenValidatorException.class)
+    @ExceptionHandler
     public ResponseEntity<Object> handleUnauthenticatedOIDCException(JwtTokenValidatorException e, WebRequest req) {
         return logAndRespond(FORBIDDEN, e, req, "Token utløper " + e.getExpiryDate());
     }
 
-    @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<Object> handleExpiredToken(TokenExpiredException e, WebRequest req) {
-        return logAndRespond(FORBIDDEN, e, req, e.getExpiryDate());
+
+
+    /**
+     * Handle predefined java exceptions
+     */
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return logAndRespond(UNPROCESSABLE_ENTITY, e, request, validationErrors(e));
     }
 
-    @ExceptionHandler(UnauthenticatedException.class)
-    public ResponseEntity<Object> handleUnauthenticatedException(UnauthenticatedException e, WebRequest req) {
-        return logAndRespond(FORBIDDEN, e, req);
+    @ExceptionHandler
+    public ResponseEntity<Object> handleHttpStatusCodeException(HttpStatusCodeException e, WebRequest request) {
+        return logAndRespond(e.getStatusCode(), e, request);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> catchAll(Exception e, WebRequest req) {
+    @ExceptionHandler
+    public ResponseEntity<Object> handleValidationException(ConstraintViolationException e, WebRequest req) {
+        return logAndRespond(UNPROCESSABLE_ENTITY, e, req);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Object> handleUncaughtExceptions(Exception e, WebRequest req) {
         return logAndRespond(INTERNAL_SERVER_ERROR, e, req);
     }
+
 
     private ResponseEntity<Object> logAndRespond(HttpStatus status, Exception e, WebRequest req, Object... messages) {
         return logAndRespond(status, e, req, List.of(messages));
     }
 
-    private ResponseEntity<Object> logAndRespond(HttpStatus status, Exception e, WebRequest req,
-            List<Object> messages) {
+    private ResponseEntity<Object> logAndRespond(HttpStatus status, Exception e, WebRequest req, List<Object> messages) {
         var apiError = new ApiError(status, e, messages);
         var path = fullPathTilKaltEndepunkt(req);
         if (tokenUtil.erAutentisert() && !tokenUtil.erUtløpt()) {
-            LOG.warn("[{}] {} {}", path, status, apiError.getMessages(), e);
+            LOG.warn("[{}] {} {}", path, status, apiError.messages(), e);
         } else {
-            LOG.debug("[{}] {} {}", path, status, apiError.getMessages(),e);
+            LOG.debug("[{}] {} {}", path, status, apiError.messages(),e);
         }
         return handleExceptionInternal(e, apiError, new HttpHeaders(), status, req);
     }
@@ -115,7 +102,7 @@ public class FpWsProxyExceptionHandler extends ResponseEntityExceptionHandler {
         return e.getBindingResult().getFieldErrors()
                 .stream()
                 .map(FpWsProxyExceptionHandler::errorMessage)
-                .collect(toList());
+                .toList();
     }
 
     private static String errorMessage(FieldError error) {

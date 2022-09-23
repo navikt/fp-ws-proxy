@@ -15,6 +15,8 @@ import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.AnnulerKravGrunnlag
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.KodeAksjon;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.Kravgrunnlag431Dto;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.KravgrunnlagDetaljDto;
+import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.KravgrunnlagHentDetaljResponsDto;
+import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.Kvittering;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.TilbakekrevingVedtakDto;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.ØkonomiConsumerFeil;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.ØkonomiKvitteringTolk;
@@ -44,18 +46,23 @@ class TilbakekrevingController {
         this.tilbakekrevingKlientWs = tilbakekrevingKlientWs;
     }
 
-    // TODO: fptilbake kjører med RunWithSavepoint og aggerer på kvitteringen. Returnere kvittering?
-    //  Hvem skal reaguere på kvitteringene? fp-ws-proxy eller fptilbake?
-    //  Hvis det skal her, mulig flytt det inn i klienten?
+    // TODO: Problemer
+    //  Exceptions som catch (SOAPFaultException e) { blir oversatt til IntegrasjonException exception i fptilbake
+    //      SOAPFaultException kan mappes til Integrasjonsexcepiton og retuner new IntegrasjonException("F-942048", String.format("SOAP tjenesten [ %s ] returnerte en SOAP Fault:", webservice), e);
+    //  Returnerer kvittering som fptilbake kan aggerer på slik at den kan oversette til logiske Exceptions? Eller skal fp-ws-proxy gjøre dette?
+    //      Fptilbake aggerer på kvittering.
+    //
+    //  Fptilbake lagrer XML requesten. Hvordan løse dette? Logge dett i secure logs? Løsning: Logg til secure loggs ved feil.
     @PostMapping
-    public TilbakekrevingsvedtakResponse tilbakekrevingsvedtak(TilbakekrevingVedtakDto tilbakekrevingDto) {
+    public Kvittering tilbakekrevingsvedtak(TilbakekrevingVedtakDto tilbakekrevingDto) {
         LOG.info("Sender request til tilbakekrevingsvedtak til økonomi");
         var request = TilbakekrevingWSMapper.tilTilbakekrevingsvedtakRequest(tilbakekrevingDto);
-        return tilbakekrevingKlientWs.tilbakekrevingsvedtak(request);
+        var respons = tilbakekrevingKlientWs.tilbakekrevingsvedtak(request);
+        return HentKravgrunnlagMapper.tilKvitteringDto(respons.getMmel());
     }
 
     @GetMapping
-    public Kravgrunnlag431Dto kravgrunnlagHentDetalj(KravgrunnlagDetaljDto kravgrunnlagDetaljDto) {
+    public KravgrunnlagHentDetaljResponsDto kravgrunnlagHentDetalj(KravgrunnlagDetaljDto kravgrunnlagDetaljDto) {
         LOG.info("Sender request til tilbakekreving hos økonomi");
         var request = TilbakekrevingWSMapper.tilKravgrunnlagHentDetaljRequest(kravgrunnlagDetaljDto);
         var respons = tilbakekrevingKlientWs.kravgrunnlagHentDetalj(request);
@@ -63,46 +70,27 @@ class TilbakekrevingController {
         var kvittering = respons.getMmel();
         var kravgrunnlagId = request.getHentkravgrunnlag().getKravgrunnlagId().longValue();
         var behandlingsId = kravgrunnlagDetaljDto.behandlingsId();
-        validerKvitteringForHentGrunnlag(behandlingsId, kravgrunnlagId, kvittering);
         LOG.info("Hentet kravgrunnlag fra oppdragsystemet for behandlingId={} KravgrunnlagId={} Alvorlighetsgrad='{}' kodeMelding='{}' infomelding='{}'",
             behandlingsId,
             kravgrunnlagId,
             kvittering.getAlvorlighetsgrad(),
             kvittering.getKodeMelding(),
             kvittering.getBeskrMelding());
-
-        return HentKravgrunnlagMapper.mapTilDto(respons.getDetaljertkravgrunnlag());
+        LOG.info("Referanse fra WS: {}", respons.getDetaljertkravgrunnlag().getReferanse());
+        return HentKravgrunnlagMapper.mapTilDto(respons);
     }
 
     @PostMapping
-    public void kravgrunnlagAnnuler(AnnulerKravGrunnlagDtoRest annulerKravGrunnlagDtoRest) {
+    public Kvittering kravgrunnlagAnnuler(AnnulerKravGrunnlagDtoRest annulerKravGrunnlagDtoRest) {
         var behandlingId = annulerKravGrunnlagDtoRest.behandlingId();
         LOG.info("Starter Anullerekravgrunnlag for behandlingId={}", behandlingId);
         var request = TilbakekrevingWSMapper.tilKravgrunnlagAnnulerRequest(annulerKravGrunnlagDtoRest);
         var respons = tilbakekrevingKlientWs.kravgrunnlagAnnuler(request);
         var kvittering = respons.getMmel();
-        validerKvitteringForAnnulereGrunnlag(behandlingId, kvittering);
         LOG.info("AnnulereKravgrunnlag sendt til oppdragssystemet. BehandlingId={} Alvorlighetsgrad='{}' infomelding='{}'",
             behandlingId,
             kvittering.getAlvorlighetsgrad(),
             kvittering.getBeskrMelding());
-    }
-
-    private void validerKvitteringForHentGrunnlag(Long behandlingId, Long kravgrunnlagId, MmelDto mmel) {
-        if (!ØkonomiKvitteringTolk.erKvitteringOK(mmel)) {
-            throw ØkonomiConsumerFeil.fikkFeilkodeVedHentingAvKravgrunnlag(behandlingId, ØkonomiConsumerFeil.formaterKvittering(mmel));
-        } else if (ØkonomiKvitteringTolk.erKravgrunnlagetIkkeFinnes(mmel)) {
-            throw ØkonomiConsumerFeil.fikkFeilkodeVedHentingAvKravgrunnlagNårKravgrunnlagIkkeFinnes(behandlingId, kravgrunnlagId, ØkonomiConsumerFeil.formaterKvittering(mmel));
-        } else if (ØkonomiKvitteringTolk.erKravgrunnlagetSperret(mmel)) {
-            throw ØkonomiConsumerFeil.fikkFeilkodeVedHentingAvKravgrunnlagNårKravgrunnlagErSperret(behandlingId, kravgrunnlagId, ØkonomiConsumerFeil.formaterKvittering(mmel));
-        } else if (ØkonomiKvitteringTolk.harKravgrunnlagNoeUkjentFeil(mmel)) {
-            throw ØkonomiConsumerFeil.fikkUkjentFeilkodeVedHentingAvKravgrunnlag(behandlingId, kravgrunnlagId, ØkonomiConsumerFeil.formaterKvittering(mmel));
-        }
-    }
-
-    private void validerKvitteringForAnnulereGrunnlag(Long behandlingId, MmelDto mmel) {
-        if (!ØkonomiKvitteringTolk.erKvitteringOK(mmel)) {
-            throw ØkonomiConsumerFeil.fikkFeilkodeVedAnnulereKravgrunnlag(behandlingId, ØkonomiConsumerFeil.formaterKvittering(mmel));
-        }
+        return HentKravgrunnlagMapper.tilKvitteringDto(kvittering);
     }
 }
