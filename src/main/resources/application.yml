@@ -52,9 +52,14 @@ no.nav.security.jwt:
 #      discoveryurl: https://sts.adeo.no/SecurityTokenServiceProvider/TODO/.well-known/openid-configuration
 #      accepted_audience: srvGOSYS
 
-# SOAP/WS
+
+# Brukers av klientene på utgående kall (WS eller RS)
 securitytokenservice:
-  username: ${fpselvbetjening.username}
-  password : ${fpselvbetjening.password}
+  username: ${securitytokenservice.username}  # Kommer fra vault
+  password : ${securitytokenservice.password} # Kommer fra vault
   url: https://sts.adeo.no/SecurityTokenServiceProvider/
 
+sts:
+  username: ${securitytokenservice.username}  # Kommer fra vault
+  password : ${securitytokenservice.password} # Kommer fra vault
+  url: https://security-token-service.nais.adeo.no # TODO

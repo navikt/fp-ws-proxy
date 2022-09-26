@@ -3,7 +3,16 @@ name: Build PR or branch
 on:
   pull_request:
     branches:
-      - master
+      - main
+    paths-ignore:
+      - '**.md'
+      - '**.MD'
+      - '.gitignore'
+      - '.github/workflows/build.yml'
+      - '.github/workflows/promote.yml'
+      - '.github/workflows/dispatch.yml'
+      - '.github/workflows/codeql-analysis.yml'
+      - '.github/dependabot.yml'
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -25,9 +34,10 @@ jobs:
         run: |
           mvn install --settings .github/.m2/settings.xml
 
-      - name: Sonar analyse
-        if: github.actor != 'dependabot[bot]'
-        run: |
-          mvn jacoco:prepare-agent jacoco:report sonar:sonar --settings .github/.m2/settings.xml
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+# PRIVATE REPO
+#      - name: Sonar analyse
+#        if: github.actor != 'dependabot[bot]'
+#        run: |
+#          mvn jacoco:prepare-agent jacoco:report sonar:sonar --settings .github/.m2/settings.xml
+#        env:
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

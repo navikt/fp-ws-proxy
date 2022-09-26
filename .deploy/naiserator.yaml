@@ -6,12 +6,13 @@ metadata:
   labels:
     team: teamforeldrepenger
 spec:
-  tokenx:
-    enabled: true
   accessPolicy:
     inbound:
       rules:
         - application: fpsoknad-mottak
+        - application: fptilbake
+        - application: fpoppdrag
+#        - application: gosys # TODO
   image: {{image}}
   port: 8080
   replicas:

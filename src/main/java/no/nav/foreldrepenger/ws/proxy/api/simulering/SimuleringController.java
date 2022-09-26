@@ -7,6 +7,7 @@ import static no.nav.foreldrepenger.ws.proxy.config.TokenUtilConfiguration.STS_R
 
 import java.util.List;
 
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +31,7 @@ class SimuleringController {
     @PostMapping
     public List<BeregningDto> simulerBeregning(@RequestBody List<String> oppdragXmlListe,
                                                @RequestParam("ytelseType") YtelseType ytelseType,
-                                               @RequestParam("utenInntrekk") boolean utenInntrekk) {
+                                               @RequestParam("utenInntrekk") @DefaultValue("false") boolean utenInntrekk) {
         var simuleringWSRequest = tilSimulerBeregingsRequester(oppdragXmlListe, ytelseType, utenInntrekk);
         var simulerBeregningResponse = simuleringKlientWs.simulerBeregningene(simuleringWSRequest);
         return tilBeregningDtoListe(simulerBeregningResponse);

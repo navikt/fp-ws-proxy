@@ -9,7 +9,7 @@ env:
 
 jobs:
   promote:
-    if: ${{ env.CLUSTER }} != 'dev-fss' || ${{ env.CLUSTER }} != 'dev-gcp'
+    if: ${{ env.CLUSTER }} != 'prod-fss' || ${{ env.CLUSTER }} != 'prod-gcp' # Tillater ikke prodsetting enda.
     runs-on: ubuntu-latest
     steps:
       - name: Henter informasjon fra issuet
