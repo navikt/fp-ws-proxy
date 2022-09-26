@@ -1,7 +1,7 @@
 name: Build PR or branch
 
 on:
-  pull_request:
+  pull_request_target:
     branches:
       - main
     paths-ignore:
@@ -14,7 +14,7 @@ on:
       - '.github/workflows/codeql-analysis.yml'
       - '.github/dependabot.yml'
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
 
 jobs:
   kompiler:
