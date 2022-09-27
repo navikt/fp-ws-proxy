@@ -10,8 +10,8 @@ spring:
       kubernetes:
         role: fp-ws-proxy
         kubernetes-path: kubernetes/prod/fss
-        service-account-token-file: /var/run/secrets/kubernetes.io/serviceaccount/token
       kv:
-        application-name: fp-ws-proxy/teamforeldrepenger
+        enabled: true
         backend: kv/prod/fss
+        application-name: fp-ws-proxy/teamforeldrepenger
         default-context: fp-ws-proxy/teamforeldrepenger

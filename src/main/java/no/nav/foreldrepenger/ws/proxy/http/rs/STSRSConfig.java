@@ -13,8 +13,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters.FormInserter;
 import org.springframework.web.util.UriBuilder;
 
-import no.nav.foreldrepenger.ws.proxy.http.rs.AbstractConfig;
-
 @ConfigurationProperties(prefix = "sts")
 public class STSRSConfig extends AbstractConfig {
 
@@ -30,12 +28,12 @@ public class STSRSConfig extends AbstractConfig {
 
     @ConstructorBinding
     public STSRSConfig(URI baseUri,
-                       @DefaultValue(DEFAULT_SLACK) Duration slack,
                        String username,
                        String password,
                        @DefaultValue(PING_PATH) String pingPath,
-                       @DefaultValue("true") boolean enabled,
-                       @DefaultValue(DEFAULT_PATH) String stsPath) {
+                       @DefaultValue(DEFAULT_PATH) String stsPath,
+                       @DefaultValue(DEFAULT_SLACK) Duration slack,
+                       @DefaultValue("true") boolean enabled) {
         super(baseUri, pingPath, enabled);
         this.stsPath = stsPath;
         this.slack = slack;

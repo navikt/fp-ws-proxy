@@ -3,10 +3,18 @@ name: Deployment pipeline q1
 on:
   push:
     branches:
-      - master
+      - main
+    paths-ignore:
+      - '**.md'
+      - '**.MD'
+      - '.gitignore'
+      - '.github/workflows/build-pr.yml'
+      - '.github/workflows/dispatch.yml'
+      - '.github/workflows/codeql-analysis.yml'
+      - '.github/dependabot.yml'
 env:
   IMAGE_BASE: ghcr.io/${{ github.repository }}
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
 
 jobs:
   kompiler:
@@ -85,8 +93,9 @@ jobs:
                           body: '/promote dev-fss'})
              });
 
-      - name: Sonar analyse
-        run: |
-          mvn jacoco:prepare-agent jacoco:report sonar:sonar --settings .github/.m2/settings.xml
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+# PRIVATE REPO
+#      - name: Sonar analyse
+#        run: |
+#          mvn jacoco:prepare-agent jacoco:report sonar:sonar --settings .github/.m2/settings.xml
+#        env:
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
