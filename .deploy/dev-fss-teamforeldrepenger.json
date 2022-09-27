@@ -1,6 +1,5 @@
 {
     "ingresses":  [
-        "https://fp-ws-proxy.dev.intern.nav.no",
-        "https://fp-ws-proxy.dev.nav.no"
+        "https://fp-ws-proxy.dev.intern.nav.no"
     ]
 }
