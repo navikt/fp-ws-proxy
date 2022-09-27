@@ -9,7 +9,9 @@ env:
 
 jobs:
   promote:
-    if: env.CLUSTER != 'prod-fss' || env.CLUSTER != 'prod-gcp' # Tillater ikke prodsetting enda.
+    if: |
+      github.event.client_payload.slash_command.args.unnamed.arg1 != 'prod-fss' ||
+      github.event.client_payload.slash_command.args.unnamed.arg1 != 'prod-gcp' # Tillater ikke prodsetting enda.
     runs-on: ubuntu-latest
     steps:
       - name: Henter informasjon fra issuet
