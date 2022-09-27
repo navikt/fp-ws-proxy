@@ -22,7 +22,6 @@ public final class URIUtil {
             .build()
             .toUri();
     }
-
     public static UriComponentsBuilder builder(URI base, String path, org.springframework.http.HttpHeaders queryParams) {
         return UriComponentsBuilder
             .fromUri(base)
