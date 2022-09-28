@@ -13,7 +13,7 @@ import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.
 
 @Component
 class SimuleringKlientWs {
-    private static final Logger LOG = LoggerFactory.getLogger(SimuleringKlientWs.class); // TODO: Secure loggs!
+    private static final Logger SECURE_LOG = LoggerFactory.getLogger("secureLogger");
 
     private final SimulerFpService klient;
 
@@ -29,10 +29,10 @@ class SimuleringKlientWs {
 
     public SimulerBeregningResponse simulerBeregning(SimulerBeregningRequest request) {
         try {
-            LOG.info("Simulerer ");
+            SECURE_LOG.info("Simulerer ");
             return klient.simulerBeregning(request);
         } catch (Exception e) {
-            LOG.info("Simulering feilet for request={}", anonymiser(request));
+            SECURE_LOG.info("Simulering feilet for request={}", anonymiser(request));
             return null; // TODO: Hvordan reagere på feilet simulering? Returnere null?
         }
     }
