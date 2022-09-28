@@ -2,21 +2,16 @@ management:
   endpoint:
     health:
       show-details : never
+  endpoints:
+    web:
+      exposure:
+        include: env, configprops, info, health, metrics, prometheus
   metrics:
     web:
       server:
         request:
           autotime:
             enabled: true
-  endpoints:
-    web:
-      exposure:
-        include:  env, configprops, info, health, metrics, prometheus
-  health :
-    diskspace:
-      enabled: false
-    jms:
-      enabled: false
 server:
   servlet:
     context-path: /api
@@ -26,6 +21,7 @@ spring:
   mvc:
     log-request-details: true
 
+## SIKKERHET ##
 no.nav.security.jwt:
   client:
     registration:
@@ -52,14 +48,29 @@ no.nav.security.jwt:
 #      discoveryurl: https://sts.adeo.no/SecurityTokenServiceProvider/TODO/.well-known/openid-configuration
 #      accepted_audience: srvGOSYS
 
-
 # Brukers av klientene på utgående kall (WS eller RS)
 securitytokenservice:
   username: ${securitytokenservice.username}  # Kommer fra vault
-  password : ${securitytokenservice.password} # Kommer fra vault
+  password: ${securitytokenservice.password} # Kommer fra vault
   url: https://sts.adeo.no/SecurityTokenServiceProvider/
-
 sts:
   username: ${securitytokenservice.username}  # Kommer fra vault
-  password : ${securitytokenservice.password} # Kommer fra vault
-  url: https://security-token-service.nais.adeo.no # TODO
+  password: ${securitytokenservice.password} # Kommer fra vault
+  baseUri: https://security-token-service.nais.adeo.no
+
+
+## INTEGRASJONER ##
+meldekortutbetalingsgrunnlag:
+  v1:
+    url: https://arena.adeo.no/ail_ws/MeldekortUtbetalingsgrunnlag_v1
+
+oppdrag:
+  service:
+    url: https://wasapp.adeo.no/cics/services/simulerFpServiceWSBinding
+
+tilbakekreving:
+  v1:
+    url: https://cics.adeo.no/oppdrag/K231CW80
+
+
+

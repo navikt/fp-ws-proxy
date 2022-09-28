@@ -17,12 +17,7 @@ public class TilbakekrevingConfiguration extends WsClient<TilbakekrevingPortType
     }
 
     @Bean
-    public TilbakekrevingPortType client(@Value("${virksomhet.person.v3.endpointurl}") String serviceUrl) { // TODO: Riktig url
+    public TilbakekrevingPortType tilbakekrevingKlient(@Value("${tilbakekreving.v1.url}") String serviceUrl) {
         return createPortForSystemUser(serviceUrl, TilbakekrevingPortType.class);
-    }
-
-    @Bean
-    public TilbakekrevingKlientWs bankkontoKlient(TilbakekrevingPortType klient) {
-        return new TilbakekrevingKlientWs(klient);
     }
 }

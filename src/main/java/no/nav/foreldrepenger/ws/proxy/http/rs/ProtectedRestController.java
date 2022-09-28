@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.ws.proxy.http.rs;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static no.nav.foreldrepenger.common.util.TokenUtil.CLAIMS;
-import static no.nav.foreldrepenger.common.util.TokenUtil.TOKENX;
+import static no.nav.foreldrepenger.ws.proxy.config.TokenUtilConfiguration.STS_RS;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.lang.annotation.Documented;
@@ -19,7 +19,7 @@ import no.nav.security.token.support.core.api.RequiredIssuers;
 
 @RestController
 @Documented
-@RequiredIssuers(@ProtectedWithClaims(issuer = TOKENX, claimMap = CLAIMS))
+@RequiredIssuers(@ProtectedWithClaims(issuer = STS_RS, claimMap = CLAIMS))
 @Target(TYPE)
 @Retention(RUNTIME)
 @RequestMapping

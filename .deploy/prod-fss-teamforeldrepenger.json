@@ -1,5 +1,7 @@
 {
-  "ingresses": [
-      "https://fp-ws-proxy.intern.nav.no"
-  ]
+    "ingresses": [
+        "https://fp-ws-proxy.intern.nav.no"
+    ],
+    "minReplicas": "2",
+    "maxReplicas": "3"
 }

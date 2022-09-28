@@ -17,12 +17,7 @@ public class SimuleringConfiguration extends WsClient<SimulerFpService> {
     }
 
     @Bean
-    public SimulerFpService client(@Value("${virksomhet.person.v3.endpointurl}") String serviceUrl) { // TODO: Riktig url
+    public SimulerFpService simuleringKlient(@Value("${oppdrag.service.url}") String serviceUrl) {
         return createPortForSystemUser(serviceUrl, SimulerFpService.class);
-    }
-
-    @Bean
-    public SimuleringKlientWs bankkontoKlient(SimulerFpService client) {
-        return new SimuleringKlientWs(client);
     }
 }

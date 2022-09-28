@@ -17,12 +17,7 @@ public class ArenaConfiguration extends WsClient<MeldekortUtbetalingsgrunnlagV1>
     }
 
     @Bean
-    public MeldekortUtbetalingsgrunnlagV1 client(@Value("${virksomhet.person.v3.endpointurl}") String serviceUrl) { // TODO: Riktig url
+    public MeldekortUtbetalingsgrunnlagV1 klient(@Value("${meldekortutbetalingsgrunnlag.v1.url}") String serviceUrl) {
         return createPortForSystemUser(serviceUrl, MeldekortUtbetalingsgrunnlagV1.class);
-    }
-
-    @Bean
-    public ArenaKlientWs bankkontoKlient(MeldekortUtbetalingsgrunnlagV1 client) {
-        return new ArenaKlientWs(client);
     }
 }

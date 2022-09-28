@@ -6,11 +6,6 @@ management :
   endpoint:
     health:
       show-details : always
-org:
-  apache:
-    cxf:
-      logging:
-        enable : true
 spring:
   config.import: vault://
   cloud:
@@ -28,10 +23,34 @@ spring:
         backend: kv/preprod/fss
         application-name: fp-ws-proxy/teamforeldrepenger
         default-context: fp-ws-proxy/teamforeldrepenger
+  mvc:
+    log-request-details: true
 
-
+## SIKKERHET ##
+no.nav.security.jwt:
+  client:
+    registration:
+      fpfordel:
+        token-exchange:
+          audience: dev-fss:teamforeldrepenger:fpfordel
+      fpsak:
+        token-exchange:
+          audience: dev-fss:teamforeldrepenger:fpsak
 # Brukers av clientene på utgående kall (WS eller RS)
 securitytokenservice:
   url: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
 sts:
-  uri: https://security-token-service.nais.preprod.local
+  baseUri: https://security-token-service.nais.preprod.local
+
+## INTEGRASJONER ##
+meldekortutbetalingsgrunnlag:
+  v1:
+    url: https://arena-q1.adeo.no/ail_ws/MeldekortUtbetalingsgrunnlag_v1
+oppdrag:
+  service:
+    url: https://cics-q1.adeo.no/oppdrag/simulerFpServiceWSBinding
+tilbakekreving:
+  v1:
+    url: https://cics-q1.adeo.no/oppdrag/K231CW80
+
+

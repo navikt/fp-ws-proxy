@@ -12,18 +12,20 @@ spec:
         - application: fpsoknad-mottak
         - application: fptilbake
         - application: fpoppdrag
-#        - application: gosys # TODO
+  #        - application: gosys # TODO
   image: {{image}}
   port: 8080
   replicas:
-    min: 2
-    max: 2
+    min: {{minReplicas}}
+    max: {{maxReplicas}}
   liveness:
     path: /api/actuator/health/liveness
-    initialDelay: 60
+    initialDelay: 8
+    failureThreshold: 5
   readiness:
     path: /api/actuator/health/readiness
-    initialDelay: 60
+    initialDelay: 8
+    failureThreshold: 5
   prometheus:
     enabled: true
     path: /api/actuator/prometheus
@@ -36,5 +38,5 @@ spec:
       cpu: 1000m
       memory: 2048Mi
     requests:
-      cpu: 50m
+      cpu: 100m
       memory: 512Mi

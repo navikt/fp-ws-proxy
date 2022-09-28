@@ -1,8 +1,11 @@
-management :
-  endpoints.web.exposure.include:  '*'
+management:
+  endpoints:
+    web:
+      exposure:
+        include:  '*'
   endpoint:
-    health.show-details : always
-    security.enabled : false
+    health:
+      enabled: false
 server:
   port: 9010
 spring:
@@ -35,4 +38,27 @@ no.nav.security.jwt:
 #    sts-ws: # TODO:
 #      discoveryurl: http://localhost:8060/soap/SecurityTokenServiceProvider/
 #      accepted_audience: srvGOSYS
+securitytokenservice:
+  username: vtp
+  password: vtp
+  url: http://localhost:8060/soap/SecurityTokenServiceProvider/
+sts:
+  username: vtp
+  password: vtp
+  baseUri: http://localhost:8060
 
+
+## INTEGRASJONER ##
+fpsak:
+  baseUri: http://localhost:8080/fpsak
+fpfordel:
+  baseUri: http://localhost:8080/fpfordel
+meldekortutbetalingsgrunnlag:
+  v1:
+    url: https://localhost:8063/soap/ail_ws/MeldekortUtbetalingsgrunnlag_v1
+oppdrag:
+  service:
+    url: https://localhost:8063/soap/cics/services/oppdragService
+tilbakekreving:
+  v1:
+    url: https://localhost:8063/soap/tilbakekreving/services/tilbakekrevingService

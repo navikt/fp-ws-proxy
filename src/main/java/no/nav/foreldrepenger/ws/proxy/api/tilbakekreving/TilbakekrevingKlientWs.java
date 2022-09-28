@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.ws.proxy.api.tilbakekreving;
 
+import org.springframework.stereotype.Component;
+
 import no.nav.okonomi.tilbakekrevingservice.KravgrunnlagAnnulerRequest;
 import no.nav.okonomi.tilbakekrevingservice.KravgrunnlagAnnulerResponse;
 import no.nav.okonomi.tilbakekrevingservice.KravgrunnlagHentDetaljRequest;
@@ -8,6 +10,7 @@ import no.nav.okonomi.tilbakekrevingservice.TilbakekrevingPortType;
 import no.nav.okonomi.tilbakekrevingservice.TilbakekrevingsvedtakRequest;
 import no.nav.okonomi.tilbakekrevingservice.TilbakekrevingsvedtakResponse;
 
+@Component
 class TilbakekrevingKlientWs {
 
     private final TilbakekrevingPortType klient;
