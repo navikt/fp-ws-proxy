@@ -1,15 +1,18 @@
 package no.nav.foreldrepenger.ws.proxy.api.arena;
 
+import javax.xml.ws.soap.SOAPFaultException;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.binding.FinnMeldekortUtbetalingsgrunnlagListeAktoerIkkeFunnet;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.binding.FinnMeldekortUtbetalingsgrunnlagListeSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.binding.FinnMeldekortUtbetalingsgrunnlagListeUgyldigInput;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.binding.MeldekortUtbetalingsgrunnlagV1;
+import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.feil.ForretningsmessigUnntak;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.FinnMeldekortUtbetalingsgrunnlagListeRequest;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.FinnMeldekortUtbetalingsgrunnlagListeResponse;
-import no.nav.vedtak.exception.IntegrasjonException;
-import no.nav.vedtak.exception.TekniskException;
 
 @Component
 class ArenaKlientWs {
@@ -23,12 +26,28 @@ class ArenaKlientWs {
     public FinnMeldekortUtbetalingsgrunnlagListeResponse finnMeldekortUtbetalingsgrunnlagListe(FinnMeldekortUtbetalingsgrunnlagListeRequest arenaWSRequest) {
         try {
             return klient.finnMeldekortUtbetalingsgrunnlagListe(arenaWSRequest);
-        } catch (FinnMeldekortUtbetalingsgrunnlagListeSikkerhetsbegrensning e) {
-            throw new TekniskException("FP-150919", "MeldekortUtbetalingsgrunnlag (Arena) ikke tilgjengelig (sikkerhetsbegrensning)", e);
-        } catch (FinnMeldekortUtbetalingsgrunnlagListeUgyldigInput e) {
-            throw new IntegrasjonException("FP-615299", "MeldekortUtbetalingsgrunnlag (Arena) ugyldig input", e);
-        } catch (FinnMeldekortUtbetalingsgrunnlagListeAktoerIkkeFunnet e) {
-            throw new IntegrasjonException("FP-615298", "MeldekortUtbetalingsgrunnlag (Arena) fant ikke person for oppgitt aktørId", e);
+        } catch (SOAPFaultException ex) {
+            throw ex; // TODO: Bare returnere en 500 feil?
+        } catch (FinnMeldekortUtbetalingsgrunnlagListeAktoerIkkeFunnet ex) {
+            throw create(HttpStatus.FORBIDDEN, mapForretningsmessigUnntakTilMessage(ex.getFaultInfo()));
+        } catch (FinnMeldekortUtbetalingsgrunnlagListeSikkerhetsbegrensning ex) {
+            throw create(HttpStatus.BAD_REQUEST, mapForretningsmessigUnntakTilMessage(ex.getFaultInfo()));
+        } catch (FinnMeldekortUtbetalingsgrunnlagListeUgyldigInput ex) {
+            throw create(HttpStatus.NOT_FOUND, mapForretningsmessigUnntakTilMessage(ex.getFaultInfo()));
         }
+    }
+
+    private static String mapForretningsmessigUnntakTilMessage(ForretningsmessigUnntak forretningsmessigUnntak) {
+        if (forretningsmessigUnntak == null) {
+            return null;
+        }
+        return String.format("Feilkilde: %s, feilaarsak: %s, feilmelding: %s",
+            forretningsmessigUnntak.getFeilkilde(),
+            forretningsmessigUnntak.getFeilaarsak(),
+            forretningsmessigUnntak.getFeilmelding());
+    }
+
+    private static HttpClientErrorException create(HttpStatus status, String statustekst) {
+        return HttpClientErrorException.create(status, statustekst, null, null, null);
     }
 }

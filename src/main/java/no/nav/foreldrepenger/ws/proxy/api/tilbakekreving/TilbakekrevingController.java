@@ -3,11 +3,14 @@ package no.nav.foreldrepenger.ws.proxy.api.tilbakekreving;
 import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.TilbakekrevingController.TILBAKEKREVING_PATH;
 import static no.nav.foreldrepenger.ws.proxy.config.TokenUtilConfiguration.STS_RS;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.AnnulerKravGrunnlagDtoRest;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.KravgrunnlagDetaljDto;
@@ -37,15 +40,15 @@ class TilbakekrevingController {
         this.tilbakekrevingKlientWs = tilbakekrevingKlientWs;
     }
 
-    // TODO: Problemer
+    // TODO: Problemer:
     //  Exceptions som catch (SOAPFaultException e) { blir oversatt til IntegrasjonException exception i fptilbake
     //      SOAPFaultException kan mappes til Integrasjonsexcepiton og retuner new IntegrasjonException("F-942048", String.format("SOAP tjenesten [ %s ] returnerte en SOAP Fault:", webservice), e);
     //  Returnerer kvittering som fptilbake kan aggerer på slik at den kan oversette til logiske Exceptions? Eller skal fp-ws-proxy gjøre dette?
-    //      Fptilbake aggerer på kvittering.
-    //
-    //  Fptilbake lagrer XML requesten. Hvordan løse dette? Logge dett i secure logs? Løsning: Logg til secure loggs ved feil.
+    //      Fptilbake aggerer på kvittering
+    //  Fptilbake lagrer XML requesten. Hvordan løse dette? Logge dett i secure logs?
+    //      Løsning: Logg til secure loggs ved feil
     @PostMapping(TILBAKEKREVINGVEDTAK_PATH)
-    public Kvittering tilbakekrevingsvedtak(TilbakekrevingVedtakDto tilbakekrevingDto) {
+    public Kvittering tilbakekrevingsvedtak(@Valid @RequestBody TilbakekrevingVedtakDto tilbakekrevingDto) {
         LOG.info("Sender request til tilbakekrevingsvedtak til økonomi");
         var request = TilbakekrevingWSMapper.tilTilbakekrevingsvedtakRequest(tilbakekrevingDto);
         var respons = tilbakekrevingKlientWs.tilbakekrevingsvedtak(request);
@@ -53,7 +56,7 @@ class TilbakekrevingController {
     }
 
     @GetMapping(KRAVGRUNNLAG_PATH)
-    public KravgrunnlagHentDetaljResponsDto kravgrunnlagHentDetalj(KravgrunnlagDetaljDto kravgrunnlagDetaljDto) {
+    public KravgrunnlagHentDetaljResponsDto kravgrunnlagHentDetalj(@Valid @RequestBody KravgrunnlagDetaljDto kravgrunnlagDetaljDto) {
         LOG.info("Sender request til tilbakekreving hos økonomi");
         var request = TilbakekrevingWSMapper.tilKravgrunnlagHentDetaljRequest(kravgrunnlagDetaljDto);
         var respons = tilbakekrevingKlientWs.kravgrunnlagHentDetalj(request);
@@ -72,7 +75,7 @@ class TilbakekrevingController {
     }
 
     @PostMapping(KRAVGRUNNLAG_PATH)
-    public Kvittering kravgrunnlagAnnuler(AnnulerKravGrunnlagDtoRest annulerKravGrunnlagDtoRest) {
+    public Kvittering kravgrunnlagAnnuler(@Valid @RequestBody AnnulerKravGrunnlagDtoRest annulerKravGrunnlagDtoRest) {
         var behandlingId = annulerKravGrunnlagDtoRest.behandlingId();
         LOG.info("Starter Anullerekravgrunnlag for behandlingId={}", behandlingId);
         var request = TilbakekrevingWSMapper.tilKravgrunnlagAnnulerRequest(annulerKravGrunnlagDtoRest);

@@ -77,31 +77,31 @@ class ArenaMapperWSTest {
         assertThat(meldekortUtbetalingsgrunnlagSak)
             .hasSize(2);
         assertThat(meldekortUtbetalingsgrunnlagSak)
-            .extracting(MeldekortUtbetalingsgrunnlagSak::getYtelseType)
+            .extracting(MeldekortUtbetalingsgrunnlagSak::type)
             .containsOnly(ytelsetype);
         assertThat(meldekortUtbetalingsgrunnlagSak)
-            .extracting(MeldekortUtbetalingsgrunnlagSak::getSaksnummer)
+            .extracting(MeldekortUtbetalingsgrunnlagSak::saksnummer)
             .extracting(Saksnummer::value)
             .containsOnly(fnrFAKE);
         assertThat(meldekortUtbetalingsgrunnlagSak)
-            .extracting(MeldekortUtbetalingsgrunnlagSak::getSakStatus)
+            .extracting(MeldekortUtbetalingsgrunnlagSak::sakStatus)
             .containsOnly(ytelseStatus.getKode());
         assertThat(meldekortUtbetalingsgrunnlagSak)
-            .extracting(MeldekortUtbetalingsgrunnlagSak::getVedtakStatus)
+            .extracting(MeldekortUtbetalingsgrunnlagSak::vedtakStatus)
             .containsOnly(RelatertYtelseStatus.AVSLU.getKode());
 
         assertThat(meldekortUtbetalingsgrunnlagSak)
-            .extracting(MeldekortUtbetalingsgrunnlagSak::getVedtaksPeriodeFom)
+            .extracting(MeldekortUtbetalingsgrunnlagSak::vedtaksPeriodeFom)
             .containsExactly(fomVedtak1, fomVedtak2);
         assertThat(meldekortUtbetalingsgrunnlagSak)
-            .extracting(MeldekortUtbetalingsgrunnlagSak::getVedtaksPeriodeTom)
+            .extracting(MeldekortUtbetalingsgrunnlagSak::vedtaksPeriodeTom)
             .containsExactly(tomVedtak1, tomVedtak2);
 
         assertThat(meldekortUtbetalingsgrunnlagSak)
-            .extracting(MeldekortUtbetalingsgrunnlagSak::getVedtattDato)
+            .extracting(MeldekortUtbetalingsgrunnlagSak::vedtattDato)
             .containsExactly(fomVedtak1, fomVedtak2);
         assertThat(meldekortUtbetalingsgrunnlagSak)
-            .extracting(MeldekortUtbetalingsgrunnlagSak::getKravMottattDato)
+            .extracting(MeldekortUtbetalingsgrunnlagSak::kravMottattDato)
             .containsExactly(fomVedtak1, fomVedtak2);
 
     }

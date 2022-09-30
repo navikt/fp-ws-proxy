@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.ws.proxy.api.arena.dto.ArenaRequestDto;
+import no.nav.foreldrepenger.ws.proxy.api.arena.dto.Beløp;
 import no.nav.foreldrepenger.ws.proxy.api.arena.dto.Fagsystem;
 import no.nav.foreldrepenger.ws.proxy.api.arena.dto.MeldekortUtbetalingsgrunnlagMeldekort;
 import no.nav.foreldrepenger.ws.proxy.api.arena.dto.MeldekortUtbetalingsgrunnlagSak;
@@ -71,32 +72,32 @@ public class ArenaMapperWS {
         for (Meldekort meldekort : vedtak.getMeldekortListe()) {
             meldekortList.add(oversettArenaMeldekort(meldekort));
         }
-        return MeldekortUtbetalingsgrunnlagSak.MeldekortSakBuilder.ny()
-            .medType(oversettType(sak))
-            .medTilstand(oversettTilstand(sak, vedtak))
-            .medKilde(Fagsystem.ARENA)
-            .medKravMottattDato(oversettDatoNullable(vedtak.getDatoKravMottatt()))
-            .medSaksnummer(new Saksnummer(sak.getFagsystemSakId()))
-            .medSakStatus(sak.getSaksstatus().getValue())
-            .medVedtakStatus(vedtak.getVedtaksstatus().getValue())
-            .medVedtattDato(oversettDatoNullable(vedtak.getVedtaksdato()))
-            .medVedtaksPeriodeFom(oversettDatoNullable(vedtak.getVedtaksperiode().getFom()))
-            .medVedtaksPeriodeTom(oversettDatoNullable(vedtak.getVedtaksperiode().getTom()))
-            .medVedtaksDagsats(BigDecimal.valueOf(vedtak.getDagsats()))
-            .leggTilMeldekort(meldekortList)
+        return MeldekortUtbetalingsgrunnlagSak.builder()
+            .type(oversettType(sak))
+            .tilstand(oversettTilstand(sak, vedtak))
+            .kilde(Fagsystem.ARENA)
+            .kravMottattDato(oversettDatoNullable(vedtak.getDatoKravMottatt()))
+            .saksnummer(new Saksnummer(sak.getFagsystemSakId()))
+            .sakStatus(sak.getSaksstatus().getValue())
+            .vedtakStatus(vedtak.getVedtaksstatus().getValue())
+            .vedtattDato(oversettDatoNullable(vedtak.getVedtaksdato()))
+            .vedtaksPeriodeFom(oversettDatoNullable(vedtak.getVedtaksperiode().getFom()))
+            .vedtaksPeriodeTom(oversettDatoNullable(vedtak.getVedtaksperiode().getTom()))
+            .vedtaksDagsats(new Beløp(BigDecimal.valueOf(vedtak.getDagsats())))
+            .meldekortene(meldekortList)
             .build();
 
     }
 
     private static MeldekortUtbetalingsgrunnlagSak oversettArenaUtenVedtak(Sak sak) {
-        MeldekortUtbetalingsgrunnlagSak.MeldekortSakBuilder sakBuilder = MeldekortUtbetalingsgrunnlagSak.MeldekortSakBuilder.ny()
-            .medType(oversettType(sak))
-            .medTilstand(oversettTilstandUtenVedtak(sak))
-            .medKilde(Fagsystem.ARENA)
-            .medSaksnummer(new Saksnummer(sak.getFagsystemSakId()))
-            .medSakStatus(sak.getSaksstatus().getValue())
-            .medKravMottattDato(null)
-            .medVedtakStatus(null);
+        var sakBuilder = MeldekortUtbetalingsgrunnlagSak.builder()
+            .type(oversettType(sak))
+            .tilstand(oversettTilstandUtenVedtak(sak))
+            .kilde(Fagsystem.ARENA)
+            .saksnummer(new Saksnummer(sak.getFagsystemSakId()))
+            .sakStatus(sak.getSaksstatus().getValue())
+            .kravMottattDato(null)
+            .vedtakStatus(null);
         return sakBuilder.build();
     }
 
@@ -131,12 +132,12 @@ public class ArenaMapperWS {
     }
 
     private static MeldekortUtbetalingsgrunnlagMeldekort oversettArenaMeldekort(Meldekort meldekort) {
-        return MeldekortUtbetalingsgrunnlagMeldekort.MeldekortMeldekortBuilder.ny()
-            .medMeldekortFom(oversettDatoNullable(meldekort.getMeldekortperiode().getFom()))
-            .medMeldekortTom(oversettDatoNullable(meldekort.getMeldekortperiode().getTom()))
-            .medDagsats(BigDecimal.valueOf(meldekort.getDagsats()))
-            .medBeløp(BigDecimal.valueOf(meldekort.getBeloep()))
-            .medUtbetalingsgrad(BigDecimal.valueOf(meldekort.getUtbetalingsgrad()))
+        return MeldekortUtbetalingsgrunnlagMeldekort.builder()
+            .meldekortFom(oversettDatoNullable(meldekort.getMeldekortperiode().getFom()))
+            .meldekortTom(oversettDatoNullable(meldekort.getMeldekortperiode().getTom()))
+            .dagsats(BigDecimal.valueOf(meldekort.getDagsats()))
+            .beløp(BigDecimal.valueOf(meldekort.getBeloep()))
+            .utbetalingsgrad(BigDecimal.valueOf(meldekort.getUtbetalingsgrad()))
             .build();
     }
 

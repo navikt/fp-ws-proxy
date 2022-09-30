@@ -34,7 +34,7 @@ no.nav.security.jwt:
   issuer:
     sts-rs:
       discoveryurl: http://localhost:8060/rest/v1/sts/.well-known/openid-configuration
-      accepted_audience: srvFPABAKUS, srvfpoppdrag, srvfptilbake
+      accepted_audience: OIDC, srvFPABAKUS, srvfpoppdrag, srvfptilbake
 #    sts-ws: # TODO:
 #      discoveryurl: http://localhost:8060/soap/SecurityTokenServiceProvider/
 #      accepted_audience: srvGOSYS

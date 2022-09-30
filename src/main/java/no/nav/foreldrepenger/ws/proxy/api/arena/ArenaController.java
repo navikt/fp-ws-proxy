@@ -8,10 +8,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import no.nav.foreldrepenger.ws.proxy.api.arena.dto.ArenaRequestDto;
 import no.nav.foreldrepenger.ws.proxy.api.arena.dto.MeldekortUtbetalingsgrunnlagSak;
@@ -26,6 +29,7 @@ import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.Finn
 @ProtectedRestController(issuer = STS_RS, value = ARENA_PATH)
 public class ArenaController {
     private static final Logger LOG = LoggerFactory.getLogger(ArenaController.class);
+    private static final Logger SECURE_LOG = LoggerFactory.getLogger("secureLogger");
     public static final String ARENA_PATH = "/arena";
 
     private final ArenaKlientWs arenaKlientWs;
@@ -35,8 +39,8 @@ public class ArenaController {
     }
 
     @PostMapping
-    public List<MeldekortUtbetalingsgrunnlagSak> sendTilArena(ArenaRequestDto arenaDto) {
-        LOG.info("Sender request {} til arena", arenaDto);
+    public List<MeldekortUtbetalingsgrunnlagSak> sendTilArena(@Valid @RequestBody ArenaRequestDto arenaDto) {
+        SECURE_LOG.info("Sender request {} til arena", arenaDto);
         var arenaWSRequest = tilWSRequest(arenaDto);
 
         var meldekortUtbetalingsgrunnlagListe = Optional.ofNullable(arenaKlientWs.finnMeldekortUtbetalingsgrunnlagListe(arenaWSRequest))
@@ -47,7 +51,7 @@ public class ArenaController {
             .flatMap(Collection::stream)
             .toList();
 
-        LOG.info("Mottok følgende respons fra Arena {}", meldekortUtbetalingsgrunnlagListe);
+        SECURE_LOG.info("Mottok følgende respons fra Arena {}", meldekortUtbetalingsgrunnlagListe);
         return meldekortUtbetalingsgrunnlagListe;
     }
 
