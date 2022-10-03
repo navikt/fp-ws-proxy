@@ -26,7 +26,7 @@ import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.Finn
  * Skal erstatte Meldekorttjenesten i fpabakus: https://github.com/navikt/fp-abakus/blob/master/domenetjenester/iay/src/main/java/no/nav/foreldrepenger/abakus/registerdata/ytelse/arena/MeldekortTjeneste.java
  */
 @Validated
-@ProtectedRestController(issuer = STS_RS, value = ARENA_PATH)
+@ProtectedRestController(issuer = STS_RS, value = ARENA_PATH, claimMap = {})
 public class ArenaController {
     private static final Logger LOG = LoggerFactory.getLogger(ArenaController.class);
     private static final Logger SECURE_LOG = LoggerFactory.getLogger("secureLogger");

@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.ws.proxy.api.simulering.dto.YtelseType;
 import no.nav.security.token.support.spring.ProtectedRestController;
 
 @Validated
-@ProtectedRestController(issuer = STS_RS, value = SIMULERING_PATH)
+@ProtectedRestController(issuer = STS_RS, value = SIMULERING_PATH, claimMap = {})
 class SimuleringController {
     public static final String SIMULERING_PATH = "/simulering";
 

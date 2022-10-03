@@ -26,7 +26,7 @@ import no.nav.security.token.support.spring.ProtectedRestController;
  * https://github.com/navikt/fptilbake/blob/master/integrasjontjenester/oekonomi-tilbakekreving-klient/src/main/java/no/nav/foreldrepenger/tilbakekreving/integrasjon/økonomi/ØkonomiConsumerImpl.java
  */
 @Validated
-@ProtectedRestController(issuer = STS_RS, value = TILBAKEKREVING_PATH)
+@ProtectedRestController(issuer = STS_RS, value = TILBAKEKREVING_PATH, claimMap = {})
 class TilbakekrevingController {
 
     private static final Logger LOG = LoggerFactory.getLogger(TilbakekrevingController.class);
