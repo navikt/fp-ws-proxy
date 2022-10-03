@@ -17,6 +17,12 @@ import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.feil.Forretnin
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.FinnMeldekortUtbetalingsgrunnlagListeRequest;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.FinnMeldekortUtbetalingsgrunnlagListeResponse;
 
+
+/**
+ * Integrasjon mot Arena - tjeneste MeldekortUtbetalingsgrunnlag
+ *
+ * @see https://confluence.adeo.no/display/SDFS/tjeneste_v3%3Avirksomhet%3AmeldekortUtbetalingsgrunnlag_v1
+ */
 @Component
 public class ArenaKlientWs implements PingEndpointAware {
 

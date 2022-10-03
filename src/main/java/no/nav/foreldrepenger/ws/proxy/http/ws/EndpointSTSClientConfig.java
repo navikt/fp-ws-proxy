@@ -23,7 +23,7 @@ public class EndpointSTSClientConfig {
     private static final String POLICY_PATH = "classpath:policy/";
     private static final String STS_REQUEST_SAML_POLICY = POLICY_PATH + "requestSamlPolicy.xml";
 
-    private STSClient stsClient;
+    private final STSClient stsClient;
 
     public EndpointSTSClientConfig(STSClient stsClient) {
         this.stsClient = stsClient;
@@ -31,16 +31,10 @@ public class EndpointSTSClientConfig {
 
     public <T> T configureRequestSamlToken(T port) {
         var client = ClientProxy.getClient(port);
-        // do not have onbehalfof token so cache token in endpoint
-        configureEndpointWithPolicyForSTS(stsClient, client, STS_REQUEST_SAML_POLICY, true);
-        return port;
-    }
-
-    private static void configureEndpointWithPolicyForSTS(STSClient stsClient, Client client, String policyReference,
-            boolean cacheTokenInEndpoint) {
         client.getRequestContext().put(STS_CLIENT, stsClient);
-        client.getRequestContext().put(CACHE_ISSUED_TOKEN_IN_ENDPOINT, cacheTokenInEndpoint);
-        setEndpointPolicyReference(client, policyReference);
+        client.getRequestContext().put(CACHE_ISSUED_TOKEN_IN_ENDPOINT, true);
+        setEndpointPolicyReference(client, STS_REQUEST_SAML_POLICY);
+        return port;
     }
 
     private static void setEndpointPolicyReference(Client client, String uri) {

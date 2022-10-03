@@ -50,12 +50,12 @@ no.nav.security.jwt:
 
 # Brukers av klientene på utgående kall (WS eller RS)
 securitytokenservice:
-  username: ${securitytokenservice.username}  # Kommer fra vault
-  password: ${securitytokenservice.password} # Kommer fra vault
+  username: ${systembruker.username}  # Kommer fra vault
+  password: ${systembruker.password} # Kommer fra vault
   url: https://sts.adeo.no/SecurityTokenServiceProvider/
 sts:
-  username: ${securitytokenservice.username}  # Kommer fra vault
-  password: ${securitytokenservice.password} # Kommer fra vault
+  username: ${systembruker.username}  # Kommer fra vault
+  password: ${systembruker.password} # Kommer fra vault
   baseUri: https://security-token-service.nais.adeo.no
 
 

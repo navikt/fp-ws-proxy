@@ -7,11 +7,12 @@ import java.net.URI;
 import java.util.Map;
 
 import org.apache.cxf.Bus;
+import org.apache.cxf.ext.logging.LoggingInInterceptor;
+import org.apache.cxf.ext.logging.LoggingOutInterceptor;
 import org.apache.cxf.ws.security.trust.STSClient;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 
 @ConfigurationProperties(prefix = "securitytokenservice")
 public class STSWSClientConfig {
@@ -30,14 +31,22 @@ public class STSWSClientConfig {
     }
 
     @Bean
-    @Lazy
     public STSClient configureSTSClient(Bus bus) {
         var sts = new STSClient(bus);
         sts.setEnableAppliesTo(false);
         sts.setAllowRenewing(false);
         sts.setLocation(url.toString());
-        sts.setProperties(Map.of(USERNAME, username, PASSWORD, password));
+        sts.setProperties(Map.of(
+            USERNAME, username,
+            PASSWORD, password));
         sts.setPolicy(STS_CLIENT_AUTHENTICATION_POLICY); // used for the STS client to authenticate itself to the STS provider.
+
+        var loggingInInterceptor = new LoggingInInterceptor();
+        loggingInInterceptor.setPrettyLogging(true);
+        var loggingOutInterceptor = new LoggingOutInterceptor();
+        loggingOutInterceptor.setPrettyLogging(true);
+        sts.getInInterceptors().add(loggingInInterceptor);
+        sts.getOutInterceptors().add(loggingOutInterceptor);
         return sts;
     }
 }

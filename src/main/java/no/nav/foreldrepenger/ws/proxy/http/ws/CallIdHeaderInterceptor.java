@@ -16,7 +16,6 @@ import org.jboss.logging.MDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Trenger vi denne?
 public class CallIdHeaderInterceptor extends AbstractPhaseInterceptor<Message> {
 
     private static final Logger logger = LoggerFactory.getLogger(CallIdHeaderInterceptor.class);
