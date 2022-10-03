@@ -2,6 +2,8 @@ package no.nav.foreldrepenger.ws.proxy.api.arena;
 
 import javax.xml.ws.soap.SOAPFaultException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -16,6 +18,8 @@ import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.Finn
 
 @Component
 class ArenaKlientWs {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ArenaKlientWs.class);
 
     private final MeldekortUtbetalingsgrunnlagV1 klient;
 
@@ -41,10 +45,13 @@ class ArenaKlientWs {
         if (forretningsmessigUnntak == null) {
             return null;
         }
-        return String.format("Feilkilde: %s, feilaarsak: %s, feilmelding: %s",
+
+        var formatFeilmelding = String.format("Feilkilde: %s, feilaarsak: %s, feilmelding: %s",
             forretningsmessigUnntak.getFeilkilde(),
             forretningsmessigUnntak.getFeilaarsak(),
             forretningsmessigUnntak.getFeilmelding());
+        LOG.info("Noe gikk galt i kall mot arena {}", formatFeilmelding);
+        return formatFeilmelding;
     }
 
     private static HttpClientErrorException create(HttpStatus status, String statustekst) {
