@@ -38,8 +38,12 @@ public class WsClient<T> {
         Client client = ClientProxy.getClient(port);
 
         if (isDevOrLocal(env)) {
-            client.getInFaultInterceptors().add(new LoggingInInterceptor());
-            client.getOutFaultInterceptors().add(new LoggingOutInterceptor());
+            var loggingInInterceptor = new LoggingInInterceptor();
+            loggingInInterceptor.setPrettyLogging(true);
+            var loggingOutInterceptor = new LoggingOutInterceptor();
+            loggingOutInterceptor.setPrettyLogging(true);
+            client.getInInterceptors().add(loggingInInterceptor);
+            client.getOutInterceptors().add(loggingOutInterceptor);
         }
         client.getOutInterceptors().add(new CallIdHeaderInterceptor());
         return port;

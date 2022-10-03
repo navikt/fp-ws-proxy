@@ -52,9 +52,11 @@
 
     <springProfile name="dev |local">
         <logger name="no.nav.foreldrepenger" level="trace" />
-        <logger name="no.nav.security" level="trace" />
+        <logger name="no.nav.security" level="info" />
         <logger name="org.springframework.web" level="info" />
         <logger name="org.springframework.web.server.adapter.HttpWebHandlerAdapter" level="info" />
+<!--        <logger name="org.apache.cxf.common.logging" level="debug" />-->
+<!--        <logger name="org.apache.cxf.ext.logging" level="debug" />-->
     </springProfile>
 
     <logger name="secureLogger" level="INFO" additivity="false">

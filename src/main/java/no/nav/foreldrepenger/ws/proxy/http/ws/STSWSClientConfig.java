@@ -11,6 +11,7 @@ import org.apache.cxf.ws.security.trust.STSClient;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 
 @ConfigurationProperties(prefix = "securitytokenservice")
 public class STSWSClientConfig {
@@ -29,6 +30,7 @@ public class STSWSClientConfig {
     }
 
     @Bean
+    @Lazy
     public STSClient configureSTSClient(Bus bus) {
         var sts = new STSClient(bus);
         sts.setEnableAppliesTo(false);

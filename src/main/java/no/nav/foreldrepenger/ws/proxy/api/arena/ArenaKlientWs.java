@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
+import no.nav.foreldrepenger.ws.proxy.http.PingEndpointAware;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.binding.FinnMeldekortUtbetalingsgrunnlagListeAktoerIkkeFunnet;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.binding.FinnMeldekortUtbetalingsgrunnlagListeSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.binding.FinnMeldekortUtbetalingsgrunnlagListeUgyldigInput;
@@ -17,7 +18,7 @@ import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.Finn
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.FinnMeldekortUtbetalingsgrunnlagListeResponse;
 
 @Component
-class ArenaKlientWs {
+public class ArenaKlientWs implements PingEndpointAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(ArenaKlientWs.class);
 
@@ -56,5 +57,15 @@ class ArenaKlientWs {
 
     private static HttpClientErrorException create(HttpStatus status, String statustekst) {
         return HttpClientErrorException.create(status, statustekst, null, null, null);
+    }
+
+    @Override
+    public String name() {
+        return "Arena [MeldekortUtbetalingsgrunnlagV1]";
+    }
+
+    @Override
+    public void ping() {
+        klient.ping();
     }
 }
