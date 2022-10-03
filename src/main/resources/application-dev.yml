@@ -36,6 +36,11 @@ no.nav.security.jwt:
       fpsak:
         token-exchange:
           audience: dev-fss:teamforeldrepenger:fpsak
+  issuer:
+    sts-rs:
+      discoveryurl: https://security-token-service.nais.preprod.local/.well-known/openid-configuration
+
+
 # Brukers av clientene på utgående kall (WS eller RS)
 securitytokenservice:
   url: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
