@@ -35,7 +35,7 @@
 
         <fpsoknad-felles.version>0.8.14</fpsoknad-felles.version>
         <felles.version>4.1.39</felles.version>
-        <token-validation-version>2.1.2</token-validation-version>
+        <token-validation-version>2.1.6</token-validation-version>
         <boot-conditionals.version>3.1.0</boot-conditionals.version>
         <cxf.version>3.5.3</cxf.version>
         <nimbus-jose-jwt.version>8.23</nimbus-jose-jwt.version>
