@@ -10,7 +10,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.ws.proxy.api.arena.dto.ArenaRequestDto;
 import no.nav.foreldrepenger.ws.proxy.api.arena.dto.Beløp;
 import no.nav.foreldrepenger.ws.proxy.api.arena.dto.Fagsystem;
@@ -77,7 +76,7 @@ public class ArenaMapperWS {
             .tilstand(oversettTilstand(sak, vedtak))
             .kilde(Fagsystem.ARENA)
             .kravMottattDato(oversettDatoNullable(vedtak.getDatoKravMottatt()))
-            .saksnummer(new Saksnummer(sak.getFagsystemSakId()))
+            .saksnummer(sak.getFagsystemSakId())
             .sakStatus(sak.getSaksstatus().getValue())
             .vedtakStatus(vedtak.getVedtaksstatus().getValue())
             .vedtattDato(oversettDatoNullable(vedtak.getVedtaksdato()))
@@ -94,7 +93,7 @@ public class ArenaMapperWS {
             .type(oversettType(sak))
             .tilstand(oversettTilstandUtenVedtak(sak))
             .kilde(Fagsystem.ARENA)
-            .saksnummer(new Saksnummer(sak.getFagsystemSakId()))
+            .saksnummer(sak.getFagsystemSakId())
             .sakStatus(sak.getSaksstatus().getValue())
             .kravMottattDato(null)
             .vedtakStatus(null);

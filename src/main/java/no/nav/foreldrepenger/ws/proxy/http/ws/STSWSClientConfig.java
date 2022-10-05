@@ -6,8 +6,6 @@ import static org.apache.cxf.rt.security.SecurityConstants.USERNAME;
 import java.net.URI;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
 import org.apache.cxf.Bus;
 import org.apache.cxf.ext.logging.LoggingInInterceptor;
 import org.apache.cxf.ext.logging.LoggingOutInterceptor;
@@ -37,21 +35,17 @@ public class STSWSClientConfig {
         var sts = new STSClient(bus);
         sts.setEnableAppliesTo(false);
         sts.setAllowRenewing(false);
-        sts.setServiceQName(new QName("http://docs.oasis-open.org/ws-sx/ws-trust/200512/wsdl", "SecurityTokenServiceProvider"));
-        sts.setEndpointQName(new QName("http://docs.oasis-open.org/ws-sx/ws-trust/200512/wsdl", "SecurityTokenServiceSOAP"));
         sts.setLocation(url.toString());
-
         sts.setProperties(Map.of(
             USERNAME, username,
             PASSWORD, password));
         sts.setPolicy(STS_CLIENT_AUTHENTICATION_POLICY); // used for the STS client to authenticate itself to the STS provider.
-
         var loggingInInterceptor = new LoggingInInterceptor();
         loggingInInterceptor.setPrettyLogging(true);
         var loggingOutInterceptor = new LoggingOutInterceptor();
         loggingOutInterceptor.setPrettyLogging(true);
-        sts.getInInterceptors().add(loggingInInterceptor);
-        sts.getOutInterceptors().add(loggingOutInterceptor);
+        sts.getInFaultInterceptors().add(loggingInInterceptor);
+        sts.getOutFaultInterceptors().add(loggingOutInterceptor);
         return sts;
     }
 }

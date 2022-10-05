@@ -6,10 +6,10 @@ import java.time.LocalDate;
 import lombok.Builder;
 
 @Builder
-public record MeldekortUtbetalingsgrunnlagMeldekort(LocalDate meldekortFom,
-                                                    LocalDate meldekortTom,
+public record MeldekortUtbetalingsgrunnlagMeldekort(BigDecimal beløp,
                                                     BigDecimal dagsats,
-                                                    BigDecimal beløp,
+                                                    LocalDate meldekortFom,
+                                                    LocalDate meldekortTom,
                                                     BigDecimal utbetalingsgrad) {
 
 }

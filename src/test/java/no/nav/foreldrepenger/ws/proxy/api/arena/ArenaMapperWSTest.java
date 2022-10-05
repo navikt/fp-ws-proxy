@@ -9,7 +9,6 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.ws.proxy.api.arena.dto.ArenaRequestDto;
 import no.nav.foreldrepenger.ws.proxy.api.arena.dto.MeldekortUtbetalingsgrunnlagSak;
 import no.nav.foreldrepenger.ws.proxy.api.arena.dto.YtelseStatus;
@@ -81,7 +80,6 @@ class ArenaMapperWSTest {
             .containsOnly(ytelsetype);
         assertThat(meldekortUtbetalingsgrunnlagSak)
             .extracting(MeldekortUtbetalingsgrunnlagSak::saksnummer)
-            .extracting(Saksnummer::value)
             .containsOnly(fnrFAKE);
         assertThat(meldekortUtbetalingsgrunnlagSak)
             .extracting(MeldekortUtbetalingsgrunnlagSak::sakStatus)

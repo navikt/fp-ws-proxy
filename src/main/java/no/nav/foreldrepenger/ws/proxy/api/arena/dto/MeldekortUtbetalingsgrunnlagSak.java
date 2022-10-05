@@ -4,19 +4,18 @@ import java.time.LocalDate;
 import java.util.List;
 
 import lombok.Builder;
-import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 @Builder
-public record MeldekortUtbetalingsgrunnlagSak(List<MeldekortUtbetalingsgrunnlagMeldekort> meldekortene,
-                                              YtelseType type,
-                                              YtelseStatus tilstand,
-                                              Fagsystem kilde,
-                                              Saksnummer saksnummer,
-                                              String sakStatus,
-                                              String vedtakStatus,
+public record MeldekortUtbetalingsgrunnlagSak(Fagsystem kilde,
                                               LocalDate kravMottattDato,
-                                              LocalDate vedtattDato,
+                                              List<MeldekortUtbetalingsgrunnlagMeldekort> meldekortene,
+                                              String sakStatus,
+                                              String saksnummer,
+                                              YtelseStatus tilstand,
+                                              YtelseType type,
+                                              String vedtakStatus,
+                                              Beløp vedtaksDagsats,
                                               LocalDate vedtaksPeriodeFom,
                                               LocalDate vedtaksPeriodeTom,
-                                              Beløp vedtaksDagsats) {
+                                              LocalDate vedtattDato) {
 }
