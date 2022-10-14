@@ -34,7 +34,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <fpsoknad-felles.version>0.8.14</fpsoknad-felles.version>
-        <felles.version>4.1.39</felles.version>
+        <felles.version>4.2.5</felles.version>
         <token-validation-version>2.1.2</token-validation-version>
         <boot-conditionals.version>3.1.0</boot-conditionals.version>
         <cxf.version>3.5.3</cxf.version>
