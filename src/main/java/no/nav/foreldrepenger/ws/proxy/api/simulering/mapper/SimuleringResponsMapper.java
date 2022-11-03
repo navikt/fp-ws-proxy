@@ -4,10 +4,10 @@ import static no.nav.foreldrepenger.common.util.StreamUtil.safeStream;
 
 import java.util.List;
 
-import no.nav.foreldrepenger.ws.proxy.api.simulering.dto.BeregningDto;
-import no.nav.foreldrepenger.ws.proxy.api.simulering.dto.BeregningStoppnivåDetaljerDto;
-import no.nav.foreldrepenger.ws.proxy.api.simulering.dto.BeregningStoppnivåDto;
-import no.nav.foreldrepenger.ws.proxy.api.simulering.dto.BeregningsPeriodeDto;
+import no.nav.foreldrepenger.kontrakter.simulering.respons.BeregningDto;
+import no.nav.foreldrepenger.kontrakter.simulering.respons.BeregningStoppnivåDetaljerDto;
+import no.nav.foreldrepenger.kontrakter.simulering.respons.BeregningStoppnivåDto;
+import no.nav.foreldrepenger.kontrakter.simulering.respons.BeregningsPeriodeDto;
 import no.nav.system.os.entiteter.beregningskjema.BeregningStoppnivaa;
 import no.nav.system.os.entiteter.beregningskjema.BeregningStoppnivaaDetaljer;
 import no.nav.system.os.entiteter.beregningskjema.BeregningsPeriode;
@@ -20,22 +20,29 @@ public class SimuleringResponsMapper {
 
     public static List<BeregningDto> tilBeregningDtoListe(List<SimulerBeregningResponse> simulerBeregningResponse) {
         return safeStream(simulerBeregningResponse)
+            .filter(response -> !erSimuleringNull(response))
             .map(SimuleringResponsMapper::tilBeregningDto)
             .toList();
     }
 
-    private static BeregningDto tilBeregningDto(SimulerBeregningResponse simulerBeregningResponse) {
+    private static boolean erSimuleringNull(SimulerBeregningResponse simulerBeregningResponse) {
         var response = simulerBeregningResponse.getResponse();
         if (response == null || response.getSimulering() == null) {
-            return new BeregningDto();
+            return true;
         }
-        var simulering = response.getSimulering();
-        return new BeregningDto(simulering.getGjelderId(),
-            simulering.getGjelderNavn(),
-            simulering.getDatoBeregnet(),
-            simulering.getKodeFaggruppe(),
-            simulering.getBelop(),
-            tilBeregningPeriodeDto(simulering.getBeregningsPeriode()));
+        return false;
+    }
+
+    private static BeregningDto tilBeregningDto(SimulerBeregningResponse simulerBeregningResponse) {
+        var simulering = simulerBeregningResponse.getResponse().getSimulering();
+        return new BeregningDto.Builder()
+            .gjelderId(simulering.getGjelderId())
+            .gjelderNavn(simulering.getGjelderNavn())
+            .datoBeregnet(simulering.getDatoBeregnet())
+            .kodeFaggruppe(simulering.getKodeFaggruppe())
+            .belop(simulering.getBelop())
+            .beregningsPeriode(tilBeregningPeriodeDto(simulering.getBeregningsPeriode()))
+            .build();
     }
 
     private static List<BeregningsPeriodeDto> tilBeregningPeriodeDto(List<BeregningsPeriode> beregningsPerioder) {
@@ -58,20 +65,20 @@ public class SimuleringResponsMapper {
     }
 
     private static BeregningStoppnivåDto tilBeregningStoppNivåDto(BeregningStoppnivaa stoppnivå) {
-        return new BeregningStoppnivåDto(
-            stoppnivå.getKodeFagomraade(),
-            stoppnivå.getStoppNivaaId(),
-            stoppnivå.getBehandlendeEnhet(),
-            stoppnivå.getOppdragsId(),
-            stoppnivå.getFagsystemId(),
-            stoppnivå.getKid(),
-            stoppnivå.getUtbetalesTilId(),
-            stoppnivå.getUtbetalesTilNavn(),
-            stoppnivå.getBilagsType(),
-            stoppnivå.getForfall(),
-            stoppnivå.isFeilkonto(),
-            tilBeregningStoppNivåDetaljerDto(stoppnivå.getBeregningStoppnivaaDetaljer()));
-
+        return new BeregningStoppnivåDto.Builder()
+            .kodeFagomraade(stoppnivå.getKodeFagomraade())
+            .stoppNivaaId(stoppnivå.getStoppNivaaId())
+            .behandlendeEnhet(stoppnivå.getBehandlendeEnhet())
+            .oppdragsId(stoppnivå.getOppdragsId())
+            .fagsystemId(stoppnivå.getFagsystemId())
+            .kid(stoppnivå.getKid())
+            .utbetalesTilId(stoppnivå.getUtbetalesTilId())
+            .utbetalesTilNavn(stoppnivå.getUtbetalesTilNavn())
+            .bilagsType(stoppnivå.getBilagsType())
+            .forfall(stoppnivå.getForfall())
+            .feilkonto(stoppnivå.isFeilkonto())
+            .beregningStoppnivaaDetaljer(tilBeregningStoppNivåDetaljerDto(stoppnivå.getBeregningStoppnivaaDetaljer()))
+            .build();
     }
 
     private static List<BeregningStoppnivåDetaljerDto> tilBeregningStoppNivåDetaljerDto(List<BeregningStoppnivaaDetaljer> beregningStoppnivaaDetaljer) {
@@ -81,31 +88,31 @@ public class SimuleringResponsMapper {
     }
 
     private static BeregningStoppnivåDetaljerDto tilBeregningStoppNivåDto(BeregningStoppnivaaDetaljer detaljer) {
-        return new BeregningStoppnivåDetaljerDto(
-            detaljer.getFaktiskFom(),
-            detaljer.getFaktiskTom(),
-            detaljer.getKontoStreng(),
-            detaljer.getBehandlingskode(),
-            detaljer.getBelop(),
-            detaljer.getTrekkVedtakId(),
-            detaljer.getStonadId(),
-            detaljer.getKorrigering(),
-            detaljer.isTilbakeforing(),
-            detaljer.getLinjeId(),
-            detaljer.getSats(),
-            detaljer.getTypeSats(),
-            detaljer.getAntallSats(),
-            detaljer.getSaksbehId(),
-            detaljer.getUforeGrad(),
-            detaljer.getKravhaverId(),
-            detaljer.getDelytelseId(),
-            detaljer.getBostedsenhet(),
-            detaljer.getSkykldnerId(),
-            detaljer.getKlassekode(),
-            detaljer.getKlasseKodeBeskrivelse(),
-            detaljer.getTypeKlasse(),
-            detaljer.getTypeKlasseBeskrivelse(),
-            detaljer.getRefunderesOrgNr());
-
+        return new BeregningStoppnivåDetaljerDto.Builder()
+            .faktiskFom(detaljer.getFaktiskFom())
+            .faktiskTom(detaljer.getFaktiskTom())
+            .kontoStreng(detaljer.getKontoStreng())
+            .behandlingskode(detaljer.getBehandlingskode())
+            .belop(detaljer.getBelop())
+            .trekkVedtakId(detaljer.getTrekkVedtakId())
+            .stonadId(detaljer.getStonadId())
+            .korrigering(detaljer.getKorrigering())
+            .tilbakeforing(detaljer.isTilbakeforing())
+            .linjeId(detaljer.getLinjeId())
+            .sats(detaljer.getSats())
+            .typeSats(detaljer.getTypeSats())
+            .antallSats(detaljer.getAntallSats())
+            .saksbehId(detaljer.getSaksbehId())
+            .uforeGrad(detaljer.getUforeGrad())
+            .kravhaverId(detaljer.getKravhaverId())
+            .delytelseId(detaljer.getDelytelseId())
+            .bostedsenhet(detaljer.getBostedsenhet())
+            .skykldnerId(detaljer.getSkykldnerId())
+            .klassekode(detaljer.getKlassekode())
+            .klasseKodeBeskrivelse(detaljer.getKlasseKodeBeskrivelse())
+            .typeKlasse(detaljer.getTypeKlasse())
+            .klasseKodeBeskrivelse(detaljer.getTypeKlasseBeskrivelse())
+            .refunderesOrgNr(detaljer.getRefunderesOrgNr())
+            .build();
     }
 }

@@ -6,13 +6,6 @@ metadata:
   labels:
     team: teamforeldrepenger
 spec:
-  accessPolicy:
-    inbound:
-      rules:
-        - application: fpsoknad-mottak
-        - application: fptilbake
-        - application: fpoppdrag
-  #        - application: gosys # TODO
   image: {{image}}
   port: 8080
   replicas:
@@ -21,7 +14,6 @@ spec:
   liveness:
     path: /api/actuator/health/liveness
     initialDelay: 8
-    failureThreshold: 5
   readiness:
     path: /api/actuator/health/readiness
     initialDelay: 8

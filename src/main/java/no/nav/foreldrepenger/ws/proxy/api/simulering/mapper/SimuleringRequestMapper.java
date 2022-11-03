@@ -3,14 +3,19 @@ package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import no.nav.foreldrepenger.ws.proxy.api.simulering.dto.Fagområde;
-import no.nav.foreldrepenger.ws.proxy.api.simulering.dto.YtelseType;
+import no.nav.foreldrepenger.ws.proxy.api.simulering.Fagområde;
+import no.nav.foreldrepenger.ws.proxy.api.simulering.YtelseType;
 import no.nav.system.os.entiteter.oppdragskjema.Ompostering;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpservicegrensesnitt.ObjectFactory;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpservicegrensesnitt.SimulerBeregningRequest;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.Oppdrag;
 
+/**
+ * Matcher mapper i fpoppdrag som mapper List<String> oppdragXmlListe til List<SimulerBeregningRequest>
+ */
 public class SimuleringRequestMapper {
+
+    private static final String KODE_ENDRING = "ENDR";
 
     private SimuleringRequestMapper() {
     }
@@ -59,7 +64,7 @@ public class SimuleringRequestMapper {
         Oppdrag oppdrag = request.getRequest().getOppdrag();
         Ompostering ompostering = OppdragMapper.mapOmpostering(oppdrag.getSaksbehId(), "N");
         oppdrag.setOmpostering(ompostering);
-        oppdrag.setKodeEndring("ENDR");
+        oppdrag.setKodeEndring(KODE_ENDRING);
         return request;
     }
 

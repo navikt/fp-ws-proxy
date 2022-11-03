@@ -87,7 +87,7 @@ public class OppdragMapper {
         Ompostering op = new Ompostering();
         op.setOmPostering(ompostering);
         op.setSaksbehId(saksbehId);
-        op.setTidspktReg(tilSpesialkodetDatoOgKlokkeslett(LocalDateTime.now()));
+        op.setTidspktReg(ØkonomistøtteUtils.tilSpesialkodetDatoOgKlokkeslett(LocalDateTime.now()));
         return op;
     }
 
@@ -97,12 +97,6 @@ public class OppdragMapper {
             op.setDatoOmposterFom(convDate(ompostering116.getDatoOmposterFom()));
         }
         return op;
-    }
-
-    private static String tilSpesialkodetDatoOgKlokkeslett(LocalDateTime dt) {
-        String pattern = "yyyy-MM-dd-HH.mm.ss.SSS";
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(pattern);
-        return dt.format(dtf);
     }
 
     private static List<Enhet> mapOppdragsEnhet120(List<OppdragsEnhet120> oppdragsEnhet120Liste) {
