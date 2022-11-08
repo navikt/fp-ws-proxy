@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.ØkonomistøtteUtils.tilSpesialkodetDatoOgKlokkeslett;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ public class ØkonomistøtteUtilsTest {
         // Arrange
         var time = LocalDateTime.of(2018, 11, 8, 12, 30, 30, 123300000);
         // Act
-        var datoOgKlokkeslett = ØkonomistøtteUtils.tilSpesialkodetDatoOgKlokkeslett(time);
+        var datoOgKlokkeslett = tilSpesialkodetDatoOgKlokkeslett(time);
         // Assert
         assertThat(datoOgKlokkeslett).isNotEmpty();
         assertThat(datoOgKlokkeslett).isEqualTo(EXPECTED_DATETIME_STR);
@@ -26,7 +27,7 @@ public class ØkonomistøtteUtilsTest {
         // Arrange
         var time = LocalDateTime.of(2018, 11, 8, 12, 30, 30, 123700000);
         // Act
-        var datoOgKlokkeslett = ØkonomistøtteUtils.tilSpesialkodetDatoOgKlokkeslett(time);
+        var datoOgKlokkeslett = tilSpesialkodetDatoOgKlokkeslett(time);
         // Assert
         assertThat(datoOgKlokkeslett).isNotEmpty();
 

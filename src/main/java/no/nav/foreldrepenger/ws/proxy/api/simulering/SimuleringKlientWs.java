@@ -22,7 +22,6 @@ class SimuleringKlientWs {
     }
 
     public List<SimulerBeregningResponse> simulerBeregningene(List<SimulerBeregningRequest> request) {
-        SECURE_LOG.info("Simulerer {} oppdrag", request.size());
         return request.stream()
             .map(this::simulerBeregning)
             .toList();

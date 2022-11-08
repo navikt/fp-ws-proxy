@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.ØkonomistøtteUtils.tilSpesialkodetDatoOgKlokkeslett;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -87,7 +89,7 @@ public class OppdragMapper {
         Ompostering op = new Ompostering();
         op.setOmPostering(ompostering);
         op.setSaksbehId(saksbehId);
-        op.setTidspktReg(ØkonomistøtteUtils.tilSpesialkodetDatoOgKlokkeslett(LocalDateTime.now()));
+        op.setTidspktReg(tilSpesialkodetDatoOgKlokkeslett(LocalDateTime.now()));
         return op;
     }
 
