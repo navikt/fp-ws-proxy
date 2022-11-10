@@ -50,7 +50,7 @@ public class SimuleringController {
             oppdragXmlListe.size(),
             totalStørrelseUt);
         var simulerBeregningResponse = simuleringKlientWs.simulerBeregningene(simuleringWSRequest);
-        LOG.info("Simulering{} svarmeldinger mottatt. behandlingID={} tidsforbruk={} ms",
+        LOG.info("Simulering {} svarmeldinger mottatt. behandlingID={} tidsforbruk={} ms",
             tekstMedUtenInntrekk,
             behandlingId,
             System.currentTimeMillis() - t0);

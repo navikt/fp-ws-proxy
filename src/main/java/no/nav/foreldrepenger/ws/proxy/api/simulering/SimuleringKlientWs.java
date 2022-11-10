@@ -31,7 +31,7 @@ class SimuleringKlientWs {
         try {
             return klient.simulerBeregning(request);
         } catch (Exception e) {
-            SECURE_LOG.info("Simulering feilet for request={}", anonymiser(request));
+            SECURE_LOG.info("Simulering feilet for request={}", anonymiser(request), e);
             return null; // TODO: Hvordan reagere på feilet simulering? Returnere null?
         }
     }
