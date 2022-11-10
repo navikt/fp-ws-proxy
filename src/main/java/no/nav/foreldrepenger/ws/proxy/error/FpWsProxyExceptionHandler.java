@@ -43,7 +43,7 @@ public class FpWsProxyExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler
     public ResponseEntity<Object> handleIntegrasjonException(IntegrasjonException e, WebRequest req) {
-        return logAndRespond(UNPROCESSABLE_ENTITY, e, req);
+        return logAndRespond(INTERNAL_SERVER_ERROR, e, req);
     }
 
     @ExceptionHandler

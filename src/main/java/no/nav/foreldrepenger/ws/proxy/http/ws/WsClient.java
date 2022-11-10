@@ -43,7 +43,9 @@ public class WsClient<T> {
             var loggingOutInterceptor = new LoggingOutInterceptor();
             loggingOutInterceptor.setPrettyLogging(true);
             client.getInInterceptors().add(loggingInInterceptor);
+            client.getInFaultInterceptors().add(loggingInInterceptor);
             client.getOutInterceptors().add(loggingOutInterceptor);
+            client.getOutFaultInterceptors().add(loggingInInterceptor);
         }
         client.getOutInterceptors().add(new CallIdHeaderInterceptor());
         return port;

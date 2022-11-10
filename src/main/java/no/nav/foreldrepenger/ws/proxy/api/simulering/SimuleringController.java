@@ -41,7 +41,7 @@ public class SimuleringController {
         SECURE_LOG.info("Utfører simulering {} av følgende oppdrag {}", tekstMedUtenInntrekk, oppdragskontrollDto);
         long t0 = System.currentTimeMillis();
         var behandlingId = oppdragskontrollDto.behandlingId();
-        var oppdragXmlListe = new ØkonomioppdragMapper().generateOppdragXML(oppdragskontrollDto);
+        var oppdragXmlListe = new ØkonomioppdragMapper().generateOppdragXML(oppdragskontrollDto); // TODO: Fjern denne og map direkte til SimulerBeregningRequest
         var totalStørrelseUt = størrelse(oppdragXmlListe);
         var simuleringWSRequest = tilSimulerBeregingsRequester(oppdragXmlListe, ytelseType, utenInntrekk);
         LOG.info("Starter simulering {}. behandlingID={} oppdragantall={} totalstørrelseUt={}",
