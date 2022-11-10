@@ -12,12 +12,14 @@ import no.nav.system.os.eksponering.simulerfpservicewsbinding.SimulerFpService;
 @Configuration
 public class SimuleringConfiguration extends WsClient<SimulerFpService> {
 
+    private static final String WSDL = "wsdl/no/nav/system/os/eksponering/simulerfpservicewsbinding.wsdl";
+
     public SimuleringConfiguration(EndpointSTSClientConfig endpointStsClientConfig, Environment env) {
         super(endpointStsClientConfig, env);
     }
 
     @Bean
     public SimulerFpService simuleringKlient(@Value("${oppdrag.service.url}") String serviceUrl) {
-        return createPortForSystemUser(serviceUrl, SimulerFpService.class);
+        return createPortForSystemUser(serviceUrl, WSDL, SimulerFpService.class);
     }
 }

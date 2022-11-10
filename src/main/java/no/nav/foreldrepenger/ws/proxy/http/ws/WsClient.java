@@ -29,11 +29,24 @@ public class WsClient<T> {
         return port;
     }
 
-    @SuppressWarnings("unchecked")
+    public T createPortForSystemUser(String serviceUrl, String wsdl, Class<?> portType) {
+        T port = createAndConfigurePort(serviceUrl, wsdl, portType);
+        endpointStsClientConfig.configureRequestSamlToken(port);
+        return port;
+    }
+
     private T createAndConfigurePort(String serviceUrl, Class<?> portType) {
+        return createAndConfigurePort(serviceUrl, null, portType);
+    }
+
+    @SuppressWarnings("unchecked")
+    private T createAndConfigurePort(String serviceUrl, String wsdl, Class<?> portType) {
         var jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
         jaxWsProxyFactoryBean.setServiceClass(portType);
         jaxWsProxyFactoryBean.setAddress(Objects.requireNonNull(serviceUrl));
+        if (wsdl != null) {
+            jaxWsProxyFactoryBean.setWsdlURL(wsdl);
+        }
         T port = (T) jaxWsProxyFactoryBean.create();
         Client client = ClientProxy.getClient(port);
 
