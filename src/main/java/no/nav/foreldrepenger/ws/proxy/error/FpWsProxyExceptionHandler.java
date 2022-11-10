@@ -93,7 +93,7 @@ public class FpWsProxyExceptionHandler extends ResponseEntityExceptionHandler {
         if (tokenUtil.erAutentisert() && !tokenUtil.erUtløpt()) {
             LOG.warn("[{}] {} {}", path, status, apiError.messages(), e);
         } else {
-            LOG.debug("[{}] {} {}", path, status, apiError.messages(),e);
+            LOG.warn("[{}] {} {}", path, status, apiError.messages(),e);
         }
         return handleExceptionInternal(e, apiError, new HttpHeaders(), status, req);
     }

@@ -54,6 +54,7 @@
         <logger name="no.nav.foreldrepenger" level="trace" />
         <logger name="no.nav.security" level="info" />
         <logger name="org.springframework.web" level="info" />
+        <logger name="org.springframework.web.method.HandlerMethod" level="trace" />
         <logger name="org.springframework.web.server.adapter.HttpWebHandlerAdapter" level="info" />
         <logger name="org.apache.cxf.common.logging" level="info" />
         <logger name="org.apache.cxf.ext.logging" level="info" />
