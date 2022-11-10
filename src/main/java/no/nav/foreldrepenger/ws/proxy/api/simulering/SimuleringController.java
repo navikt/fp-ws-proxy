@@ -35,7 +35,7 @@ public class SimuleringController {
         this.simuleringKlientWs = simuleringKlientWs;
     }
 
-    @PostMapping
+    @PostMapping("/start")
     public List<BeregningDto> simulerBeregning(@RequestBody @Valid OppdragskontrollDto oppdragskontrollDto,
                                                @RequestParam("ytelse_type") YtelseType ytelseType,
                                                @RequestParam("uten_inntrekk") @DefaultValue("false") boolean utenInntrekk) {
