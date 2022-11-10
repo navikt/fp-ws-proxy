@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import no.nav.foreldrepenger.ws.proxy.api.simulering.dto.Fagområde;
 import no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.SimuleringResponsMapper;
 import no.nav.system.os.eksponering.simulerfpservicewsbinding.SimulerFpService;
 import no.nav.system.os.entiteter.beregningskjema.Beregning;

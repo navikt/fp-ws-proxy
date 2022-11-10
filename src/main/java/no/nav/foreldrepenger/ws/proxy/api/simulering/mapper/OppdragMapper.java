@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.ØkonomistøtteUtils.tilSpesialkodetDatoOgKlokkeslett;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -97,12 +99,6 @@ public class OppdragMapper {
             op.setDatoOmposterFom(convDate(ompostering116.getDatoOmposterFom()));
         }
         return op;
-    }
-
-    private static String tilSpesialkodetDatoOgKlokkeslett(LocalDateTime dt) {
-        String pattern = "yyyy-MM-dd-HH.mm.ss.SSS";
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(pattern);
-        return dt.format(dtf);
     }
 
     private static List<Enhet> mapOppdragsEnhet120(List<OppdragsEnhet120> oppdragsEnhet120Liste) {

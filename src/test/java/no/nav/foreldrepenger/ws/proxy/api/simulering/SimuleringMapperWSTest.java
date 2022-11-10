@@ -1,25 +1,32 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering;
 
 import static no.nav.foreldrepenger.common.util.ResourceHandleUtil.copyToString;
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.dto.YtelseType.FP;
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.YtelseType.FP;
 import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.SimuleringRequestMapper.tilSimulerBeregingsRequester;
-import static no.nav.foreldrepenger.xmlutils.DateUtil.convertToXMLGregorianCalendar;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
 import no.nav.system.os.entiteter.oppdragskjema.Attestant;
-import no.nav.system.os.entiteter.oppdragskjema.Ompostering;
 import no.nav.system.os.entiteter.oppdragskjema.Oppdragslinje;
 import no.nav.system.os.entiteter.typer.simpletypes.FradragTillegg;
-import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.Oppdrag;
+import no.nav.vedtak.exception.TekniskException;
 
 class SimuleringMapperWSTest {
+
+    private static final Long BEHANDLING_ID_1 = 42345L;
+
+    @Test
+    void test_skalKasteFeilVedUkjentEllerUgyldigXml() {
+        assertThatThrownBy(() -> tilSimulerBeregingsRequester(Collections.singletonList("abcd"), null, false))
+            .isInstanceOf(TekniskException.class)
+            .hasMessageContaining("FPO-832562");
+    }
 
     @Test
     void verifiserAtUnmarshallingAvXMLStrengIkkeMinsterNoeData() {

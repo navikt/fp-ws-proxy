@@ -29,7 +29,6 @@ class SimuleringKlientWs {
 
     public SimulerBeregningResponse simulerBeregning(SimulerBeregningRequest request) {
         try {
-            SECURE_LOG.info("Simulerer ");
             return klient.simulerBeregning(request);
         } catch (Exception e) {
             SECURE_LOG.info("Simulering feilet for request={}", anonymiser(request));

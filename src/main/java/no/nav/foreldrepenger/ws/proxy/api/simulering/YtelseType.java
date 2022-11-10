@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.ws.proxy.api.simulering.dto;
+package no.nav.foreldrepenger.ws.proxy.api.simulering;
 
 public enum YtelseType {
     ES,
