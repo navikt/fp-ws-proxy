@@ -6,8 +6,6 @@ import static org.apache.cxf.rt.security.SecurityConstants.USERNAME;
 import java.net.URI;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
 import org.apache.cxf.Bus;
 import org.apache.cxf.ext.logging.LoggingInInterceptor;
 import org.apache.cxf.ext.logging.LoggingOutInterceptor;
@@ -35,9 +33,6 @@ public class STSWSClientConfig {
     @Bean
     public STSClient configureSTSClient(Bus bus) {
         var sts = new STSClient(bus);
-        sts.setWsdlLocation("wsdl/ws-trust-1.4-service.wsdl");
-        sts.setServiceQName(new QName("http://docs.oasis-open.org/ws-sx/ws-trust/200512/wsdl", "SecurityTokenServiceProvider"));
-        sts.setEndpointQName(new QName("http://docs.oasis-open.org/ws-sx/ws-trust/200512/wsdl", "SecurityTokenServiceSOAP"));
         sts.setEnableAppliesTo(false);
         sts.setAllowRenewing(false);
         sts.setLocation(url.toString());

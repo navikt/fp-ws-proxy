@@ -31,7 +31,7 @@ public class EndpointSTSClientConfig {
     public <T> T configureRequestSamlToken(T port) {
         var client = ClientProxy.getClient(port);
         client.getRequestContext().put(STS_CLIENT, stsClient);
-//        client.getRequestContext().put(CACHE_ISSUED_TOKEN_IN_ENDPOINT, true);
+        // client.getRequestContext().put(CACHE_ISSUED_TOKEN_IN_ENDPOINT, true);
         setEndpointPolicyReference(client, STS_REQUEST_SAML_POLICY);
         return port;
     }
