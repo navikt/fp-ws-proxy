@@ -52,11 +52,17 @@ class SimuleringKlientWs {
             .toList();
     }
 
+    /**
+     * Simulerer oppdrag mot oppdragssystemet (OS). Krever gyldig SAML token.
+     * Og for authorisering så må service brukeren være lagt inn i whitelist
+     * @param request
+     * @return
+     */
     public SimulerBeregningResponse simulerBeregning(SimulerBeregningRequest request) {
         try {
             var respons = klient.simulerBeregning(request);
             XmlStringFieldFikser.stripTrailingSpacesFromStrings(respons);
-            return klient.simulerBeregning(request);
+            return respons;
         } catch (SimulerBeregningFeilUnderBehandling e) {
             SECURE_LOG.info("Simulering feilet for request={}", anonymiser(request), e);
             FeilUnderBehandling fault = e.getFaultInfo();
