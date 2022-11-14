@@ -17,7 +17,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.3</version>
+        <version>2.7.5</version>
         <relativePath/>
     </parent>
     <properties>
@@ -33,12 +33,17 @@
         <sonar.organization>navikt</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
-        <fp-kontrakter.version>6.1.28</fp-kontrakter.version>
-        <fpsoknad-felles.version>0.8.14</fpsoknad-felles.version>
-        <felles.version>4.1.39</felles.version>
-        <token-validation-version>2.1.2</token-validation-version>
+        <!-- Interne avhengigheter -->
         <boot-conditionals.version>3.1.0</boot-conditionals.version>
-        <cxf.version>3.5.3</cxf.version>
+        <fp-kontrakter.version>6.1.28</fp-kontrakter.version>
+        <fpsoknad-felles.version>0.8.32</fpsoknad-felles.version>
+        <fp-felles.version>4.2.8</fp-felles.version>
+        <tjenestespesifikasjon.version>2606.1f6354e</tjenestespesifikasjon.version>
+        <legacy-avhengigheter.version>2.0_20190412163011_bb51d0e</legacy-avhengigheter.version>
+
+        <!-- Eksterne avhengigheter -->
+        <token-validation-version>2.1.6</token-validation-version>
+        <cxf.version>3.5.4</cxf.version>
         <nimbus-jose-jwt.version>8.23</nimbus-jose-jwt.version>
     </properties>
 
@@ -118,24 +123,24 @@
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>nav-meldekortUtbetalingsgrunnlag-v1-tjenestespesifikasjon</artifactId>
-            <version>1.2021.02.22-10.45-4201aaea72fb</version>
+            <version>${tjenestespesifikasjon.version}</version>
         </dependency>
 
         <!-- SIMULERING -->
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>tilbakekreving-v1-tjenestespesifikasjon</artifactId>
-            <version>1.2021.02.22-10.45-4201aaea72fb</version>
+            <version>${tjenestespesifikasjon.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>nav-system-os-simuler-fp-service-tjenestespesifikasjon</artifactId>
-            <version>2594.7c3ac50 </version>
+            <version>${tjenestespesifikasjon.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
             <artifactId>okonomistotte-v1</artifactId>
-            <version>2.0_20190412163011_bb51d0e</version>
+            <version>${legacy-avhengigheter.version}</version>
             <classifier>jaxb</classifier>
             <scope>compile</scope>
         </dependency>
@@ -152,8 +157,8 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
-            <artifactId>felles-xmlutils</artifactId>
-            <version>${felles.version}</version>
+            <artifactId>felles-feil</artifactId>
+            <version>${fp-felles.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.boot</groupId>

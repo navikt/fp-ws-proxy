@@ -37,7 +37,7 @@ import no.nav.foreldrepenger.kontrakter.simulering.request.Refusjonsinfo156Dto;
 import no.nav.foreldrepenger.kontrakter.simulering.request.SatsDto;
 import no.nav.foreldrepenger.kontrakter.simulering.request.TypeSats;
 import no.nav.foreldrepenger.kontrakter.simulering.request.UtbetalingsgradDto;
-import no.nav.foreldrepenger.xmlutils.DateUtil;
+import no.nav.foreldrepenger.ws.proxy.util.DateUtil;
 
 public class ØkonomioppdragMapperTest {
     private static final String REFUNDERES_ID = "123456789";

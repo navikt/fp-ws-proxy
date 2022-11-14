@@ -33,8 +33,8 @@ import no.nav.foreldrepenger.kontrakter.simulering.request.OppdragskontrollDto;
 import no.nav.foreldrepenger.kontrakter.simulering.request.Oppdragslinje150Dto;
 import no.nav.foreldrepenger.kontrakter.simulering.request.Refusjonsinfo156Dto;
 import no.nav.foreldrepenger.kontrakter.simulering.request.UtbetalingsgradDto;
-import no.nav.foreldrepenger.xmlutils.DateUtil;
-import no.nav.foreldrepenger.xmlutils.JaxbHelper;
+import no.nav.foreldrepenger.ws.proxy.util.DateUtil;
+import no.nav.foreldrepenger.ws.proxy.util.JaxbHelper;
 import no.nav.vedtak.exception.TekniskException;
 
 public class ØkonomioppdragMapper {

@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.ws.proxy.api.arena;
 
 import static no.nav.foreldrepenger.ws.proxy.api.arena.dto.YtelseType.DAGPENGER;
-import static no.nav.foreldrepenger.xmlutils.DateUtil.convertToLocalDate;
-import static no.nav.foreldrepenger.xmlutils.DateUtil.convertToXMLGregorianCalendar;
+import static no.nav.foreldrepenger.ws.proxy.util.DateUtil.convertToLocalDate;
+import static no.nav.foreldrepenger.ws.proxy.util.DateUtil.convertToXMLGregorianCalendar;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;

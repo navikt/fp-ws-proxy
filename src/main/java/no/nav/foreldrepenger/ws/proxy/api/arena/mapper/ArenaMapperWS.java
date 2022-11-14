@@ -17,7 +17,7 @@ import no.nav.foreldrepenger.ws.proxy.api.arena.dto.MeldekortUtbetalingsgrunnlag
 import no.nav.foreldrepenger.ws.proxy.api.arena.dto.MeldekortUtbetalingsgrunnlagSak;
 import no.nav.foreldrepenger.ws.proxy.api.arena.dto.YtelseStatus;
 import no.nav.foreldrepenger.ws.proxy.api.arena.dto.YtelseType;
-import no.nav.foreldrepenger.xmlutils.DateUtil;
+import no.nav.foreldrepenger.ws.proxy.util.DateUtil;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.informasjon.Meldekort;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.informasjon.ObjectFactory;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.informasjon.Sak;
