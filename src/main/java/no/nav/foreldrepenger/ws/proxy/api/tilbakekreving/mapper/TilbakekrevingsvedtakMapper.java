@@ -11,7 +11,7 @@ import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.Periode;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.TilbakekrevingBeløp;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.TilbakekrevingPeriodeDto;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.TilbakekrevingVedtakDto;
-import no.nav.foreldrepenger.xmlutils.DateUtil;
+import no.nav.foreldrepenger.ws.proxy.util.DateUtil;
 import no.nav.tilbakekreving.tilbakekrevingsvedtak.vedtak.v1.TilbakekrevingsbelopDto;
 import no.nav.tilbakekreving.tilbakekrevingsvedtak.vedtak.v1.TilbakekrevingsperiodeDto;
 import no.nav.tilbakekreving.tilbakekrevingsvedtak.vedtak.v1.TilbakekrevingsvedtakDto;

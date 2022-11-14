@@ -24,7 +24,7 @@ import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.Refusjonsinfo15
 import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.TfradragTillegg;
 import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.TkodeArbeidsgiver;
 import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.TkodeStatusLinje;
-import no.nav.foreldrepenger.xmlutils.JaxbHelper;
+import no.nav.foreldrepenger.ws.proxy.util.JaxbHelper;
 import no.nav.system.os.entiteter.oppdragskjema.Attestant;
 import no.nav.system.os.entiteter.oppdragskjema.Enhet;
 import no.nav.system.os.entiteter.oppdragskjema.Grad;
