@@ -18,13 +18,13 @@ jobs:
     uses: navikt/fp-gha-workflows/.github/workflows/build-app-no-db.yml@main
     with:
       sonar-scan: true
-      build-image: ${{ github.ref_name == 'master' }} # default: true
-      push-image: ${{ github.ref_name == 'master' }} # default: false
+      build-image: ${{ github.ref_name == 'main' }} # default: true
+      push-image: ${{ github.ref_name == 'main' }} # default: false
     secrets: inherit
 
   create-issue:
     name: Issues
-    if: github.ref_name == 'master'
+    if: github.ref_name == 'main'
     needs: build-app
     uses: navikt/fp-gha-workflows/.github/workflows/issues.yml@main
     with:
@@ -33,7 +33,7 @@ jobs:
 
   promote:
     name: Deploy til dev-fss
-    if: github.ref_name == 'master'
+    if: github.ref_name == 'main'
     needs: [ build-app, create-issue ]
     uses: navikt/fp-gha-workflows/.github/workflows/promote.yml@main
     with:
