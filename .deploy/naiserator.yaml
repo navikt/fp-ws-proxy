@@ -18,13 +18,13 @@ spec:
     cpuThresholdPercentage: 80
   liveness:
     path: /api/actuator/health/liveness
-    initialDelay: 30
+    initialDelay: 15
     timeout: 5
     periodSeconds: 10
     failureThreshold: 27
   readiness:
     path: /api/actuator/health/readiness
-    initialDelay: 30
+    initialDelay: 15
     timeout: 5
     periodSeconds: 10
     failureThreshold: 27
