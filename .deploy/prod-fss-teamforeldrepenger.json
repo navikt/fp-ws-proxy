@@ -3,5 +3,13 @@
         "https://fp-ws-proxy.intern.nav.no"
     ],
     "minReplicas": "2",
-    "maxReplicas": "3"
+    "maxReplicas": "3",
+    "limits": {
+        "cpu": "3",
+        "mem": "2048Mi"
+    },
+    "requests": {
+        "cpu": "1",
+        "mem": "1024Mi"
+    }
 }

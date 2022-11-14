@@ -8,29 +8,35 @@ metadata:
 spec:
   image: {{image}}
   port: 8080
-  replicas:
-    min: {{minReplicas}}
-    max: {{maxReplicas}}
-  liveness:
-    path: /api/actuator/health/liveness
-    initialDelay: 8
-  readiness:
-    path: /api/actuator/health/readiness
-    initialDelay: 8
-    failureThreshold: 5
-  prometheus:
-    enabled: true
-    path: /api/actuator/prometheus
   ingresses:
   {{#each ingresses as |url|}}
      - {{url}}
   {{/each}}
+  replicas:
+    min: {{minReplicas}}
+    max: {{maxReplicas}}
+    cpuThresholdPercentage: 80
+  liveness:
+    path: /api/actuator/health/liveness
+    initialDelay: 30
+    timeout: 5
+    periodSeconds: 10
+    failureThreshold: 27
+  readiness:
+    path: /api/actuator/health/readiness
+    initialDelay: 30
+    timeout: 5
+    periodSeconds: 10
+    failureThreshold: 27
+  prometheus:
+    enabled: true
+    path: /api/actuator/prometheus
   resources:
     limits:
-      cpu: 1000m
-      memory: 2048Mi
+      cpu: "{{limits.cpu}}"
+      memory: "{{limits.mem}}"
     requests:
-      cpu: 100m
-      memory: 512Mi
+      cpu: "{{requests.cpu}}"
+      memory: "{{requests.mem}}"
   secureLogs:
     enabled: true
