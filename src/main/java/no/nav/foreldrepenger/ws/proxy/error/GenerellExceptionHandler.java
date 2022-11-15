@@ -1,7 +1,10 @@
 package no.nav.foreldrepenger.ws.proxy.error;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
@@ -23,29 +26,54 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import no.nav.foreldrepenger.common.util.TokenUtil;
 import no.nav.security.token.support.core.exceptions.JwtTokenValidatorException;
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException;
-import no.nav.vedtak.exception.IntegrasjonException;
+import no.nav.system.os.eksponering.simulerfpservicewsbinding.SimulerBeregningFeilUnderBehandling;
 
 @ControllerAdvice
-public class FpWsProxyExceptionHandler extends ResponseEntityExceptionHandler {
-    private static final Logger LOG = LoggerFactory.getLogger(FpWsProxyExceptionHandler.class);
+public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(GenerellExceptionHandler.class);
 
-    private final TokenUtil tokenUtil;
-
-    public FpWsProxyExceptionHandler(TokenUtil tokenUtil) {
-        this.tokenUtil = tokenUtil;
+    public GenerellExceptionHandler() {
     }
 
     /**
-     * Handle custom exceptions
+     * Håndtering av ulike custom SOAP exceptions
      */
     @ExceptionHandler
-    public ResponseEntity<Object> handleIntegrasjonException(IntegrasjonException e, WebRequest req) {
-        return logAndRespond(INTERNAL_SERVER_ERROR, e, req);
+    public ResponseEntity<Object> handleOppdragNedetidException(OppdragNedetidException e, WebRequest req) {
+        return logAndRespond(SERVICE_UNAVAILABLE, e, req, e.getMessage());
     }
 
+    @ExceptionHandler
+    public ResponseEntity<Object> handleSimulerBeregningFeilUnderBehandlingException(SimulerBeregningFeilUnderBehandling e, WebRequest req) {
+        return logAndRespond(INTERNAL_SERVER_ERROR, e, req, e.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Object> handleFinnMeldekortUtbetalingsgrunnlagListeSikkerhetsbegrensingException(FinnMeldekortUtbetalingsgrunnlagListeSikkerhetsbegrensingException e, WebRequest req) {
+        return logAndRespond(UNAUTHORIZED, e, req, e.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Object> handleFinnMeldekortUtbetalingsgrunnlagListeUgyldigInputException(FinnMeldekortUtbetalingsgrunnlagListeUgyldigInputException e, WebRequest req) {
+        return logAndRespond(BAD_REQUEST, e, req, e.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Object> handleFinnMeldekortUtbetalingsgrunnlagListeAktoerIkkeFunnetException(FinnMeldekortUtbetalingsgrunnlagListeAktoerIkkeFunnetException e, WebRequest req) {
+        return logAndRespond(NOT_FOUND, e, req, e.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Object> handleUncaughtSoapExceptions(GenerellSoapFaultException e, WebRequest req) {
+        return logAndRespond(INTERNAL_SERVER_ERROR, e, req, e.getMessage());
+    }
+
+
+    /**
+     * Håndtering av ulike custom REST exceptions
+     */
     @ExceptionHandler
     public ResponseEntity<Object> handleJwtUnauthorizedException(JwtTokenUnauthorizedException e, WebRequest req) {
         return logAndRespond(UNAUTHORIZED, e, req);
@@ -57,14 +85,19 @@ public class FpWsProxyExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-
     /**
-     * Handle predefined java exceptions
+     * Håndtering av generelle REST exceptions
      */
-
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
         return logAndRespond(UNPROCESSABLE_ENTITY, e, request, validationErrors(e));
+    }
+
+    private static List<String> validationErrors(MethodArgumentNotValidException e) {
+        return e.getBindingResult().getFieldErrors()
+            .stream()
+            .map(FieldError::getField)
+            .toList();
     }
 
     @ExceptionHandler
@@ -89,24 +122,17 @@ public class FpWsProxyExceptionHandler extends ResponseEntityExceptionHandler {
 
     private ResponseEntity<Object> logAndRespond(HttpStatus status, Exception e, WebRequest req, List<Object> messages) {
         var apiError = new ApiError(status, e, messages);
-        var path = fullPathTilKaltEndepunkt(req);
-        if (tokenUtil.erAutentisert() && !tokenUtil.erUtløpt()) {
-            LOG.warn("[{}] {} {}", path, status, apiError.messages(), e);
-        } else {
-            LOG.warn("[{}] {} {}", path, status, apiError.messages(),e);
-        }
+        logException(status, e, req, apiError);
         return handleExceptionInternal(e, apiError, new HttpHeaders(), status, req);
     }
 
-    private static List<String> validationErrors(MethodArgumentNotValidException e) {
-        return e.getBindingResult().getFieldErrors()
-                .stream()
-                .map(FpWsProxyExceptionHandler::errorMessage)
-                .toList();
-    }
-
-    private static String errorMessage(FieldError error) {
-        return error.getField() + " " + error.getDefaultMessage();
+    private static void logException(HttpStatus status, Exception e, WebRequest req, ApiError apiError) {
+        var path = fullPathTilKaltEndepunkt(req);
+        if (e instanceof OppdragNedetidException) {
+            LOG.info("[{}] {} {}", path, status, apiError.messages(), e);
+        } else {
+            LOG.warn("[{}] {} {}", path, status, apiError.messages(), e);
+        }
     }
 
     private static String fullPathTilKaltEndepunkt(WebRequest req) {
