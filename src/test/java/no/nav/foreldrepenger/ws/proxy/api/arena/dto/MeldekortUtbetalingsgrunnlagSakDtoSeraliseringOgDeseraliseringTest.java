@@ -15,6 +15,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import no.nav.foreldrepenger.kontrakter.arena.respons.BeløpDto;
+import no.nav.foreldrepenger.kontrakter.arena.respons.FagsystemDto;
+import no.nav.foreldrepenger.kontrakter.arena.respons.MeldekortUtbetalingsgrunnlagMeldekortDto;
+import no.nav.foreldrepenger.kontrakter.arena.respons.MeldekortUtbetalingsgrunnlagSakDto;
+import no.nav.foreldrepenger.kontrakter.arena.respons.YtelseStatusDto;
+import no.nav.foreldrepenger.kontrakter.arena.respons.YtelseTypeDto;
 import no.nav.foreldrepenger.ws.proxy.config.JacksonConfiguration;
 
 /**
@@ -30,7 +36,7 @@ class MeldekortUtbetalingsgrunnlagSakDtoSeraliseringOgDeseraliseringTest {
     @Test
     void konsistenstestForÅSjekkeAtDeseraliseringFungereUavhengigAvSeralisering() throws JsonProcessingException {
         var seralisertStreng = hardkodetSeralisertStreng();
-        var testA = MAPPER.readValue(seralisertStreng, MeldekortUtbetalingsgrunnlagSak.class);
+        var testA = MAPPER.readValue(seralisertStreng, MeldekortUtbetalingsgrunnlagSakDto.class);
         assertThat(testA).isEqualTo(getMeldekortUtbetalingsgrunnlagSakDto());
     }
 
@@ -52,7 +58,7 @@ class MeldekortUtbetalingsgrunnlagSakDtoSeraliseringOgDeseraliseringTest {
                         "dagsats": 1,
                         "meldekortFom": "2022-08-24",
                         "meldekortTom": "2022-08-29",
-                        "utbetalingsgrad": 10
+                        "utbetalingsgrad": 100
                     }
                 ],
                 "sakStatus": "AKTIV",
@@ -69,27 +75,30 @@ class MeldekortUtbetalingsgrunnlagSakDtoSeraliseringOgDeseraliseringTest {
     }
 
 
-    static MeldekortUtbetalingsgrunnlagSak getMeldekortUtbetalingsgrunnlagSakDto() {
-        return new MeldekortUtbetalingsgrunnlagSak(
-            Fagsystem.ARENA,
-            LocalDate.of(2022, 8, 24),
-            List.of(getMeldekortUtbetalingsgrunnlagMeldekortDto()),
-            "AKTIV",
-            "1234567890",
-            YtelseStatus.LØPENDE,
-            YtelseType.DAGPENGER,
-            "IVERK",
-            new Beløp(BigDecimal.valueOf(809.0)),
-            LocalDate.of(2022, 12, 27),
-            LocalDate.of(2023, 01, 6),
-            LocalDate.of(2022, 8, 24));
+    static MeldekortUtbetalingsgrunnlagSakDto getMeldekortUtbetalingsgrunnlagSakDto() {
+        return new MeldekortUtbetalingsgrunnlagSakDto.Builder()
+            .kilde(FagsystemDto.ARENA)
+            .kravMottattDato(LocalDate.of(2022, 8, 24))
+            .meldekortene(List.of(getMeldekortUtbetalingsgrunnlagMeldekortDto()))
+            .sakStatus("AKTIV")
+            .saksnummer("1234567890")
+            .tilstand(YtelseStatusDto.LOP)
+            .type(YtelseTypeDto.DAG)
+            .vedtakStatus("IVERK")
+            .vedtaksDagsats(new BeløpDto(BigDecimal.valueOf(809.0)))
+            .vedtaksPeriodeFom(LocalDate.of(2022, 12, 27))
+            .vedtaksPeriodeTom(LocalDate.of(2023, 1, 6))
+            .vedtattDato(LocalDate.of(2022, 8, 24))
+            .build();
     }
 
-    private static MeldekortUtbetalingsgrunnlagMeldekort getMeldekortUtbetalingsgrunnlagMeldekortDto() {
-        return new MeldekortUtbetalingsgrunnlagMeldekort(
-            BigDecimal.TEN, BigDecimal.ONE,
-            LocalDate.of(2022, 8, 24),
-            LocalDate.of(2022, 8, 29),
-            BigDecimal.TEN);
+    private static MeldekortUtbetalingsgrunnlagMeldekortDto getMeldekortUtbetalingsgrunnlagMeldekortDto() {
+        return new MeldekortUtbetalingsgrunnlagMeldekortDto.Builder()
+            .beløp(BigDecimal.TEN)
+            .dagsats(BigDecimal.ONE)
+            .meldekortFom(LocalDate.of(2022, 8, 24))
+            .meldekortTom(LocalDate.of(2022, 8, 29))
+            .utbetalingsgrad(BigDecimal.valueOf(100))
+            .build();
     }
 }

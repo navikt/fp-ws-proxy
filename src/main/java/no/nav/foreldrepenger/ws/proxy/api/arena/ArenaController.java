@@ -16,8 +16,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import no.nav.foreldrepenger.ws.proxy.api.arena.dto.ArenaRequestDto;
-import no.nav.foreldrepenger.ws.proxy.api.arena.dto.MeldekortUtbetalingsgrunnlagSak;
+import no.nav.foreldrepenger.kontrakter.arena.request.ArenaRequestDto;
+import no.nav.foreldrepenger.kontrakter.arena.respons.MeldekortUtbetalingsgrunnlagSakDto;
 import no.nav.foreldrepenger.ws.proxy.api.arena.mapper.ArenaMapperWS;
 import no.nav.security.token.support.spring.ProtectedRestController;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.FinnMeldekortUtbetalingsgrunnlagListeResponse;
@@ -29,7 +29,6 @@ import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.Finn
 @ProtectedRestController(issuer = STS_RS, value = ARENA_PATH, claimMap = {})
 public class ArenaController {
     private static final Logger LOG = LoggerFactory.getLogger(ArenaController.class);
-    private static final Logger SECURE_LOG = LoggerFactory.getLogger("secureLogger");
     public static final String ARENA_PATH = "/arena";
 
     private final ArenaKlientWs arenaKlientWs;
@@ -39,8 +38,8 @@ public class ArenaController {
     }
 
     @PostMapping
-    public List<MeldekortUtbetalingsgrunnlagSak> sendTilArena(@Valid @RequestBody ArenaRequestDto arenaDto) {
-        SECURE_LOG.info("Sender request {} til arena", arenaDto);
+    public List<MeldekortUtbetalingsgrunnlagSakDto> henterDagpengerOgAAP(@Valid @RequestBody ArenaRequestDto arenaDto) {
+        LOG.info("Henter dagpenger/AAP for {}", arenaDto);
         var arenaWSRequest = tilWSRequest(arenaDto);
 
         var meldekortUtbetalingsgrunnlagListe = Optional.ofNullable(arenaKlientWs.finnMeldekortUtbetalingsgrunnlagListe(arenaWSRequest))
@@ -51,7 +50,7 @@ public class ArenaController {
             .flatMap(Collection::stream)
             .toList();
 
-        SECURE_LOG.info("Mottok følgende respons fra Arena {}", meldekortUtbetalingsgrunnlagListe);
+        LOG.info("Hentet {} meldekort for dagpenger/AAP", meldekortUtbetalingsgrunnlagListe.size());
         return meldekortUtbetalingsgrunnlagListe;
     }
 

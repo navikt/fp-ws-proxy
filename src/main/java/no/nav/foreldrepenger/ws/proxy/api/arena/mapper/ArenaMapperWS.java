@@ -7,16 +7,13 @@ import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import no.nav.foreldrepenger.ws.proxy.api.arena.dto.ArenaRequestDto;
-import no.nav.foreldrepenger.ws.proxy.api.arena.dto.Beløp;
-import no.nav.foreldrepenger.ws.proxy.api.arena.dto.Fagsystem;
-import no.nav.foreldrepenger.ws.proxy.api.arena.dto.MeldekortUtbetalingsgrunnlagMeldekort;
-import no.nav.foreldrepenger.ws.proxy.api.arena.dto.MeldekortUtbetalingsgrunnlagSak;
-import no.nav.foreldrepenger.ws.proxy.api.arena.dto.YtelseStatus;
-import no.nav.foreldrepenger.ws.proxy.api.arena.dto.YtelseType;
+import no.nav.foreldrepenger.kontrakter.arena.request.ArenaRequestDto;
+import no.nav.foreldrepenger.kontrakter.arena.respons.BeløpDto;
+import no.nav.foreldrepenger.kontrakter.arena.respons.FagsystemDto;
+import no.nav.foreldrepenger.kontrakter.arena.respons.MeldekortUtbetalingsgrunnlagMeldekortDto;
+import no.nav.foreldrepenger.kontrakter.arena.respons.MeldekortUtbetalingsgrunnlagSakDto;
+import no.nav.foreldrepenger.kontrakter.arena.respons.YtelseStatusDto;
+import no.nav.foreldrepenger.kontrakter.arena.respons.YtelseTypeDto;
 import no.nav.foreldrepenger.ws.proxy.util.DateUtil;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.informasjon.Meldekort;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.informasjon.ObjectFactory;
@@ -26,9 +23,10 @@ import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.Finn
 
 public class ArenaMapperWS {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ArenaMapperWS.class);
-    private static final ObjectFactory objectFactory = new ObjectFactory(); // TODO: Kan denne være static?
+    private ArenaMapperWS() {
+    }
 
+    private static final ObjectFactory objectFactory = new ObjectFactory();
 
     public static FinnMeldekortUtbetalingsgrunnlagListeRequest tilWSRequest(ArenaRequestDto arenaDto) {
         var request = new FinnMeldekortUtbetalingsgrunnlagListeRequest();
@@ -55,8 +53,8 @@ public class ArenaMapperWS {
         return request;
     }
 
-    public static List<MeldekortUtbetalingsgrunnlagSak> oversettArenaSak(Sak sak) {
-        List<MeldekortUtbetalingsgrunnlagSak> vedtakene = new ArrayList<>();
+    public static List<MeldekortUtbetalingsgrunnlagSakDto> oversettArenaSak(Sak sak) {
+        List<MeldekortUtbetalingsgrunnlagSakDto> vedtakene = new ArrayList<>();
         if (sak.getVedtakListe().isEmpty()) {
             vedtakene.add(oversettArenaUtenVedtak(sak));
         }
@@ -66,15 +64,15 @@ public class ArenaMapperWS {
         return vedtakene;
     }
 
-    private static MeldekortUtbetalingsgrunnlagSak oversettArenaVedtakMeldekort(Sak sak, Vedtak vedtak) {
-        List<MeldekortUtbetalingsgrunnlagMeldekort> meldekortList = new ArrayList<>();
+    private static MeldekortUtbetalingsgrunnlagSakDto oversettArenaVedtakMeldekort(Sak sak, Vedtak vedtak) {
+        List<MeldekortUtbetalingsgrunnlagMeldekortDto> meldekortList = new ArrayList<>();
         for (Meldekort meldekort : vedtak.getMeldekortListe()) {
             meldekortList.add(oversettArenaMeldekort(meldekort));
         }
-        return MeldekortUtbetalingsgrunnlagSak.builder()
+        return new MeldekortUtbetalingsgrunnlagSakDto.Builder()
             .type(oversettType(sak))
             .tilstand(oversettTilstand(sak, vedtak))
-            .kilde(Fagsystem.ARENA)
+            .kilde(FagsystemDto.ARENA)
             .kravMottattDato(oversettDatoNullable(vedtak.getDatoKravMottatt()))
             .saksnummer(sak.getFagsystemSakId())
             .sakStatus(sak.getSaksstatus().getValue())
@@ -82,17 +80,17 @@ public class ArenaMapperWS {
             .vedtattDato(oversettDatoNullable(vedtak.getVedtaksdato()))
             .vedtaksPeriodeFom(oversettDatoNullable(vedtak.getVedtaksperiode().getFom()))
             .vedtaksPeriodeTom(oversettDatoNullable(vedtak.getVedtaksperiode().getTom()))
-            .vedtaksDagsats(new Beløp(BigDecimal.valueOf(vedtak.getDagsats())))
+            .vedtaksDagsats(new BeløpDto(BigDecimal.valueOf(vedtak.getDagsats())))
             .meldekortene(meldekortList)
             .build();
 
     }
 
-    private static MeldekortUtbetalingsgrunnlagSak oversettArenaUtenVedtak(Sak sak) {
-        var sakBuilder = MeldekortUtbetalingsgrunnlagSak.builder()
+    private static MeldekortUtbetalingsgrunnlagSakDto oversettArenaUtenVedtak(Sak sak) {
+        var sakBuilder = new MeldekortUtbetalingsgrunnlagSakDto.Builder()
             .type(oversettType(sak))
             .tilstand(oversettTilstandUtenVedtak(sak))
-            .kilde(Fagsystem.ARENA)
+            .kilde(FagsystemDto.ARENA)
             .saksnummer(sak.getFagsystemSakId())
             .sakStatus(sak.getSaksstatus().getValue())
             .kravMottattDato(null)
@@ -107,31 +105,31 @@ public class ArenaMapperWS {
         return datoXML.toGregorianCalendar().toZonedDateTime().toLocalDate();
     }
 
-    private static YtelseType oversettType(Sak sak) {
-        if (YtelseType.ARBEIDSAVKLARINGSPENGER.getKode().equals(sak.getTema().getValue())) {
-            return YtelseType.ARBEIDSAVKLARINGSPENGER;
-        } else if (YtelseType.DAGPENGER.getKode().equals(sak.getTema().getValue())) {
-            return YtelseType.DAGPENGER;
+    private static YtelseTypeDto oversettType(Sak sak) {
+        if (YtelseTypeDto.AAP.name().equals(sak.getTema().getValue())) {
+            return YtelseTypeDto.AAP;
+        } else if (YtelseTypeDto.DAG.name().equals(sak.getTema().getValue())) {
+            return YtelseTypeDto.DAG;
         } else {
-            return YtelseType.UDEFINERT;
+            return null;
         }
     }
 
-    private static YtelseStatus oversettTilstand(Sak sak, Vedtak vedtak) {
-        YtelseStatus statusVedtak = RelatertYtelseStatusReverse.reverseMap(vedtak.getVedtaksstatus().getValue(), LOG);
-        if (YtelseStatus.UNDER_BEHANDLING.equals(statusVedtak) &&
-            YtelseStatus.AVSLUTTET.equals(RelatertYtelseStatusReverse.reverseMap(sak.getSaksstatus().getValue(), LOG))) {
-            return YtelseStatus.AVSLUTTET;
+    private static YtelseStatusDto oversettTilstand(Sak sak, Vedtak vedtak) {
+        YtelseStatusDto statusVedtak = RelatertYtelseStatusReverse.reverseMap(vedtak.getVedtaksstatus().getValue());
+        if (YtelseStatusDto.UBEH.equals(statusVedtak) &&
+            YtelseStatusDto.AVSLU.equals(RelatertYtelseStatusReverse.reverseMap(sak.getSaksstatus().getValue()))) {
+            return YtelseStatusDto.AVSLU;
         }
         return statusVedtak;
     }
 
-    private static YtelseStatus oversettTilstandUtenVedtak(Sak sak) {
-        return RelatertYtelseStatusReverse.reverseMap(sak.getSaksstatus().getValue(), LOG);
+    private static YtelseStatusDto oversettTilstandUtenVedtak(Sak sak) {
+        return RelatertYtelseStatusReverse.reverseMap(sak.getSaksstatus().getValue());
     }
 
-    private static MeldekortUtbetalingsgrunnlagMeldekort oversettArenaMeldekort(Meldekort meldekort) {
-        return MeldekortUtbetalingsgrunnlagMeldekort.builder()
+    private static MeldekortUtbetalingsgrunnlagMeldekortDto oversettArenaMeldekort(Meldekort meldekort) {
+        return new MeldekortUtbetalingsgrunnlagMeldekortDto.Builder()
             .meldekortFom(oversettDatoNullable(meldekort.getMeldekortperiode().getFom()))
             .meldekortTom(oversettDatoNullable(meldekort.getMeldekortperiode().getTom()))
             .dagsats(BigDecimal.valueOf(meldekort.getDagsats()))
