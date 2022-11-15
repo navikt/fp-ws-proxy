@@ -33,9 +33,9 @@ import no.nav.foreldrepenger.kontrakter.simulering.request.OppdragskontrollDto;
 import no.nav.foreldrepenger.kontrakter.simulering.request.Oppdragslinje150Dto;
 import no.nav.foreldrepenger.kontrakter.simulering.request.Refusjonsinfo156Dto;
 import no.nav.foreldrepenger.kontrakter.simulering.request.UtbetalingsgradDto;
+import no.nav.foreldrepenger.ws.proxy.error.UgyldigInputException;
 import no.nav.foreldrepenger.ws.proxy.util.DateUtil;
 import no.nav.foreldrepenger.ws.proxy.util.JaxbHelper;
-import no.nav.vedtak.exception.TekniskException;
 
 public class ØkonomioppdragMapper {
 
@@ -74,7 +74,7 @@ public class ØkonomioppdragMapper {
             LOG.debug("Oppretter oppdrag XML for behandling: {} og fagsystem: {}", behandlingsId, oppdrag.getOppdrag110().getFagsystemId());
             return JaxbHelper.marshalAndValidateJaxb(OppdragSkjemaConstants.JAXB_CLASS, oppdrag, OppdragSkjemaConstants.XSD_LOCATION);
         } catch (JAXBException | SAXException e) {
-            throw new TekniskException("FP-536167",
+            throw new UgyldigInputException("FP-536167",
                 String.format("Kan ikke konvertere oppdrag med id %s. Problemer ved generering av xml", oppdrag.getOppdrag110().getOppdragsId()),
                 e);
         }

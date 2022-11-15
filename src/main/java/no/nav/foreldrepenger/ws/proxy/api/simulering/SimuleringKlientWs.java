@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 import no.nav.foreldrepenger.ws.proxy.api.simulering.util.XmlStringFieldFikser;
 import no.nav.foreldrepenger.ws.proxy.error.GenerellSoapFaultException;
 import no.nav.foreldrepenger.ws.proxy.error.OppdragNedetidException;
-import no.nav.foreldrepenger.ws.proxy.error.SimulerBeregningFeilUnderBehandlingException;
 import no.nav.system.os.eksponering.simulerfpservicewsbinding.SimulerBeregningFeilUnderBehandling;
 import no.nav.system.os.eksponering.simulerfpservicewsbinding.SimulerFpService;
+import no.nav.system.os.tjenester.simulerfpservice.feil.FeilUnderBehandling;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpservicegrensesnitt.SimulerBeregningRequest;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpservicegrensesnitt.SimulerBeregningResponse;
 
@@ -60,13 +60,20 @@ class SimuleringKlientWs {
             XmlStringFieldFikser.stripTrailingSpacesFromStrings(respons);
             return respons;
         } catch (SimulerBeregningFeilUnderBehandling e) {
-            throw new SimulerBeregningFeilUnderBehandlingException(e);
+            throw new GenerellSoapFaultException(feilUnderBehandlingTilMessage(e.getFaultInfo()), e);
         } catch (WebServiceException e) {
             if (feiletPgaOppdragsystemetUtenforÅpningstid(e)) {
                 throw new OppdragNedetidException(e);
             }
             throw new GenerellSoapFaultException("Simulering feilet. Fikk uventet feil mot oppdragssytemet", e);
         }
+    }
+    private static String feilUnderBehandlingTilMessage(FeilUnderBehandling fault) {
+        if (fault == null) {
+            return "Simulering feilet. Feil under behandling.";
+        }
+        return String.format("Simulering feilet. Mottok feilmelding fra oppdragsystemet: source='%s' type='%s' message='%s' rootcause='%s' timestamp='%s'",
+            fault.getErrorSource(), fault.getErrorType(), fault.getErrorMessage(), fault.getRootCause(), fault.getDateTimeStamp());
     }
 
     private static boolean feiletPgaOppdragsystemetUtenforÅpningstid(WebServiceException e) {

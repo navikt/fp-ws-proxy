@@ -28,7 +28,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import no.nav.security.token.support.core.exceptions.JwtTokenValidatorException;
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException;
-import no.nav.system.os.eksponering.simulerfpservicewsbinding.SimulerBeregningFeilUnderBehandling;
 
 @ControllerAdvice
 public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
@@ -46,27 +45,22 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<Object> handleSimulerBeregningFeilUnderBehandlingException(SimulerBeregningFeilUnderBehandling e, WebRequest req) {
-        return logAndRespond(INTERNAL_SERVER_ERROR, e, req, e.getMessage());
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<Object> handleFinnMeldekortUtbetalingsgrunnlagListeSikkerhetsbegrensingException(FinnMeldekortUtbetalingsgrunnlagListeSikkerhetsbegrensingException e, WebRequest req) {
+    public ResponseEntity<Object> handleSikkerhetsbegrensingException(SikkerhetsbegrensingException e, WebRequest req) {
         return logAndRespond(UNAUTHORIZED, e, req, e.getMessage());
     }
 
     @ExceptionHandler
-    public ResponseEntity<Object> handleFinnMeldekortUtbetalingsgrunnlagListeUgyldigInputException(FinnMeldekortUtbetalingsgrunnlagListeUgyldigInputException e, WebRequest req) {
+    public ResponseEntity<Object> handleUgyldigInputException(UgyldigInputException e, WebRequest req) {
         return logAndRespond(BAD_REQUEST, e, req, e.getMessage());
     }
 
     @ExceptionHandler
-    public ResponseEntity<Object> handleFinnMeldekortUtbetalingsgrunnlagListeAktoerIkkeFunnetException(FinnMeldekortUtbetalingsgrunnlagListeAktoerIkkeFunnetException e, WebRequest req) {
+    public ResponseEntity<Object> handleFinnesIkkeException(FinnesIkkeException e, WebRequest req) {
         return logAndRespond(NOT_FOUND, e, req, e.getMessage());
     }
 
     @ExceptionHandler
-    public ResponseEntity<Object> handleUncaughtSoapExceptions(GenerellSoapFaultException e, WebRequest req) {
+    public ResponseEntity<Object> handleGeneralOrUncaughtSoapExceptions(GenerellSoapFaultException e, WebRequest req) {
         return logAndRespond(INTERNAL_SERVER_ERROR, e, req, e.getMessage());
     }
 

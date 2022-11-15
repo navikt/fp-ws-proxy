@@ -12,10 +12,10 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.ws.proxy.error.UgyldigInputException;
 import no.nav.system.os.entiteter.oppdragskjema.Attestant;
 import no.nav.system.os.entiteter.oppdragskjema.Oppdragslinje;
 import no.nav.system.os.entiteter.typer.simpletypes.FradragTillegg;
-import no.nav.vedtak.exception.TekniskException;
 
 class SimuleringMapperWSTest {
 
@@ -24,7 +24,7 @@ class SimuleringMapperWSTest {
     @Test
     void test_skalKasteFeilVedUkjentEllerUgyldigXml() {
         assertThatThrownBy(() -> tilSimulerBeregingsRequester(Collections.singletonList("abcd"), null, false))
-            .isInstanceOf(TekniskException.class)
+            .isInstanceOf(UgyldigInputException.class)
             .hasMessageContaining("FPO-832562");
     }
 
