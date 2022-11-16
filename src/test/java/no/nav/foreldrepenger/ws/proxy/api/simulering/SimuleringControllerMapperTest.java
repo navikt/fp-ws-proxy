@@ -6,29 +6,16 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.SimuleringResponsMapper;
-import no.nav.system.os.eksponering.simulerfpservicewsbinding.SimulerFpService;
 import no.nav.system.os.entiteter.beregningskjema.Beregning;
 import no.nav.system.os.entiteter.beregningskjema.BeregningStoppnivaa;
 import no.nav.system.os.entiteter.beregningskjema.BeregningStoppnivaaDetaljer;
 import no.nav.system.os.entiteter.beregningskjema.BeregningsPeriode;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpservicegrensesnitt.SimulerBeregningResponse;
 
-class SimuleringControllerTest {
-
-    @Mock
-    private SimulerFpService simulerFpService;
-    private SimuleringController simuleringController;
-
-    @BeforeEach
-    public  void init() {
-        var simuleringKlientWs = new SimuleringKlientWs(simulerFpService);
-        new SimuleringController(simuleringKlientWs);
-    }
+class SimuleringControllerMapperTest {
 
     @Test
     void mapperTilResponsDtoMapperKorrektAntallElementer() {

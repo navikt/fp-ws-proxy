@@ -24,6 +24,7 @@ import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.Refusjonsinfo15
 import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.TfradragTillegg;
 import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.TkodeArbeidsgiver;
 import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.TkodeStatusLinje;
+import no.nav.foreldrepenger.ws.proxy.error.UgyldigInputException;
 import no.nav.foreldrepenger.ws.proxy.util.JaxbHelper;
 import no.nav.system.os.entiteter.oppdragskjema.Attestant;
 import no.nav.system.os.entiteter.oppdragskjema.Enhet;
@@ -36,7 +37,6 @@ import no.nav.system.os.entiteter.typer.simpletypes.KodeStatusLinje;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.ObjectFactory;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.Oppdrag;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.Oppdragslinje;
-import no.nav.vedtak.exception.TekniskException;
 
 public class OppdragMapper {
 
@@ -55,7 +55,7 @@ public class OppdragMapper {
                 OppdragSkjemaConstants.JAXB_CLASS, oppdrag, OppdragSkjemaConstants.XSD_LOCATION); // TODO: Gjøre dette uten JaxbHelper?
             return OppdragMapper.mapTilSimuleringOppdrag(fpOppdrag.getOppdrag110());
         } catch (JAXBException | SAXException | XMLStreamException e) {
-            throw new TekniskException("FPO-832562", "Kunne ikke tolke mottatt oppdrag XML", e);
+            throw new UgyldigInputException("FPO-832562", "Kunne ikke tolke mottatt oppdrag XML", e);
         }
     }
 

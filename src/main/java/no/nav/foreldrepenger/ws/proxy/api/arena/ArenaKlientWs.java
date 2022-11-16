@@ -2,12 +2,12 @@ package no.nav.foreldrepenger.ws.proxy.api.arena;
 
 import javax.xml.ws.soap.SOAPFaultException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 
+import no.nav.foreldrepenger.ws.proxy.error.FinnesIkkeException;
+import no.nav.foreldrepenger.ws.proxy.error.GenerellSoapFaultException;
+import no.nav.foreldrepenger.ws.proxy.error.SikkerhetsbegrensingException;
+import no.nav.foreldrepenger.ws.proxy.error.UgyldigInputException;
 import no.nav.foreldrepenger.ws.proxy.http.PingEndpointAware;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.binding.FinnMeldekortUtbetalingsgrunnlagListeAktoerIkkeFunnet;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.binding.FinnMeldekortUtbetalingsgrunnlagListeSikkerhetsbegrensning;
@@ -25,9 +25,6 @@ import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.Finn
  */
 @Component
 public class ArenaKlientWs implements PingEndpointAware {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ArenaKlientWs.class);
-
     private final MeldekortUtbetalingsgrunnlagV1 klient;
 
     public ArenaKlientWs(MeldekortUtbetalingsgrunnlagV1 klient) {
@@ -37,32 +34,25 @@ public class ArenaKlientWs implements PingEndpointAware {
     public FinnMeldekortUtbetalingsgrunnlagListeResponse finnMeldekortUtbetalingsgrunnlagListe(FinnMeldekortUtbetalingsgrunnlagListeRequest arenaWSRequest) {
         try {
             return klient.finnMeldekortUtbetalingsgrunnlagListe(arenaWSRequest);
-        } catch (SOAPFaultException ex) {
-            throw ex; // TODO: Bare returnere en 500 feil?
-        } catch (FinnMeldekortUtbetalingsgrunnlagListeAktoerIkkeFunnet ex) {
-            throw create(HttpStatus.FORBIDDEN, mapForretningsmessigUnntakTilMessage(ex.getFaultInfo()));
-        } catch (FinnMeldekortUtbetalingsgrunnlagListeSikkerhetsbegrensning ex) {
-            throw create(HttpStatus.BAD_REQUEST, mapForretningsmessigUnntakTilMessage(ex.getFaultInfo()));
-        } catch (FinnMeldekortUtbetalingsgrunnlagListeUgyldigInput ex) {
-            throw create(HttpStatus.NOT_FOUND, mapForretningsmessigUnntakTilMessage(ex.getFaultInfo()));
+        } catch (FinnMeldekortUtbetalingsgrunnlagListeSikkerhetsbegrensning e) {
+            throw new SikkerhetsbegrensingException("MeldekortUtbetalingsgrunnlag (Arena) ikke tilgjengelig (sikkerhetsbegrensning)", mapForretningsmessigUnntakTilMessage(e.getFaultInfo()), e);
+        } catch (FinnMeldekortUtbetalingsgrunnlagListeUgyldigInput e) {
+            throw new UgyldigInputException("MeldekortUtbetalingsgrunnlag (Arena) ugyldig input", mapForretningsmessigUnntakTilMessage(e.getFaultInfo()), e);
+        } catch (FinnMeldekortUtbetalingsgrunnlagListeAktoerIkkeFunnet e) {
+            throw new FinnesIkkeException("MeldekortUtbetalingsgrunnlag (Arena) fant ikke person for oppgitt aktørId", mapForretningsmessigUnntakTilMessage(e.getFaultInfo()), e);
+        } catch (SOAPFaultException e) {
+            throw new GenerellSoapFaultException("SOAP tjenesten [ MeldekortUtbetalingsgrunnlagV1 ] returnerte en SOAP Fault", e);
         }
     }
 
     private static String mapForretningsmessigUnntakTilMessage(ForretningsmessigUnntak forretningsmessigUnntak) {
         if (forretningsmessigUnntak == null) {
-            return null;
+            return " med ingen Faultinfo.";
         }
-
-        var formatFeilmelding = String.format("Feilkilde: %s, feilaarsak: %s, feilmelding: %s",
+        return String.format(" med feilkilde: %s, feilaarsak: %s, feilmelding: %s",
             forretningsmessigUnntak.getFeilkilde(),
             forretningsmessigUnntak.getFeilaarsak(),
             forretningsmessigUnntak.getFeilmelding());
-        LOG.info("Noe gikk galt i kall mot arena {}", formatFeilmelding);
-        return formatFeilmelding;
-    }
-
-    private static HttpClientErrorException create(HttpStatus status, String statustekst) {
-        return HttpClientErrorException.create(status, statustekst, null, null, null);
     }
 
     @Override

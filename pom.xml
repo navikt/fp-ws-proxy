@@ -37,7 +37,6 @@
         <boot-conditionals.version>4.0.4</boot-conditionals.version>
         <fp-kontrakter.version>6.1.28</fp-kontrakter.version>
         <fpsoknad-felles.version>0.8.32</fpsoknad-felles.version>
-        <fp-felles.version>4.2.8</fp-felles.version>
         <tjenestespesifikasjon.version>2606.1f6354e</tjenestespesifikasjon.version>
         <legacy-avhengigheter.version>2.0_20190412163011_bb51d0e</legacy-avhengigheter.version>
 
@@ -154,11 +153,6 @@
             <groupId>no.nav.foreldrepenger</groupId>
             <artifactId>fpsoknad-felles</artifactId>
             <version>${fpsoknad-felles.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.felles</groupId>
-            <artifactId>felles-feil</artifactId>
-            <version>${fp-felles.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.boot</groupId>
