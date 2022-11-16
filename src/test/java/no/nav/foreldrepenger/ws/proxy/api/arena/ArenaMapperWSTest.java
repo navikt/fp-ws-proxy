@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.ws.proxy.api.arena;
 
-import static no.nav.foreldrepenger.ws.proxy.api.arena.dto.YtelseType.DAGPENGER;
+import static no.nav.foreldrepenger.kontrakter.arena.respons.YtelseTypeDto.DAG;
 import static no.nav.foreldrepenger.ws.proxy.util.DateUtil.convertToLocalDate;
 import static no.nav.foreldrepenger.ws.proxy.util.DateUtil.convertToXMLGregorianCalendar;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -9,10 +9,10 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.ws.proxy.api.arena.dto.ArenaRequestDto;
-import no.nav.foreldrepenger.ws.proxy.api.arena.dto.MeldekortUtbetalingsgrunnlagSak;
-import no.nav.foreldrepenger.ws.proxy.api.arena.dto.YtelseStatus;
-import no.nav.foreldrepenger.ws.proxy.api.arena.dto.YtelseType;
+import no.nav.foreldrepenger.kontrakter.arena.request.ArenaRequestDto;
+import no.nav.foreldrepenger.kontrakter.arena.respons.MeldekortUtbetalingsgrunnlagSakDto;
+import no.nav.foreldrepenger.kontrakter.arena.respons.YtelseStatusDto;
+import no.nav.foreldrepenger.kontrakter.arena.respons.YtelseTypeDto;
 import no.nav.foreldrepenger.ws.proxy.api.arena.mapper.ArenaMapperWS;
 import no.nav.foreldrepenger.ws.proxy.api.arena.mapper.RelatertYtelseStatus;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.informasjon.Bruker;
@@ -64,11 +64,11 @@ class ArenaMapperWSTest {
         var fnrFAKE = "123456789";
         sak.setFagsystemSakId(fnrFAKE);
 
-        var ytelseStatus = YtelseStatus.LØPENDE;
+        var ytelseStatus = YtelseStatusDto.LOP;
         var saksstatus = lagSakstatus(ytelseStatus);
         sak.setSaksstatus(saksstatus);
 
-        var ytelsetype = DAGPENGER;
+        var ytelsetype = DAG;
         var tema = lagTemaFraYtelsetype(ytelsetype);
         sak.setTema(tema);
 
@@ -76,30 +76,30 @@ class ArenaMapperWSTest {
         assertThat(meldekortUtbetalingsgrunnlagSak)
             .hasSize(2);
         assertThat(meldekortUtbetalingsgrunnlagSak)
-            .extracting(MeldekortUtbetalingsgrunnlagSak::type)
+            .extracting(MeldekortUtbetalingsgrunnlagSakDto::type)
             .containsOnly(ytelsetype);
         assertThat(meldekortUtbetalingsgrunnlagSak)
-            .extracting(MeldekortUtbetalingsgrunnlagSak::saksnummer)
+            .extracting(MeldekortUtbetalingsgrunnlagSakDto::saksnummer)
             .containsOnly(fnrFAKE);
         assertThat(meldekortUtbetalingsgrunnlagSak)
-            .extracting(MeldekortUtbetalingsgrunnlagSak::sakStatus)
-            .containsOnly(ytelseStatus.getKode());
+            .extracting(MeldekortUtbetalingsgrunnlagSakDto::sakStatus)
+            .containsOnly(ytelseStatus.name());
         assertThat(meldekortUtbetalingsgrunnlagSak)
-            .extracting(MeldekortUtbetalingsgrunnlagSak::vedtakStatus)
+            .extracting(MeldekortUtbetalingsgrunnlagSakDto::vedtakStatus)
             .containsOnly(RelatertYtelseStatus.AVSLU.getKode());
 
         assertThat(meldekortUtbetalingsgrunnlagSak)
-            .extracting(MeldekortUtbetalingsgrunnlagSak::vedtaksPeriodeFom)
+            .extracting(MeldekortUtbetalingsgrunnlagSakDto::vedtaksPeriodeFom)
             .containsExactly(fomVedtak1, fomVedtak2);
         assertThat(meldekortUtbetalingsgrunnlagSak)
-            .extracting(MeldekortUtbetalingsgrunnlagSak::vedtaksPeriodeTom)
+            .extracting(MeldekortUtbetalingsgrunnlagSakDto::vedtaksPeriodeTom)
             .containsExactly(tomVedtak1, tomVedtak2);
 
         assertThat(meldekortUtbetalingsgrunnlagSak)
-            .extracting(MeldekortUtbetalingsgrunnlagSak::vedtattDato)
+            .extracting(MeldekortUtbetalingsgrunnlagSakDto::vedtattDato)
             .containsExactly(fomVedtak1, fomVedtak2);
         assertThat(meldekortUtbetalingsgrunnlagSak)
-            .extracting(MeldekortUtbetalingsgrunnlagSak::kravMottattDato)
+            .extracting(MeldekortUtbetalingsgrunnlagSakDto::kravMottattDato)
             .containsExactly(fomVedtak1, fomVedtak2);
 
     }
@@ -124,25 +124,25 @@ class ArenaMapperWSTest {
         var fnrFAKE = "123456789";
         sak.setFagsystemSakId(fnrFAKE);
 
-        var ytelseStatus = YtelseStatus.LØPENDE;
+        var ytelseStatus = YtelseStatusDto.LOP;
         var saksstatus = lagSakstatus(ytelseStatus);
         sak.setSaksstatus(saksstatus);
 
-        var ytelsetype = DAGPENGER;
+        var ytelsetype = DAG;
         var tema = lagTemaFraYtelsetype(ytelsetype);
         sak.setTema(tema);
         return sak;
     }
 
-    protected static Saksstatuser lagSakstatus(YtelseStatus sakstatus) {
+    protected static Saksstatuser lagSakstatus(YtelseStatusDto sakstatus) {
         var saksstatus = new Saksstatuser();
-        saksstatus.setValue(sakstatus.getKode());
+        saksstatus.setValue(sakstatus.name());
         return saksstatus;
     }
 
-    protected static Tema lagTemaFraYtelsetype(YtelseType ytelsetype) {
+    protected static Tema lagTemaFraYtelsetype(YtelseTypeDto ytelsetype) {
         var tema = new Tema();
-        tema.setValue(ytelsetype.getKode());
+        tema.setValue(ytelsetype.name());
         return tema;
     }
 

@@ -7,6 +7,8 @@ public enum RelatertYtelseStatus {
     GODKJ("GODKJ"),
     INNST("INNST"),
     IVERK("IVERK"),
+    INAKT("INAKT"),
+    AKTIV("AKTIV"),
     MOTAT("MOTAT"),
     OPPRE("OPPRE"),
     REGIS("REGIS"),
