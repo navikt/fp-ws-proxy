@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.ws.proxy.http.rs.filters;
+package no.nav.foreldrepenger.ws.proxy.http.filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

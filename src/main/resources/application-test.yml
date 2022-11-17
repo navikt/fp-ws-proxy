@@ -1,0 +1,41 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include:  '*'
+  endpoint:
+    health:
+      enabled: false
+server:
+  port: 8292
+spring:
+  cloud:
+    vault:
+      enabled: false
+
+no.nav.security.jwt:
+  issuer:
+    sts-rs:
+      discoveryurl: ${oidc.sts.well.known.url}
+      accepted_audience: OIDC, vtp, fpsak-autotest
+
+securitytokenservice:
+  username: ${systembruker.username}
+  password: ${systembruker.password}
+  url: ${securitytokenservice.url}
+
+sts:
+  username: ${systembruker.username}
+  password: ${systembruker.password}
+  baseUri: ${oidc.sts.issuer.url}
+
+## INTEGRASJONER ##
+meldekortutbetalingsgrunnlag:
+  v1:
+    url: ${meldekortutbetalingsgrunnlag.v1.url}
+oppdrag:
+  service:
+    url: ${oppdrag.service.url}
+tilbakekreving:
+  v1:
+    url: ${tilbakekreving.v1.url}

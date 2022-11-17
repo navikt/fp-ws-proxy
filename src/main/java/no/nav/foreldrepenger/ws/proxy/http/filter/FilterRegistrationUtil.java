@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.ws.proxy.http.rs.filters;
+package no.nav.foreldrepenger.ws.proxy.http.filter;
 
 import static java.util.stream.Collectors.toList;
 

@@ -14,30 +14,11 @@ spring:
       enabled: false
 
 no.nav.security.jwt:
-  client:
-    registration:
-      fpfordel:
-        well-known-url: http://localhost:8060/rest/v1/sts/.well-known/openid-configuration
-        grant-type: client_credentials
-        scope: openid
-        authentication:
-          client-id: fp-ws-proxy
-          client-jwk: src/test/resources/tokenx/jwk.json
-          client-auth-method: client_secret_post
-      fpsak:
-        well-known-url: http://localhost:8060/rest/v1/sts/.well-known/openid-configuration
-        grant-type: urn:ietf:params:oauth:grant-type:token-exchange
-        authentication:
-          client-id: fp-ws-proxy
-          client-jwk: src/test/resources/tokenx/jwk.json
-          client-auth-method: private_key_jwt
   issuer:
     sts-rs:
       discoveryurl: http://localhost:8060/rest/v1/sts/.well-known/openid-configuration
-      accepted_audience: OIDC, srvFPABAKUS, srvfpoppdrag, srvfptilbake
-#    sts-ws: # TODO:
-#      discoveryurl: http://localhost:8060/soap/SecurityTokenServiceProvider/
-#      accepted_audience: srvGOSYS
+      accepted_audience: OIDC, vtp, srvfpabakus, srvfpoppdrag, srvfptilbake
+
 securitytokenservice:
   username: vtp
   password: vtp
@@ -49,10 +30,6 @@ sts:
 
 
 ## INTEGRASJONER ##
-fpsak:
-  baseUri: http://localhost:8080/fpsak
-fpfordel:
-  baseUri: http://localhost:8080/fpfordel
 meldekortutbetalingsgrunnlag:
   v1:
     url: https://localhost:8063/soap/ail_ws/MeldekortUtbetalingsgrunnlag_v1

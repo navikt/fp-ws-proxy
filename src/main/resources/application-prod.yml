@@ -15,13 +15,3 @@ spring:
         backend: kv/prod/fss
         application-name: fp-ws-proxy/teamforeldrepenger
         default-context: fp-ws-proxy/teamforeldrepenger
-## SIKKERHET ##
-no.nav.security.jwt:
-  client:
-    registration:
-      fpfordel:
-        token-exchange:
-          audience: prod-fss:teamforeldrepenger:fpfordel
-      fpsak:
-        token-exchange:
-          audience: prod-fss:teamforeldrepenger:fpsak
