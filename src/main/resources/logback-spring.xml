@@ -59,6 +59,11 @@
         <logger name="org.apache.cxf.services" level="debug" />
     </springProfile>
 
+    <springProfile name="prod">
+        <logger name="org.apache" level="ERROR"/>
+        <logger name="org.apache.http" level="INFO"/>
+    </springProfile>
+
     <logger name="secureLogger" level="info" additivity="false">
         <appender-ref ref="secureLogger" />
     </logger>
