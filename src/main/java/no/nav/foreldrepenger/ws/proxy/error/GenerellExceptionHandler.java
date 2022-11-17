@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.ws.proxy.error;
 
+import static java.util.Collections.emptyList;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -8,16 +9,18 @@ import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.validation.ConstraintViolationException;
+import javax.validation.Path;
 
+import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,27 +44,27 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler
     public ResponseEntity<Object> handleOppdragNedetidException(OppdragNedetidException e, WebRequest req) {
-        return logAndRespond(SERVICE_UNAVAILABLE, e, req, e.getMessage());
+        return logAndRespond(SERVICE_UNAVAILABLE, e, req);
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> handleSikkerhetsbegrensingException(SikkerhetsbegrensingException e, WebRequest req) {
-        return logAndRespond(UNAUTHORIZED, e, req, e.getMessage());
+        return logAndRespond(UNAUTHORIZED, e, req);
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> handleUgyldigInputException(UgyldigInputException e, WebRequest req) {
-        return logAndRespond(BAD_REQUEST, e, req, e.getMessage());
+        return logAndRespond(BAD_REQUEST, e, req);
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> handleFinnesIkkeException(FinnesIkkeException e, WebRequest req) {
-        return logAndRespond(NOT_FOUND, e, req, e.getMessage());
+        return logAndRespond(NOT_FOUND, e, req);
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> handleGeneralOrUncaughtSoapExceptions(GenerellSoapFaultException e, WebRequest req) {
-        return logAndRespond(INTERNAL_SERVER_ERROR, e, req, e.getMessage());
+        return logAndRespond(INTERNAL_SERVER_ERROR, e, req);
     }
 
 
@@ -75,7 +78,9 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<Object> handleUnauthenticatedOIDCException(JwtTokenValidatorException e, WebRequest req) {
-        return logAndRespond(FORBIDDEN, e, req, "Token utløper " + e.getExpiryDate());
+        Collection<FeltFeilDto> feilene = new ArrayList<>();
+        feilene.add(new FeltFeilDto("Token utløper", e.getExpiryDate().toString()));
+        return logAndRespond(FORBIDDEN, e, req, feilene);
     }
 
 
@@ -84,14 +89,11 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return logAndRespond(UNPROCESSABLE_ENTITY, e, request, validationErrors(e));
-    }
-
-    private static List<String> validationErrors(MethodArgumentNotValidException e) {
-        return e.getBindingResult().getFieldErrors()
-            .stream()
-            .map(FieldError::getField)
-            .toList();
+        Collection<FeltFeilDto> feilene = new ArrayList<>();
+        for (var fieldError : e.getBindingResult().getFieldErrors()) {
+            feilene.add(new FeltFeilDto(fieldError.getField(), fieldError.getDefaultMessage()));
+        }
+        return logAndRespond(UNPROCESSABLE_ENTITY, e, request, feilene);
     }
 
     @ExceptionHandler
@@ -101,7 +103,16 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<Object> handleValidationException(ConstraintViolationException e, WebRequest req) {
-        return logAndRespond(UNPROCESSABLE_ENTITY, e, req);
+        Collection<FeltFeilDto> feilene = new ArrayList<>();
+        for (var constraintViolation : e.getConstraintViolations()) {
+            var feltNavn = getFeltNavn(constraintViolation.getPropertyPath());
+            feilene.add(new FeltFeilDto(feltNavn, constraintViolation.getMessage()));
+        }
+        return logAndRespond(UNPROCESSABLE_ENTITY, e, req, feilene);
+    }
+
+    private String getFeltNavn(Path propertyPath) {
+        return propertyPath instanceof PathImpl pi ? pi.getLeafNode().toString() : null;
     }
 
     @ExceptionHandler
@@ -109,23 +120,30 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
         return logAndRespond(INTERNAL_SERVER_ERROR, e, req);
     }
 
-
-    private ResponseEntity<Object> logAndRespond(HttpStatus status, Exception e, WebRequest req, Object... messages) {
-        return logAndRespond(status, e, req, List.of(messages));
+    private ResponseEntity<Object> logAndRespond(HttpStatus status, Exception e, WebRequest req) {
+        return logAndRespond(status, e, req, emptyList());
     }
 
-    private ResponseEntity<Object> logAndRespond(HttpStatus status, Exception e, WebRequest req, List<Object> messages) {
-        var apiError = new ApiError(status, e, messages);
-        logException(status, e, req, apiError);
-        return handleExceptionInternal(e, apiError, new HttpHeaders(), status, req);
+    private ResponseEntity<Object> logAndRespond(HttpStatus status, Exception e, WebRequest req, Collection<FeltFeilDto> feltFeil) {
+        logException(status, e, req);
+        var errorBody = new FeilDto(tilFeilType(status), e.getMessage(), feltFeil);
+        return handleExceptionInternal(e, errorBody, new HttpHeaders(), status, req);
     }
 
-    private static void logException(HttpStatus status, Exception e, WebRequest req, ApiError apiError) {
+    private FeilType tilFeilType(HttpStatus status) {
+        return switch (status) {
+            case FORBIDDEN, UNAUTHORIZED -> FeilType.MANGLER_TILGANG_FEIL;
+            case NOT_FOUND -> FeilType.TOMT_RESULTAT_FEIL;
+            default -> FeilType.GENERELL_FEIL;
+        };
+    }
+
+    private static void logException(HttpStatus status, Exception e, WebRequest req) {
         var path = fullPathTilKaltEndepunkt(req);
         if (e instanceof OppdragNedetidException) {
-            LOG.info("[{}] {} {}", path, status, apiError.messages(), e);
+            LOG.info("[{}] {} {}", path, status, e.getMessage(), e);
         } else {
-            LOG.warn("[{}] {} {}", path, status, apiError.messages(), e);
+            LOG.warn("[{}] {} {}", path, status, e.getMessage(), e);
         }
     }
 
