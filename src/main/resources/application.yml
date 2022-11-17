@@ -23,30 +23,10 @@ spring:
 
 ## SIKKERHET ##
 no.nav.security.jwt:
-  client:
-    registration:
-      fpfordel:
-        well-known-url: http://security-token-service.default/rest/v1/sts/.well-known/openid-configuration
-        grant-type: client_credentials
-        scope: openid
-        authentication:
-          client-id: ${token.x.client.id}
-          client-jwk: ${token.x.private.jwk}
-          client-auth-method: client_secret_post
-      fpsak:
-        well-known-url: http://security-token-service.default/rest/v1/sts/.well-known/openid-configuration
-        grant-type: urn:ietf:params:oauth:grant-type:token-exchange
-        authentication:
-          client-id: ${token.x.client.id}
-          client-jwk: ${token.x.private.jwk}
-          client-auth-method: private_key_jwt
   issuer:
     sts-rs:
       discoveryurl: http://security-token-service.default/rest/v1/sts/.well-known/openid-configuration
       accepted_audience: srvfpabakus, srvfpoppdrag, srvfptilbake
-#    sts-ws: # TODO:
-#      discoveryurl: https://sts.adeo.no/SecurityTokenServiceProvider/TODO/.well-known/openid-configuration
-#      accepted_audience: srvGOSYS
 
 # Brukers av klientene på utgående kall (WS eller RS)
 securitytokenservice:
