@@ -14,7 +14,7 @@ management:
             enabled: true
 server:
   servlet:
-    context-path: /api
+    context-path: /fpwsproxy
 spring:
   application:
     name: fp-ws-proxy
