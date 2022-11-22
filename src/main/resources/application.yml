@@ -17,7 +17,7 @@ server:
     context-path: /fpwsproxy
 spring:
   application:
-    name: fp-ws-proxy
+    name: fpwsproxy
   mvc:
     log-request-details: true
 
