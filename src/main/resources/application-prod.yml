@@ -8,10 +8,10 @@ spring:
       uri: https://vault.adeo.no
       authentication: KUBERNETES
       kubernetes:
-        role: fp-ws-proxy
+        role: fpwsproxy
         kubernetes-path: kubernetes/prod/fss
       kv:
         enabled: true
         backend: kv/prod/fss
-        application-name: fp-ws-proxy/teamforeldrepenger
-        default-context: fp-ws-proxy/teamforeldrepenger
+        application-name: fpwsproxy/teamforeldrepenger
+        default-context: fpwsproxy/teamforeldrepenger
