@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering;
 
 import static no.nav.foreldrepenger.ws.proxy.api.simulering.SimuleringController.SIMULERING_PATH;
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.SimuleringRequestMapper.tilSimulerBeregingsRequester;
 import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.SimuleringResponsMapper.tilBeregningDtoListe;
 import static no.nav.foreldrepenger.ws.proxy.config.TokenUtilConfiguration.STS_RS;
 
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import no.nav.foreldrepenger.kontrakter.simulering.request.OppdragskontrollDto;
 import no.nav.foreldrepenger.kontrakter.simulering.respons.BeregningDto;
-import no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.ØkonomioppdragMapper;
+import no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.SimuleringRequestMapper;
 import no.nav.security.token.support.spring.ProtectedRestController;
 
 @Validated
@@ -38,42 +37,25 @@ public class SimuleringController {
                                                @RequestParam("uten_inntrekk") @DefaultValue("false") boolean utenInntrekk,
                                                @RequestParam(value = "ytelse_type", required = false) YtelseType ytelseType) {
         var tekstMedUtenInntrekk = utenInntrekk ? "uten inntrekk for" + ytelseType : "med inntrekk";
-        SECURE_LOG.info("Utfører simulering {} av følgende oppdrag {}", tekstMedUtenInntrekk, oppdragskontrollDto);
-        long t0 = System.currentTimeMillis();
-        var behandlingId = oppdragskontrollDto.behandlingId();
-        var oppdragXmlListe = new ØkonomioppdragMapper().generateOppdragXML(oppdragskontrollDto); // TODO: Fjern denne og map direkte til SimulerBeregningRequest
-        var totalStørrelseUt = størrelse(oppdragXmlListe);
-        var simuleringWSRequest = tilSimulerBeregingsRequester(oppdragXmlListe, ytelseType, utenInntrekk);
-        LOG.info("Starter simulering {}. behandlingID={} oppdragantall={} totalstørrelseUt={}",
-            tekstMedUtenInntrekk,
-            behandlingId,
-            oppdragXmlListe.size(),
-            totalStørrelseUt);
-        var simulerBeregningResponse = simuleringKlientWs.simulerBeregningene(simuleringWSRequest);
-        LOG.info("Simulering {} svarmeldinger mottatt. behandlingID={} tidsforbruk={} ms",
-            tekstMedUtenInntrekk,
-            behandlingId,
-            System.currentTimeMillis() - t0);
-        var respons = tilBeregningDtoListe(simulerBeregningResponse);
-        SECURE_LOG.info("Resultat av simulering {}", respons);
-        return respons;
-    }
+        try {
+            long t0 = System.currentTimeMillis();
+            var behandlingId = oppdragskontrollDto.behandlingId();
+            var simuleringWSRequest = SimuleringRequestMapper.tilSimulerBeregingsRequester(oppdragskontrollDto, ytelseType, utenInntrekk);
+            LOG.info("Starter simulering {}. behandlingID={} oppdragantall={}",
+                tekstMedUtenInntrekk,
+                behandlingId,
+                simuleringWSRequest.size());
 
-    private static String størrelse(List<String> oppdragXmlListe) {
-        long sum = 0;
-        for (String s : oppdragXmlListe) {
-            sum += s.length();
-        }
-
-        if (sum >= 1000) {
-            //output i Kilobyte for enkler å lese, avrundet til hele kB
-            return (sum + 500) / 1000 + " kB";
-        } else {
-            //output i bytes for å ha nøyaktighet når nær 0
-            return sum + " B";
+            var simulerBeregningResponse = simuleringKlientWs.simulerBeregningene(simuleringWSRequest);
+            LOG.info("Simulering {} svarmeldinger mottatt. behandlingID={} tidsforbruk={} ms",
+                tekstMedUtenInntrekk,
+                behandlingId,
+                System.currentTimeMillis() - t0);
+            return tilBeregningDtoListe(simulerBeregningResponse);
+        } catch (Exception e) {
+            SECURE_LOG.info("Simulering {} av følgende oppdrag feilet: {}", tekstMedUtenInntrekk, oppdragskontrollDto);
+            throw e;
         }
     }
-
-
 
 }

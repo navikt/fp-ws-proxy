@@ -1,63 +1,44 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.ØkonomistøtteUtils.tilSpesialkodetDatoOgKlokkeslett;
+import static no.nav.foreldrepenger.common.util.StreamUtil.safeStream;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.stream.XMLStreamException;
-
-import org.xml.sax.SAXException;
-
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.Attestant180;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.Grad170;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.Ompostering116;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.OppdragSkjemaConstants;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.OppdragsEnhet120;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.OppdragsLinje150;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.Refusjonsinfo156;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.TfradragTillegg;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.TkodeArbeidsgiver;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.TkodeStatusLinje;
-import no.nav.foreldrepenger.ws.proxy.error.UgyldigInputException;
-import no.nav.foreldrepenger.ws.proxy.util.JaxbHelper;
+import no.nav.foreldrepenger.kontrakter.simulering.request.KodeFagområde;
+import no.nav.foreldrepenger.kontrakter.simulering.request.Ompostering116Dto;
+import no.nav.foreldrepenger.kontrakter.simulering.request.Oppdrag110Dto;
+import no.nav.foreldrepenger.kontrakter.simulering.request.Oppdragslinje150Dto;
+import no.nav.foreldrepenger.kontrakter.simulering.request.Refusjonsinfo156Dto;
+import no.nav.foreldrepenger.kontrakter.simulering.request.UtbetalingsgradDto;
 import no.nav.system.os.entiteter.oppdragskjema.Attestant;
 import no.nav.system.os.entiteter.oppdragskjema.Enhet;
 import no.nav.system.os.entiteter.oppdragskjema.Grad;
 import no.nav.system.os.entiteter.oppdragskjema.Ompostering;
 import no.nav.system.os.entiteter.oppdragskjema.RefusjonsInfo;
 import no.nav.system.os.entiteter.typer.simpletypes.FradragTillegg;
-import no.nav.system.os.entiteter.typer.simpletypes.KodeArbeidsgiver;
 import no.nav.system.os.entiteter.typer.simpletypes.KodeStatusLinje;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.ObjectFactory;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.Oppdrag;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.Oppdragslinje;
 
 public class OppdragMapper {
-
-    public static final String PATTERN = "yyyy-MM-dd";
-
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN);
+    static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final LocalDate DATO_OPPDRAG_GJELDER_FOM = LocalDate.of(2000, 1, 1);
+    private static final String FRADRAG_TILLEGG = "T";
+    private static final String BRUK_KJOREPLAN = "N";
+    private static final String TYPE_GRAD = "UFOR";
+    private static final String UTBET_FREKVENS = "MND";
+    private static final Enhet DEFAULT_ENHET = oppdragsEnhet120();
 
     private OppdragMapper() {
         // skal ikke kunne instansiere klassen
     }
 
-
-    public static Oppdrag unmarshalOppdragOgKonverter(String oppdrag) {
-        try {
-            var fpOppdrag = JaxbHelper.unmarshalAndValidateXMLWithStAX(
-                OppdragSkjemaConstants.JAXB_CLASS, oppdrag, OppdragSkjemaConstants.XSD_LOCATION); // TODO: Gjøre dette uten JaxbHelper?
-            return OppdragMapper.mapTilSimuleringOppdrag(fpOppdrag.getOppdrag110());
-        } catch (JAXBException | SAXException | XMLStreamException e) {
-            throw new UgyldigInputException("FPO-832562", "Kunne ikke tolke mottatt oppdrag XML", e);
-        }
-    }
 
     /**
      * Mapper oppdrag-110 sendt fra FPSAK til oppdrag som FPOPPDRAG sender til økonomi.
@@ -65,146 +46,120 @@ public class OppdragMapper {
      * @param oppdrag110
      * @return
      */
-    public static Oppdrag mapTilSimuleringOppdrag(no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.Oppdrag110 oppdrag110) {
-        Oppdrag oppdrag = new ObjectFactory().createOppdrag();
-
-        oppdrag.setKodeEndring(oppdrag110.getKodeEndring());
-        oppdrag.setKodeFagomraade(oppdrag110.getKodeFagomraade());
-        oppdrag.setFagsystemId(oppdrag110.getFagsystemId());
-        oppdrag.setUtbetFrekvens(oppdrag110.getUtbetFrekvens());
-        oppdrag.setOppdragGjelderId(oppdrag110.getOppdragGjelderId());
-        oppdrag.setDatoOppdragGjelderFom(convDate(oppdrag110.getDatoOppdragGjelderFom()));
-        oppdrag.setSaksbehId(oppdrag110.getSaksbehId());
-        if (oppdrag110.getOmpostering116() != null) {
-            oppdrag.setOmpostering(mapOmpostering(oppdrag110.getOmpostering116()));
+    public static Oppdrag mapTilSimuleringOppdrag(Oppdrag110Dto oppdrag110, Long behandlingId) {
+        var oppdrag = new ObjectFactory().createOppdrag();
+        oppdrag.setKodeEndring(oppdrag110.kodeEndring().name());
+        oppdrag.setKodeFagomraade(oppdrag110.kodeFagomrade().name());
+        oppdrag.setFagsystemId(oppdrag110.fagsystemId().toString());
+        oppdrag.setUtbetFrekvens(UTBET_FREKVENS);
+        oppdrag.setOppdragGjelderId(oppdrag110.oppdragGjelderId());
+        oppdrag.setDatoOppdragGjelderFom(localdateTilString(DATO_OPPDRAG_GJELDER_FOM));
+        oppdrag.setSaksbehId(oppdrag110.saksbehId());
+        oppdrag.getEnhet().add(DEFAULT_ENHET);
+        oppdrag.getOppdragslinje().addAll(mapOppdragslinje150(oppdrag110.oppdragslinje150Liste(),  oppdrag110.kodeFagomrade(), oppdrag110.saksbehId(), behandlingId));
+        if (oppdrag110.ompostering116() != null) {
+            oppdrag.setOmpostering(mapOmpostering(oppdrag110.ompostering116(), oppdrag110.saksbehId()));
         }
-
-        oppdrag.getEnhet().addAll(mapOppdragsEnhet120(oppdrag110.getOppdragsEnhet120()));
-        oppdrag.getOppdragslinje().addAll(mapOppdragslinje150(oppdrag110.getOppdragsLinje150()));
-
         return oppdrag;
     }
 
-    public static Ompostering mapOmpostering(String saksbehId, String ompostering) {
-        Ompostering op = new Ompostering();
-        op.setOmPostering(ompostering);
-        op.setSaksbehId(saksbehId);
-        op.setTidspktReg(tilSpesialkodetDatoOgKlokkeslett(LocalDateTime.now()));
+    static Ompostering mapOmpostring(boolean ompostering, String saksbehandlerId, String tidspktReg) {
+        var op = new Ompostering();
+        op.setOmPostering(Boolean.TRUE.equals(ompostering) ? "J" : "N");
+        op.setSaksbehId(saksbehandlerId);
+        // op.setTidspktReg(tilSpesialkodetDatoOgKlokkeslett(LocalDateTime.now())); // TODO: Send over LocalDateTime
+        op.setTidspktReg(tidspktReg);
         return op;
     }
 
-    private static Ompostering mapOmpostering(Ompostering116 ompostering116) {
-        Ompostering op = mapOmpostering(ompostering116.getSaksbehId(), ompostering116.getOmPostering());
-        if (ompostering116.getDatoOmposterFom() != null) {
-            op.setDatoOmposterFom(convDate(ompostering116.getDatoOmposterFom()));
+    private static Ompostering mapOmpostering(Ompostering116Dto ompostering116, String saksbehandlerId) {
+        var op = mapOmpostring(ompostering116.omPostering(), saksbehandlerId, ompostering116.tidspktReg());
+        if (ompostering116.datoOmposterFom() != null) {
+            op.setDatoOmposterFom(localdateTilString(ompostering116.datoOmposterFom()));
         }
         return op;
     }
 
-    private static List<Enhet> mapOppdragsEnhet120(List<OppdragsEnhet120> oppdragsEnhet120Liste) {
-        return oppdragsEnhet120Liste.stream().map(enhet120 -> {
-            Enhet enhet = new Enhet();
-            enhet.setDatoEnhetFom(convDate(enhet120.getDatoEnhetFom()));
-            enhet.setEnhet(enhet120.getEnhet());
-            enhet.setTypeEnhet(enhet120.getTypeEnhet());
-            return enhet;
-        }).collect(Collectors.toList());
+    private static Enhet oppdragsEnhet120() {
+        var enhet = new Enhet();
+        enhet.setDatoEnhetFom(localdateTilString(LocalDate.of(1900, 1, 1)));
+        enhet.setEnhet("8020");
+        enhet.setTypeEnhet("BOS");
+        return enhet;
     }
 
-    private static List<Oppdragslinje> mapOppdragslinje150(List<OppdragsLinje150> oppdragsLinje150Liste) {
-        return oppdragsLinje150Liste.stream()
-            .map(OppdragMapper::mapOppdragslinje150)
-            .collect(Collectors.toList());
+    private static List<Oppdragslinje> mapOppdragslinje150(List<Oppdragslinje150Dto> oppdragsLinje150Liste, KodeFagområde kodeFagområde, String saksbehId, Long behandlingId) {
+        return safeStream(oppdragsLinje150Liste)
+            .map(oppdragsLinje150 -> mapOppdragslinje150(oppdragsLinje150, kodeFagområde, saksbehId, behandlingId))
+            .sorted(Comparator.comparing(opp150 -> Long.parseLong(opp150.getDelytelseId())))
+            .toList();
     }
 
-    private static Oppdragslinje mapOppdragslinje150(OppdragsLinje150 oppdragsLinje150) {
-        Oppdragslinje oppdragslinje = new Oppdragslinje();
+    private static Oppdragslinje mapOppdragslinje150(Oppdragslinje150Dto oppdragsLinje150, KodeFagområde kodeFagområde, String saksbehId, Long behandlingId) {
+        var oppdragslinje = new Oppdragslinje();
 
         // mapper enkeltelementer
-        oppdragslinje.setKodeEndringLinje(oppdragsLinje150.getKodeEndringLinje());
-        oppdragslinje.setVedtakId(oppdragsLinje150.getVedtakId());
-        oppdragslinje.setDelytelseId(oppdragsLinje150.getDelytelseId());
-        oppdragslinje.setKodeKlassifik(oppdragsLinje150.getKodeKlassifik());
-        oppdragslinje.setDatoVedtakFom(convDate(oppdragsLinje150.getDatoVedtakFom()));
-        oppdragslinje.setDatoVedtakTom(convDate(oppdragsLinje150.getDatoVedtakTom()));
-        oppdragslinje.setSats(oppdragsLinje150.getSats());
-        oppdragslinje.setFradragTillegg(mapTfradragTillegg(oppdragsLinje150.getFradragTillegg()));
-        oppdragslinje.setTypeSats(oppdragsLinje150.getTypeSats());
-        oppdragslinje.setBrukKjoreplan(oppdragsLinje150.getBrukKjoreplan());
-        oppdragslinje.setSaksbehId(oppdragsLinje150.getSaksbehId());
-        oppdragslinje.setHenvisning(oppdragsLinje150.getHenvisning());
+        oppdragslinje.setKodeEndringLinje(oppdragsLinje150.kodeEndringLinje().name());
+        oppdragslinje.setVedtakId(oppdragsLinje150.vedtakId());
+        oppdragslinje.setDelytelseId(String.valueOf(oppdragsLinje150.delytelseId()));
+        oppdragslinje.setKodeKlassifik(oppdragsLinje150.kodeKlassifik().getKode());
+        oppdragslinje.setDatoVedtakFom(localdateTilString(oppdragsLinje150.getDatoVedtakFom()));
+        oppdragslinje.setDatoVedtakTom(localdateTilString(oppdragsLinje150.getDatoVedtakTom()));
+        oppdragslinje.setSats(BigDecimal.valueOf(oppdragsLinje150.sats().verdi()));
+        oppdragslinje.setFradragTillegg(FradragTillegg.fromValue(FRADRAG_TILLEGG));
+        oppdragslinje.setTypeSats(oppdragsLinje150.typeSats().name());
+        oppdragslinje.setBrukKjoreplan(BRUK_KJOREPLAN);
+        oppdragslinje.setSaksbehId(saksbehId);
+        oppdragslinje.setHenvisning(String.valueOf(behandlingId));
+        oppdragslinje.setUtbetalesTilId(oppdragsLinje150.utbetalesTilId());
+        oppdragslinje.getAttestant().addAll(mapAttestant180(saksbehId));
 
-        // mapper lister
-        oppdragslinje.getGrad().addAll(mapGrad170(oppdragsLinje150.getGrad170()));
-        oppdragslinje.getAttestant().addAll(mapAttestant180(oppdragsLinje150.getAttestant180()));
 
-        // mapper elementer som kan være null
-        if (oppdragsLinje150.getKodeArbeidsgiver() != null) {
-            oppdragslinje.setKodeArbeidsgiver(mapTkodeArbeidsgiver(oppdragsLinje150.getKodeArbeidsgiver()));
-        } else {
-            oppdragslinje.setUtbetalesTilId(oppdragsLinje150.getUtbetalesTilId());
+        if (oppdragsLinje150.refFagsystemId() != null) {
+            oppdragslinje.setRefFagsystemId(String.valueOf(oppdragsLinje150.refFagsystemId()));
         }
-        if (oppdragsLinje150.getRefusjonsinfo156() != null) {
-            oppdragslinje.setRefusjonsInfo(mapRefusjonsinfo156(oppdragsLinje150.getRefusjonsinfo156()));
+        if (oppdragsLinje150.refDelytelseId() != null) {
+            oppdragslinje.setRefDelytelseId(String.valueOf(oppdragsLinje150.refDelytelseId()));
         }
-        if (oppdragsLinje150.getRefFagsystemId() != null) {
-            oppdragslinje.setRefFagsystemId(oppdragsLinje150.getRefFagsystemId());
+        if (oppdragsLinje150.datoStatusFom() != null) {
+            oppdragslinje.setDatoStatusFom(localdateTilString(oppdragsLinje150.datoStatusFom()));
         }
-        if (oppdragsLinje150.getRefDelytelseId() != null) {
-            oppdragslinje.setRefDelytelseId(oppdragsLinje150.getRefDelytelseId());
+        if (oppdragsLinje150.gjelderOpphør()) {
+            oppdragslinje.setKodeStatusLinje(KodeStatusLinje.OPPH);
         }
-        if (oppdragsLinje150.getDatoStatusFom() != null) {
-            oppdragslinje.setDatoStatusFom(convDate(oppdragsLinje150.getDatoStatusFom()));
+        if (!kodeFagområde.gjelderEngangsstønad()) {
+            if (null != oppdragsLinje150.utbetalingsgrad()) {
+                oppdragslinje.getGrad().addAll(mapGrad170(oppdragsLinje150.utbetalingsgrad()));
+            }
+            if (kodeFagområde.gjelderRefusjonTilArbeidsgiver()) {
+                oppdragslinje.setRefusjonsInfo(mapRefusjonsinfo156(oppdragsLinje150.refusjonsinfo156()));
+            }
         }
-        if (oppdragsLinje150.getKodeStatusLinje() != null) {
-            oppdragslinje.setKodeStatusLinje(mapTkodeStatusLinje(oppdragsLinje150.getKodeStatusLinje()));
-        }
-
         return oppdragslinje;
     }
 
-    private static RefusjonsInfo mapRefusjonsinfo156(Refusjonsinfo156 refusjonsinfo156) {
-        RefusjonsInfo refusjonsInfo = new RefusjonsInfo();
-        refusjonsInfo.setMaksDato(convDate(refusjonsinfo156.getMaksDato()));
-        refusjonsInfo.setDatoFom(convDate(refusjonsinfo156.getDatoFom()));
-        refusjonsInfo.setRefunderesId(refusjonsinfo156.getRefunderesId());
+    private static RefusjonsInfo mapRefusjonsinfo156(Refusjonsinfo156Dto refusjonsinfo156) {
+        var refusjonsInfo = new RefusjonsInfo();
+        refusjonsInfo.setMaksDato(localdateTilString(refusjonsinfo156.maksDato()));
+        refusjonsInfo.setDatoFom(localdateTilString(refusjonsinfo156.datoFom()));
+        refusjonsInfo.setRefunderesId(refusjonsinfo156.refunderesId());
         return refusjonsInfo;
     }
 
-    private static List<Grad> mapGrad170(List<Grad170> grad170Liste) {
-        return grad170Liste.stream().map(grad170 -> {
-            Grad grad = new Grad();
-            grad.setGrad(grad170.getGrad());
-            grad.setTypeGrad(grad170.getTypeGrad());
-            return grad;
-        }).collect(Collectors.toList());
+    private static List<Grad> mapGrad170(UtbetalingsgradDto utbetalingsgradDto) {
+        var grad = new Grad();
+        grad.setGrad(BigInteger.valueOf(utbetalingsgradDto.verdi()));
+        grad.setTypeGrad(TYPE_GRAD);
+        return List.of(grad);
     }
 
-    private static List<Attestant> mapAttestant180(List<Attestant180> attestant180Liste) {
-        return attestant180Liste.stream().map(attestant180 -> {
-            Attestant attestant = new Attestant();
-            attestant.setAttestantId(attestant180.getAttestantId());
-            if (attestant180.getDatoUgyldigFom() != null) {
-                attestant.setDatoUgyldigFom(convDate(attestant180.getDatoUgyldigFom()));
-            }
-            return attestant;
-        }).collect(Collectors.toList());
+    private static List<Attestant> mapAttestant180(String saksbehId) {
+        var attestant = new Attestant();
+        attestant.setAttestantId(saksbehId);
+        return List.of(attestant);
     }
 
-    private static FradragTillegg mapTfradragTillegg(TfradragTillegg tfradragTillegg) {
-        return FradragTillegg.fromValue(tfradragTillegg.value());
-    }
-
-    private static KodeArbeidsgiver mapTkodeArbeidsgiver(TkodeArbeidsgiver tkodeArbeidsgiver) {
-        return KodeArbeidsgiver.fromValue(tkodeArbeidsgiver.value());
-    }
-
-    private static KodeStatusLinje mapTkodeStatusLinje(TkodeStatusLinje tkodeStatusLinje) {
-        return KodeStatusLinje.fromValue(tkodeStatusLinje.value());
-    }
-
-    private static String convDate(XMLGregorianCalendar xmlGregorianCalendar) {
-        LocalDate ld = xmlGregorianCalendar.toGregorianCalendar().toZonedDateTime().toLocalDate();
-        return ld.format(formatter);
+    private static String localdateTilString(LocalDate date) {
+        return date != null ? date.format(DATE_TIME_FORMATTER) : null;
     }
 }
