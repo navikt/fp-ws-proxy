@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.ws.proxy.api.arena;
 
-import static no.nav.foreldrepenger.ws.proxy.api.arena.ArenaController.ARENA_PATH;
 import static no.nav.foreldrepenger.ws.proxy.api.arena.mapper.ArenaMapperWS.tilWSRequest;
 import static no.nav.foreldrepenger.ws.proxy.config.TokenUtilConfiguration.STS_RS;
 
@@ -26,10 +25,9 @@ import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.Finn
  * Skal erstatte Meldekorttjenesten i fpabakus: https://github.com/navikt/fp-abakus/blob/master/domenetjenester/iay/src/main/java/no/nav/foreldrepenger/abakus/registerdata/ytelse/arena/MeldekortTjeneste.java
  */
 @Validated
-@ProtectedRestController(issuer = STS_RS, value = ARENA_PATH, claimMap = {})
+@ProtectedRestController(issuer = STS_RS, value = "/arena", claimMap = {})
 public class ArenaController {
     private static final Logger LOG = LoggerFactory.getLogger(ArenaController.class);
-    public static final String ARENA_PATH = "/arena";
 
     private final ArenaKlientWs arenaKlientWs;
 

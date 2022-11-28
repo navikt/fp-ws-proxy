@@ -20,17 +20,14 @@ public class SimuleringResponsMapper {
 
     public static List<BeregningDto> tilBeregningDtoListe(List<SimulerBeregningResponse> simulerBeregningResponse) {
         return safeStream(simulerBeregningResponse)
-            .filter(response -> !erSimuleringNull(response))
+            .filter(SimuleringResponsMapper::erSimuleringTilstede)
             .map(SimuleringResponsMapper::tilBeregningDto)
             .toList();
     }
 
-    private static boolean erSimuleringNull(SimulerBeregningResponse simulerBeregningResponse) {
+    private static boolean erSimuleringTilstede(SimulerBeregningResponse simulerBeregningResponse) {
         var response = simulerBeregningResponse.getResponse();
-        if (response == null || response.getSimulering() == null) {
-            return true;
-        }
-        return false;
+        return response != null && response.getSimulering() != null;
     }
 
     private static BeregningDto tilBeregningDto(SimulerBeregningResponse simulerBeregningResponse) {

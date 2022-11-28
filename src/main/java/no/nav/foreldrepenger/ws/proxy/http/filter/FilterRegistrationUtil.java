@@ -1,8 +1,5 @@
 package no.nav.foreldrepenger.ws.proxy.http.filter;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.Arrays;
 import java.util.List;
 
 final class FilterRegistrationUtil {
@@ -10,12 +7,6 @@ final class FilterRegistrationUtil {
     private static final String ALWAYS = "/*";
 
     private FilterRegistrationUtil() {
-    }
-
-    static List<String> urlPatternsFor(String... patterns) {
-        return Arrays.stream(patterns)
-                .map(pattern -> pattern + ALWAYS)
-                .collect(toList());
     }
 
     static List<String> always() {

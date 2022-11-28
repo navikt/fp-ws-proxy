@@ -48,7 +48,7 @@ public class SimuleringRequestMapper {
     }
 
     private static SimulerBeregningRequest lagRequest(no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.SimulerBeregningRequest simulerBeregningRequest) {
-        var request = new ObjectFactory().createSimulerBeregningRequest(); // TODO: Hva er forskjellen mellom Objectmapperene her?
+        var request = new ObjectFactory().createSimulerBeregningRequest();
         request.setRequest(simulerBeregningRequest);
         return request;
     }

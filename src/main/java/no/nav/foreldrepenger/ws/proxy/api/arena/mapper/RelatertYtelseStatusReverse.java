@@ -6,6 +6,8 @@ import no.nav.foreldrepenger.kontrakter.arena.respons.YtelseStatusDto;
 
 public class RelatertYtelseStatusReverse {
 
+    private RelatertYtelseStatusReverse() {
+    }
 
     public static YtelseStatusDto reverseMap(String kode) {
         if (kode == null || kodeEksistereIkkeIEnum(kode)) {
