@@ -7,7 +7,7 @@ import java.util.Collection;
 
 /**
  * FeilDto brukes i exception handler i body ved feil
- * @param type litt rart, ettersom vi har en HttpStatus kode som returneres? Men greit nok.
+ * @param type mappes til "kjente feil"
  * @param feilmelding er getMessage() -> detailMessage fra Throwable objektet
  * @param feltFeil ekstra info som validerings feil..
  */

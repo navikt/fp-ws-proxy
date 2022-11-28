@@ -126,14 +126,20 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
 
     private ResponseEntity<Object> logAndRespond(HttpStatus status, Exception e, WebRequest req, Collection<FeltFeilDto> feltFeil) {
         logException(status, e, req);
-        var errorBody = new FeilDto(tilFeilType(status), e.getMessage(), feltFeil);
+        var errorBody = new FeilDto(tilFeilType(status, e), e.getMessage(), feltFeil);
         return handleExceptionInternal(e, errorBody, new HttpHeaders(), status, req);
     }
 
-    private FeilType tilFeilType(HttpStatus status) {
+    private FeilType tilFeilType(HttpStatus status, Exception e) {
         return switch (status) {
-            case FORBIDDEN, UNAUTHORIZED -> FeilType.MANGLER_TILGANG_FEIL;
+            case FORBIDDEN -> FeilType.MANGLER_TILGANG_FEIL;
             case NOT_FOUND -> FeilType.TOMT_RESULTAT_FEIL;
+            case SERVICE_UNAVAILABLE -> {
+                if (e instanceof OppdragNedetidException) {
+                    yield FeilType.OPPDRAG_FORVENTET_NEDETID;
+                }
+                yield FeilType.GENERELL_FEIL;
+            }
             default -> FeilType.GENERELL_FEIL;
         };
     }
