@@ -1,8 +1,5 @@
 package no.nav.foreldrepenger.ws.proxy.config;
 
-import org.springframework.context.annotation.Configuration;
-
-@Configuration
 public class TokenUtilConfiguration {
 
     private TokenUtilConfiguration() {
