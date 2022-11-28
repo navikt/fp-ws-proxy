@@ -6,6 +6,9 @@ import static no.nav.foreldrepenger.ws.proxy.config.TokenUtilConfiguration.STS_R
 
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.bind.DefaultValue;
@@ -31,7 +34,7 @@ public class SimuleringController {
     }
 
     @PostMapping("/start")
-    public List<BeregningDto> simulerBeregning(@RequestBody OppdragskontrollDto oppdragskontrollDto,
+    public List<BeregningDto> simulerBeregning(@Valid @NotNull @RequestBody OppdragskontrollDto oppdragskontrollDto,
                                                @RequestParam("uten_inntrekk") @DefaultValue("false") boolean utenInntrekk,
                                                @RequestParam(value = "ytelse_type", required = false) YtelseType ytelseType) {
         var tekstMedUtenInntrekk = utenInntrekk ? "uten inntrekk" + ytelseType : "med inntrekk";
