@@ -15,11 +15,12 @@ on:
 jobs:
   build-app:
     name: Build
-    uses: navikt/fp-gha-workflows/.github/workflows/build-app-no-db.yml@main
+    uses: navikt/fp-gha-workflows/.github/workflows/build-app-no-db-test.yml@main
     with:
       sonar-scan: false
       build-image: ${{ github.ref_name == 'main' }} # default: true
       push-image: ${{ github.ref_name == 'main' }} # default: false
+      use-token: READER_TOKEN
     secrets: inherit
 
   create-issue:
