@@ -20,6 +20,7 @@ jobs:
       sonar-scan: false
       build-image: ${{ github.ref_name == 'main' }} # default: true
       push-image: ${{ github.ref_name == 'main' }} # default: false
+      use-reader: true
     secrets: inherit
 
   create-issue:
