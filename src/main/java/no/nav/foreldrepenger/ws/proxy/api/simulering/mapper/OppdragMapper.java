@@ -67,7 +67,6 @@ public class OppdragMapper {
         var op = new Ompostering();
         op.setOmPostering(Boolean.TRUE.equals(ompostering) ? "J" : "N");
         op.setSaksbehId(saksbehandlerId);
-        // op.setTidspktReg(tilSpesialkodetDatoOgKlokkeslett(LocalDateTime.now())); // TODO: Send over LocalDateTime
         op.setTidspktReg(tidspktReg);
         return op;
     }

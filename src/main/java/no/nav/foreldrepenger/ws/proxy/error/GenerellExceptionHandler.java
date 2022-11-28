@@ -36,9 +36,6 @@ import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnaut
 public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
     private static final Logger LOG = LoggerFactory.getLogger(GenerellExceptionHandler.class);
 
-    public GenerellExceptionHandler() {
-    }
-
     /**
      * Håndtering av ulike custom SOAP exceptions
      */
