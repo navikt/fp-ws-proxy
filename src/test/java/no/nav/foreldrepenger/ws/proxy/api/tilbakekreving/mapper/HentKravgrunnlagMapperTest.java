@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
@@ -11,8 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.Lists;
 
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.respons.GjelderType;
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.respons.Kravgrunnlag431Dto;
+import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.GjelderType;
+import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.Kravgrunnlag431Dto;
 import no.nav.foreldrepenger.ws.proxy.util.DateUtil;
 import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.DetaljertKravgrunnlagBelopDto;
 import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.DetaljertKravgrunnlagDto;
@@ -34,12 +36,11 @@ class HentKravgrunnlagMapperTest {
         verifiserAtMappingIkkeMisterNoeData(kravgrunnlag431, detaljertKravgrunnlagDto);
     }
 
-
     @Test
-    void skal_ignorere_belop_postering_med_positiv_ytel() {
-        var feilPostering = hentBeløp(BigDecimal.valueOf(1794), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, TypeKlasseDto.FEIL);
-        var ytelPostering = hentBeløp(BigDecimal.ZERO, BigDecimal.valueOf(1794), BigDecimal.valueOf(3270), BigDecimal.ZERO, TypeKlasseDto.YTEL);
-        var positivYtelPostering = hentBeløp(BigDecimal.valueOf(3930), BigDecimal.ZERO, BigDecimal.valueOf(2454), BigDecimal.ZERO, TypeKlasseDto.YTEL);
+    void skal_sende_ned_alle_posteringer_selv_om_positiv_ytelse() {
+        var feilPostering = hentBeløp(BigDecimal.valueOf(1794), BigDecimal.ZERO, BigDecimal.ZERO, TypeKlasseDto.FEIL);
+        var ytelPostering = hentBeløp(BigDecimal.ZERO, BigDecimal.valueOf(1794), BigDecimal.valueOf(3270), TypeKlasseDto.YTEL);
+        var positivYtelPostering = hentBeløp(BigDecimal.valueOf(3930), BigDecimal.ZERO, BigDecimal.valueOf(2454), TypeKlasseDto.YTEL);
 
         var kravgrunnlagPeriode = new DetaljertKravgrunnlagPeriodeDto();
         kravgrunnlagPeriode.setPeriode(periode(LocalDate.of(2019, 8, 9), LocalDate.of(2019, 8, 16)));
@@ -55,8 +56,7 @@ class HentKravgrunnlagMapperTest {
         // Act
         var kravgrunnlag431 = HentKravgrunnlagMapper.mapTilDto(detaljertKravgrunnlagDto);
 
-        // Fjerner positiv postering fra original detaljertKravgrunnlagDto og sjekker at denne da er identisk til mappet kravgrunnlag431
-        detaljertKravgrunnlagDto.getTilbakekrevingsPeriode().forEach(p -> p.getTilbakekrevingsBelop().remove(positivYtelPostering));
+        // Verify
         verifiserAtMappingIkkeMisterNoeData(kravgrunnlag431, detaljertKravgrunnlagDto);
     }
 
@@ -89,7 +89,7 @@ class HentKravgrunnlagMapperTest {
         assertThat(kravgrunnlag431Dto.behandlendeEnhet()).isEqualTo(detaljertKravgrunnlagDto.getEnhetBehandl());
         assertThat(kravgrunnlag431Dto.kontrollFelt()).isEqualTo(detaljertKravgrunnlagDto.getKontrollfelt());
         assertThat(kravgrunnlag431Dto.saksBehId()).isEqualTo(detaljertKravgrunnlagDto.getSaksbehId());
-        assertThat(kravgrunnlag431Dto.referanse().henvisning()).isEqualTo(detaljertKravgrunnlagDto.getReferanse());
+        assertThat(kravgrunnlag431Dto.referanse()).isEqualTo(detaljertKravgrunnlagDto.getReferanse());
 
         // Verifiser kravgrunnlagPerioder432
         var kravgrunnlagPerioder432DtoListe = kravgrunnlag431Dto.perioder();
@@ -174,8 +174,8 @@ class HentKravgrunnlagMapperTest {
         periode.setTom(konvertDato(LocalDate.of(2016, 3, 31)));
         kravgrunnlagPeriode1.setPeriode(periode);
         kravgrunnlagPeriode1.setBelopSkattMnd(BigDecimal.valueOf(600.00));
-        kravgrunnlagPeriode1.getTilbakekrevingsBelop().add(hentBeløp(BigDecimal.valueOf(6000.00), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, TypeKlasseDto.FEIL));
-        kravgrunnlagPeriode1.getTilbakekrevingsBelop().add(hentBeløp(BigDecimal.ZERO, BigDecimal.valueOf(6000.00), BigDecimal.valueOf(6000.00), BigDecimal.ZERO, TypeKlasseDto.YTEL));
+        kravgrunnlagPeriode1.getTilbakekrevingsBelop().add(hentBeløp(BigDecimal.valueOf(6000.00), BigDecimal.ZERO, BigDecimal.ZERO, TypeKlasseDto.FEIL));
+        kravgrunnlagPeriode1.getTilbakekrevingsBelop().add(hentBeløp(BigDecimal.ZERO, BigDecimal.valueOf(6000.00), BigDecimal.valueOf(6000.00), TypeKlasseDto.YTEL));
 
         DetaljertKravgrunnlagPeriodeDto kravgrunnlagPeriode2 = new DetaljertKravgrunnlagPeriodeDto();
         periode = new PeriodeDto();
@@ -183,8 +183,8 @@ class HentKravgrunnlagMapperTest {
         periode.setTom(konvertDato(LocalDate.of(2016, 4, 30)));
         kravgrunnlagPeriode2.setPeriode(periode);
         kravgrunnlagPeriode2.setBelopSkattMnd(BigDecimal.valueOf(300.00));
-        kravgrunnlagPeriode2.getTilbakekrevingsBelop().add(hentBeløp(BigDecimal.valueOf(3000.00), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, TypeKlasseDto.FEIL));
-        kravgrunnlagPeriode2.getTilbakekrevingsBelop().add(hentBeløp(BigDecimal.ZERO, BigDecimal.valueOf(3000.00), BigDecimal.valueOf(3000.00), BigDecimal.ZERO, TypeKlasseDto.YTEL));
+        kravgrunnlagPeriode2.getTilbakekrevingsBelop().add(hentBeløp(BigDecimal.valueOf(3000.00), BigDecimal.ZERO, BigDecimal.ZERO, TypeKlasseDto.FEIL));
+        kravgrunnlagPeriode2.getTilbakekrevingsBelop().add(hentBeløp(BigDecimal.ZERO, BigDecimal.valueOf(3000.00), BigDecimal.valueOf(3000.00), TypeKlasseDto.YTEL));
 
         DetaljertKravgrunnlagPeriodeDto kravgrunnlagPeriode3 = new DetaljertKravgrunnlagPeriodeDto();
         periode = new PeriodeDto();
@@ -192,20 +192,19 @@ class HentKravgrunnlagMapperTest {
         periode.setTom(konvertDato(LocalDate.of(2016, 5, 26)));
         kravgrunnlagPeriode3.setPeriode(periode);
         kravgrunnlagPeriode3.setBelopSkattMnd(BigDecimal.valueOf(2100.00));
-        kravgrunnlagPeriode3.getTilbakekrevingsBelop().add(hentBeløp(BigDecimal.valueOf(21000.00), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, TypeKlasseDto.FEIL));
-        kravgrunnlagPeriode3.getTilbakekrevingsBelop().add(hentBeløp(BigDecimal.ZERO, BigDecimal.valueOf(21000.00), BigDecimal.valueOf(21000.00), BigDecimal.ZERO, TypeKlasseDto.YTEL));
+        kravgrunnlagPeriode3.getTilbakekrevingsBelop().add(hentBeløp(BigDecimal.valueOf(21000.00), BigDecimal.ZERO, BigDecimal.ZERO, TypeKlasseDto.FEIL));
+        kravgrunnlagPeriode3.getTilbakekrevingsBelop().add(hentBeløp(BigDecimal.ZERO, BigDecimal.valueOf(21000.00), BigDecimal.valueOf(21000.00), TypeKlasseDto.YTEL));
 
         return Lists.newArrayList(kravgrunnlagPeriode1, kravgrunnlagPeriode2, kravgrunnlagPeriode3);
     }
 
-    private static DetaljertKravgrunnlagBelopDto hentBeløp(BigDecimal nyBeløp, BigDecimal tilbakekrevesBeløp,
-                                                    BigDecimal opprUtbetBeløp, BigDecimal uInnkrevdBeløp, TypeKlasseDto typeKlasse) {
+    private static DetaljertKravgrunnlagBelopDto hentBeløp(BigDecimal nyBeløp, BigDecimal tilbakekrevesBeløp, BigDecimal opprUtbetBeløp, TypeKlasseDto typeKlasse) {
         DetaljertKravgrunnlagBelopDto detaljertKravgrunnlagBelop = new DetaljertKravgrunnlagBelopDto();
         detaljertKravgrunnlagBelop.setTypeKlasse(typeKlasse);
         detaljertKravgrunnlagBelop.setBelopNy(nyBeløp);
         detaljertKravgrunnlagBelop.setBelopOpprUtbet(opprUtbetBeløp);
         detaljertKravgrunnlagBelop.setBelopTilbakekreves(tilbakekrevesBeløp);
-        detaljertKravgrunnlagBelop.setBelopUinnkrevd(uInnkrevdBeløp);
+        detaljertKravgrunnlagBelop.setBelopUinnkrevd(BigDecimal.ZERO);
         detaljertKravgrunnlagBelop.setKodeKlasse("FPATAL");
         detaljertKravgrunnlagBelop.setSkattProsent(BigDecimal.valueOf(10.0000));
 
