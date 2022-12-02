@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.ws.proxy.error;
+package no.nav.foreldrepenger.ws.proxy.api.simulering.error;
 
 public class OppdragNedetidException extends RuntimeException {
 

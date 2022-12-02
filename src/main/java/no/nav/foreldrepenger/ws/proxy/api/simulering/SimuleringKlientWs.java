@@ -11,9 +11,9 @@ import javax.xml.ws.WebServiceException;
 
 import org.springframework.stereotype.Component;
 
+import no.nav.foreldrepenger.ws.proxy.api.simulering.error.OppdragNedetidException;
 import no.nav.foreldrepenger.ws.proxy.api.simulering.util.XmlStringFieldFikser;
 import no.nav.foreldrepenger.ws.proxy.error.GenerellSoapFaultException;
-import no.nav.foreldrepenger.ws.proxy.error.OppdragNedetidException;
 import no.nav.system.os.eksponering.simulerfpservicewsbinding.SimulerBeregningFeilUnderBehandling;
 import no.nav.system.os.eksponering.simulerfpservicewsbinding.SimulerFpService;
 import no.nav.system.os.tjenester.simulerfpservice.feil.FeilUnderBehandling;
