@@ -2,14 +2,15 @@ package no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper;
 
 import java.math.BigInteger;
 
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.request.HentKravgrunnlagDetaljDto;
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.request.KodeAksjon;
+import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.KravgrunnlagDetaljDto;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.AnnulerKravGrunnlagDtoRest;
+import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.KodeAksjon;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.TilbakekrevingVedtakDto;
 import no.nav.okonomi.tilbakekrevingservice.KravgrunnlagAnnulerRequest;
 import no.nav.okonomi.tilbakekrevingservice.KravgrunnlagHentDetaljRequest;
 import no.nav.okonomi.tilbakekrevingservice.TilbakekrevingsvedtakRequest;
 import no.nav.tilbakekreving.kravgrunnlag.annuller.v1.AnnullerKravgrunnlagDto;
+import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.HentKravgrunnlagDetaljDto;
 import no.nav.tilbakekreving.tilbakekrevingsvedtak.vedtak.v1.TilbakekrevingsvedtakDto;
 
 public class TilbakekrevingWSMapper {
@@ -41,8 +42,8 @@ public class TilbakekrevingWSMapper {
      * @param tilbakekrevingDto
      * @return
      */
-    public static KravgrunnlagHentDetaljRequest tilKravgrunnlagHentDetaljRequest(HentKravgrunnlagDetaljDto kravgrunnlagDetaljDto) {
-        var hentKravgrunnlagDetalj = new no.nav.tilbakekreving.kravgrunnlag.detalj.v1.HentKravgrunnlagDetaljDto();
+    public static KravgrunnlagHentDetaljRequest tilKravgrunnlagHentDetaljRequest(KravgrunnlagDetaljDto kravgrunnlagDetaljDto) {
+        var hentKravgrunnlagDetalj = new HentKravgrunnlagDetaljDto();
         hentKravgrunnlagDetalj.setKodeAksjon(kravgrunnlagDetaljDto.kodeAksjon().getKode());
         hentKravgrunnlagDetalj.setEnhetAnsvarlig(kravgrunnlagDetaljDto.enhetAnsvarlig());
         hentKravgrunnlagDetalj.setKravgrunnlagId(kravgrunnlagDetaljDto.kravgrunnlagId());

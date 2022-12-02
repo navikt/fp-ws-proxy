@@ -2,10 +2,6 @@ package no.nav.foreldrepenger.ws.proxy.error;
 
 public class FinnesIkkeException extends RuntimeException {
 
-    public FinnesIkkeException(String message, String ekstraInfo) {
-        super(tilMessage(message, ekstraInfo));
-    }
-
     public FinnesIkkeException(String message, String ekstraInfo, Exception e) {
         super(tilMessage(message, ekstraInfo), e);
     }

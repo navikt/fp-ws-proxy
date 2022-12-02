@@ -4,7 +4,6 @@ import static java.util.Collections.emptyList;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NON_AUTHORITATIVE_INFORMATION;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
@@ -30,9 +29,6 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import no.nav.foreldrepenger.ws.proxy.api.simulering.error.OppdragNedetidException;
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.KravgrunnlagErSperretException;
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.MangledeKravgrunnlagException;
 import no.nav.security.token.support.core.exceptions.JwtTokenValidatorException;
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException;
 
@@ -56,16 +52,6 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<Object> handleUgyldigInputException(UgyldigInputException e, WebRequest req) {
         return logAndRespond(BAD_REQUEST, e, req);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<Object> handleMangledeKravgrunnlagException(MangledeKravgrunnlagException e, WebRequest req) {
-        return logAndRespond(NOT_FOUND, e, req);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<Object> handleKravgrunnlagErSperretException(KravgrunnlagErSperretException e, WebRequest req) {
-        return logAndRespond(NON_AUTHORITATIVE_INFORMATION, e, req); // TODO: 203??
     }
 
     @ExceptionHandler
@@ -145,7 +131,6 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
         return switch (status) {
             case FORBIDDEN -> FeilType.MANGLER_TILGANG_FEIL;
             case NOT_FOUND -> FeilType.TOMT_RESULTAT_FEIL;
-            case NON_AUTHORITATIVE_INFORMATION -> FeilType.KRAVGRUNNLAG_SPERRET;
             case SERVICE_UNAVAILABLE -> {
                 if (e instanceof OppdragNedetidException) {
                     yield FeilType.OPPDRAG_FORVENTET_NEDETID;
@@ -158,7 +143,6 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static void logException(HttpStatus status, Exception e, WebRequest req) {
         var path = fullPathTilKaltEndepunkt(req);
-        if (e instanceof KravgrunnlagErSperretException) return;
         if (e instanceof OppdragNedetidException) {
             LOG.info("[{}] {} {}", path, status, e.getMessage(), e);
         } else {
