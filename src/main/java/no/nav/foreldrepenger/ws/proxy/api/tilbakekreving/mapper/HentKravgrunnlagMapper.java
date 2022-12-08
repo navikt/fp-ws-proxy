@@ -7,9 +7,6 @@ import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.FagOmrådeKode;
 import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.GjelderType;
 import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.KlasseType;
@@ -26,15 +23,11 @@ import no.nav.tilbakekreving.typer.v1.TypeKlasseDto;
 
 public class HentKravgrunnlagMapper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HentKravgrunnlagMapper.class);
-
     private HentKravgrunnlagMapper() {
     }
 
     public static Kravgrunnlag431Dto mapTilDto(DetaljertKravgrunnlagDto dto) {
-        var kravgrunnlag431 = formKravgrunnlag431(dto);
-        LOG.info("Referanse etter mapping: {}", kravgrunnlag431.referanse());
-        return kravgrunnlag431;
+        return formKravgrunnlag431(dto);
     }
 
     private static Kravgrunnlag431Dto formKravgrunnlag431(DetaljertKravgrunnlagDto dto) {

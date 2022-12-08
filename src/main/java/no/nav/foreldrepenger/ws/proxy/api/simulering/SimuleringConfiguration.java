@@ -1,5 +1,8 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering;
 
+import java.util.Objects;
+
+import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +21,10 @@ public class SimuleringConfiguration extends WsClient<SimulerFpService> {
 
     @Bean
     public SimulerFpService simuleringKlient(@Value("${oppdrag.service.url}") String serviceUrl) {
-        return createPortForSystemUser(serviceUrl, SimulerFpService.class);
+        var jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
+        jaxWsProxyFactoryBean.setAddress(Objects.requireNonNull(serviceUrl));
+        jaxWsProxyFactoryBean.setServiceClass(SimulerFpService.class);
+        var port = (SimulerFpService) jaxWsProxyFactoryBean.create();
+        return configureClientForSystemUser(port);
     }
 }

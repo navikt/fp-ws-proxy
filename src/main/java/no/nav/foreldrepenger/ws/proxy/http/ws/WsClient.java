@@ -2,13 +2,10 @@ package no.nav.foreldrepenger.ws.proxy.http.ws;
 
 import static no.nav.boot.conditionals.EnvUtil.isDevOrLocal;
 
-import java.util.Objects;
-
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.ext.logging.LoggingInInterceptor;
 import org.apache.cxf.ext.logging.LoggingOutInterceptor;
 import org.apache.cxf.frontend.ClientProxy;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -23,18 +20,15 @@ public class WsClient<T> {
         this.env = env;
     }
 
-    public T createPortForSystemUser(String serviceUrl, Class<?> portType) {
-        T port = createAndConfigurePort(serviceUrl, portType);
+    public T configureClientForSystemUser(T port) {
+        configureClientWithLoggingAndCallId(port);
         endpointStsClientConfig.configureRequestSamlToken(port);
         return port;
     }
 
-    private T createAndConfigurePort(String serviceUrl, Class<?> portType) {
-        var jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
-        jaxWsProxyFactoryBean.setServiceClass(portType);
-        jaxWsProxyFactoryBean.setAddress(Objects.requireNonNull(serviceUrl));
-        T port = (T) jaxWsProxyFactoryBean.create();
+    private T configureClientWithLoggingAndCallId(T port) {
         Client client = ClientProxy.getClient(port);
+        client.getOutInterceptors().add(new CallIdHeaderInterceptor());
 
         if (isDevOrLocal(env)) {
             var loggingInInterceptor = new LoggingInInterceptor();
@@ -46,8 +40,6 @@ public class WsClient<T> {
             client.getOutInterceptors().add(loggingOutInterceptor);
             client.getOutFaultInterceptors().add(loggingInInterceptor);
         }
-        client.getOutInterceptors().add(new CallIdHeaderInterceptor());
         return port;
     }
-
 }
