@@ -4,10 +4,10 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
 
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.KlasseType;
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.KodeAksjon;
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.Kravgrunnlag431Dto;
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.Periode;
+import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.request.KodeAksjon;
+import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.KlasseType;
+import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.Kravgrunnlag431Dto;
+import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.Periode;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.TilbakekrevingBeløp;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.TilbakekrevingPeriodeDto;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.TilbakekrevingVedtakDto;
