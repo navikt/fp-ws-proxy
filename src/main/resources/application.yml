@@ -26,7 +26,7 @@ no.nav.security.jwt:
   issuer:
     sts-rs:
       discoveryurl: http://security-token-service.default/rest/v1/sts/.well-known/openid-configuration
-      accepted_audience: srvfpabakus, srvfpoppdrag, srvfptilbake
+      accepted_audience: srvfpabakus, srvfpoppdrag, srvfptilbake, srvk9-tilbake
 
 # Brukers av klientene på utgående kall (WS eller RS)
 securitytokenservice:
