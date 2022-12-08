@@ -84,7 +84,6 @@ public class OppdragTestdataGenerator {
             130158784100L,
             "15088011020",
             "Z991097",
-            "2018-08-16-15.36.55.543",
             ompostering116,
             oppdragslinje150Dto
         );
