@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.request.HentKravgrunnlagDetaljDto;
 import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.Kravgrunnlag431Dto;
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.AnnulerKravGrunnlagDtoRest;
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.Kvittering;
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.dto.TilbakekrevingVedtakDto;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.KravgrunnlagErSperretException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.MangledeKravgrunnlagException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.ØkonomiKvitteringTolk;
@@ -87,27 +84,27 @@ class TilbakekrevingController {
     //      Fptilbake aggerer på kvittering
     //  Fptilbake lagrer XML requesten. Hvordan løse dette? Logge dett i secure logs?
     //      Løsning: Logg til secure loggs ved feil
-    @PostMapping(TILBAKEKREVINGVEDTAK_PATH)
-    public Kvittering tilbakekrevingsvedtak(@Valid @RequestBody TilbakekrevingVedtakDto tilbakekrevingDto) {
-        LOG.info("Sender request til tilbakekrevingsvedtak til økonomi");
-        var request = TilbakekrevingWSMapper.tilTilbakekrevingsvedtakRequest(tilbakekrevingDto);
-        var respons = tilbakekrevingKlientWs.tilbakekrevingsvedtak(request);
+//  @PostMapping(TILBAKEKREVINGVEDTAK_PATH)
+//  public Kvittering tilbakekrevingsvedtak(@Valid @RequestBody TilbakekrevingVedtakDto tilbakekrevingDto) {
+//      LOG.info("Sender request til tilbakekrevingsvedtak til økonomi");
+//      var request = TilbakekrevingWSMapper.tilTilbakekrevingsvedtakRequest(tilbakekrevingDto);
+//      var respons = tilbakekrevingKlientWs.tilbakekrevingsvedtak(request);
 //        return HentKravgrunnlagMapper.tilKvitteringDto(respons.getMmel());
-        return null;
-    }
+//      return null;
+//  }
 
-    @PostMapping(KRAVGRUNNLAG_PATH)
-    public Kvittering kravgrunnlagAnnuler(@Valid @RequestBody AnnulerKravGrunnlagDtoRest annulerKravGrunnlagDtoRest) {
-        var behandlingId = annulerKravGrunnlagDtoRest.behandlingId();
-        LOG.info("Starter Anullerekravgrunnlag for behandlingId={}", behandlingId);
-        var request = TilbakekrevingWSMapper.tilKravgrunnlagAnnulerRequest(annulerKravGrunnlagDtoRest);
-        var respons = tilbakekrevingKlientWs.kravgrunnlagAnnuler(request);
-        var kvittering = respons.getMmel();
-        LOG.info("AnnulereKravgrunnlag sendt til oppdragssystemet. BehandlingId={} Alvorlighetsgrad='{}' infomelding='{}'",
-            behandlingId,
-            kvittering.getAlvorlighetsgrad(),
-            kvittering.getBeskrMelding());
+//    @PostMapping(KRAVGRUNNLAG_PATH)
+//    public Kvittering kravgrunnlagAnnuler(@Valid @RequestBody AnnulerKravGrunnlagDtoRest annulerKravGrunnlagDtoRest) {
+//        var behandlingId = annulerKravGrunnlagDtoRest.behandlingId();
+//        LOG.info("Starter Anullerekravgrunnlag for behandlingId={}", behandlingId);
+//        var request = TilbakekrevingWSMapper.tilKravgrunnlagAnnulerRequest(annulerKravGrunnlagDtoRest);
+//        var respons = tilbakekrevingKlientWs.kravgrunnlagAnnuler(request);
+//        var kvittering = respons.getMmel();
+//        LOG.info("AnnulereKravgrunnlag sendt til oppdragssystemet. BehandlingId={} Alvorlighetsgrad='{}' infomelding='{}'",
+//            behandlingId,
+//            kvittering.getAlvorlighetsgrad(),
+//            kvittering.getBeskrMelding());
 //        return HentKravgrunnlagMapper.tilKvitteringDto(kvittering);
-        return null;
-    }
+//        return null;
+//    }
 }
