@@ -17,7 +17,7 @@ no.nav.security.jwt:
   issuer:
     sts-rs:
       discoveryurl: http://localhost:8060/rest/v1/sts/.well-known/openid-configuration
-      accepted_audience: OIDC, vtp, srvfpabakus, srvfpoppdrag, srvfptilbake
+      accepted_audience: OIDC, vtp, srvfpabakus, srvfpoppdrag, srvfptilbake, srvk9-tilbake
 
 securitytokenservice:
   username: vtp
