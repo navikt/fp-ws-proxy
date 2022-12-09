@@ -1,5 +1,8 @@
 package no.nav.foreldrepenger.ws.proxy.api.arena;
 
+import java.util.Objects;
+
+import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +21,10 @@ public class ArenaConfiguration extends WsClient<MeldekortUtbetalingsgrunnlagV1>
 
     @Bean
     public MeldekortUtbetalingsgrunnlagV1 klient(@Value("${meldekortutbetalingsgrunnlag.v1.url}") String serviceUrl) {
-        return createPortForSystemUser(serviceUrl, MeldekortUtbetalingsgrunnlagV1.class);
+        var jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
+        jaxWsProxyFactoryBean.setAddress(Objects.requireNonNull(serviceUrl));
+        jaxWsProxyFactoryBean.setServiceClass(MeldekortUtbetalingsgrunnlagV1.class);
+        var port = (MeldekortUtbetalingsgrunnlagV1) jaxWsProxyFactoryBean.create();
+        return configureClientForSystemUser(port);
     }
 }
