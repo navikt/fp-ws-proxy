@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.ws.proxy.error;
 import static java.util.Collections.emptyList;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.GONE;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NON_AUTHORITATIVE_INFORMATION;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -61,7 +62,7 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<Object> handleMangledeKravgrunnlagException(MangledeKravgrunnlagException e, WebRequest req) {
-        return logAndRespond(NOT_FOUND, e, req);
+        return logAndRespond(GONE, e, req);
     }
 
     @ExceptionHandler
@@ -157,7 +158,7 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
         }
         return switch (status) {
             case FORBIDDEN -> FeilType.MANGLER_TILGANG_FEIL;
-            case NOT_FOUND, NO_CONTENT -> FeilType.TOMT_RESULTAT_FEIL;
+            case NOT_FOUND, GONE -> FeilType.TOMT_RESULTAT_FEIL;
             case NON_AUTHORITATIVE_INFORMATION -> FeilType.KRAVGRUNNLAG_SPERRET;
             default -> FeilType.GENERELL_FEIL;
         };
