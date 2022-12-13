@@ -64,8 +64,8 @@ public class HentKravgrunnlagMapper {
     }
 
     private static KravgrunnlagPeriode432Dto formKravgrunnlagPeriode432(DetaljertKravgrunnlagPeriodeDto detaljertKravgrunnlagPeriodeDto) {
-        LocalDate fom = konverter(detaljertKravgrunnlagPeriodeDto.getPeriode().getFom());
-        LocalDate tom = konverter(detaljertKravgrunnlagPeriodeDto.getPeriode().getTom());
+        var fom = konverter(detaljertKravgrunnlagPeriodeDto.getPeriode().getFom());
+        var tom = konverter(detaljertKravgrunnlagPeriodeDto.getPeriode().getTom());
         return new KravgrunnlagPeriode432Dto.Builder()
                 .periode(new Periode(fom, tom))
                 .beløpSkattMnd(detaljertKravgrunnlagPeriodeDto.getBelopSkattMnd())

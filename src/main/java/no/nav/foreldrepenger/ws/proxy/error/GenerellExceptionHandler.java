@@ -33,6 +33,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import no.nav.foreldrepenger.ws.proxy.api.simulering.error.OppdragNedetidException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.KravgrunnlagErSperretException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.MangledeKravgrunnlagException;
+import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.UkjentFeilFraOSException;
 import no.nav.security.token.support.core.exceptions.JwtTokenValidatorException;
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException;
 
@@ -66,6 +67,12 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<Object> handleKravgrunnlagErSperretException(KravgrunnlagErSperretException e, WebRequest req) {
         return logAndRespond(NON_AUTHORITATIVE_INFORMATION, e, req); // TODO: 203??
+    }
+
+
+    @ExceptionHandler
+    public ResponseEntity<Object> handleUkjentFeilFraOSException(UkjentFeilFraOSException e, WebRequest req) {
+        return logAndRespond(INTERNAL_SERVER_ERROR, e, req);
     }
 
     @ExceptionHandler
@@ -142,28 +149,34 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private FeilType tilFeilType(HttpStatus status, Exception e) {
+        if (e instanceof UkjentFeilFraOSException) {
+            return FeilType.KRAVGRUNNLAG_UKJENT_FEIL;
+        }
+        if (e instanceof OppdragNedetidException) {
+            return FeilType.OPPDRAG_FORVENTET_NEDETID;
+        }
         return switch (status) {
             case FORBIDDEN -> FeilType.MANGLER_TILGANG_FEIL;
-            case NOT_FOUND -> FeilType.TOMT_RESULTAT_FEIL;
+            case NOT_FOUND, NO_CONTENT -> FeilType.TOMT_RESULTAT_FEIL;
             case NON_AUTHORITATIVE_INFORMATION -> FeilType.KRAVGRUNNLAG_SPERRET;
-            case SERVICE_UNAVAILABLE -> {
-                if (e instanceof OppdragNedetidException) {
-                    yield FeilType.OPPDRAG_FORVENTET_NEDETID;
-                }
-                yield FeilType.GENERELL_FEIL;
-            }
             default -> FeilType.GENERELL_FEIL;
         };
     }
 
     private static void logException(HttpStatus status, Exception e, WebRequest req) {
         var path = fullPathTilKaltEndepunkt(req);
-        if (e instanceof KravgrunnlagErSperretException) return;
-        if (e instanceof OppdragNedetidException) {
+        if (loggExceptionPåInfoNivå(e)) {
             LOG.info("[{}] {} {}", path, status, e.getMessage(), e);
         } else {
             LOG.warn("[{}] {} {}", path, status, e.getMessage(), e);
         }
+    }
+
+    private static boolean loggExceptionPåInfoNivå(Exception e) {
+        if (e instanceof KravgrunnlagErSperretException) return true;
+        if (e instanceof MangledeKravgrunnlagException) return true;
+        if (e instanceof OppdragNedetidException) return true;
+        return false;
     }
 
     private static String fullPathTilKaltEndepunkt(WebRequest req) {
