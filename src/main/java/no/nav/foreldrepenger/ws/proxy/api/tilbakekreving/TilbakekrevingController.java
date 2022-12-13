@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.request.Hent
 import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.Kravgrunnlag431Dto;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.KravgrunnlagErSperretException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.MangledeKravgrunnlagException;
+import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.UkjentFeilFraOSException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.ØkonomiKvitteringTolk;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.HentKravgrunnlagMapper;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.TilbakekrevingWSMapper;
@@ -44,13 +45,13 @@ class TilbakekrevingController {
 
     @PostMapping(KRAVGRUNNLAG_PATH)
     public Kravgrunnlag431Dto kravgrunnlagHentDetalj(@Valid @RequestBody HentKravgrunnlagDetaljDto kravgrunnlagDetaljDto) {
-        LOG.info("Sender request til tilbakekreving hos økonomi");
+        var behandlingId = kravgrunnlagDetaljDto.behandlingsId();
+        var kravgrunnlagId = kravgrunnlagDetaljDto.kravgrunnlagId().longValue();
+        LOG.info("Henter kravgrunnlag for behandling {} med kravgrunnlagId {}", behandlingId, kravgrunnlagId);
         var request = TilbakekrevingWSMapper.tilKravgrunnlagHentDetaljRequest(kravgrunnlagDetaljDto);
         var response = tilbakekrevingKlientWs.kravgrunnlagHentDetalj(request);
         var kvittering = response.getMmel();
-        var kravgrunnlagId = request.getHentkravgrunnlag().getKravgrunnlagId().longValue();
-        var behandlingId = kravgrunnlagDetaljDto.behandlingsId();
-        validerKvitteringForHentGrunnlag(kravgrunnlagDetaljDto, behandlingId, kravgrunnlagId, kvittering);
+        validerMottattKvitteringVedHentingAvKravgrunnlag(kravgrunnlagDetaljDto, behandlingId, kravgrunnlagId, kvittering);
         LOG.info("Hentet kravgrunnlag fra oppdragsystemet for behandlingId={} KravgrunnlagId={} Alvorlighetsgrad='{}' kodeMelding='{}' infomelding='{}'",
             behandlingId,
             kravgrunnlagId,
@@ -61,18 +62,19 @@ class TilbakekrevingController {
         return HentKravgrunnlagMapper.mapTilDto(response.getDetaljertkravgrunnlag());
     }
 
-    private void validerKvitteringForHentGrunnlag(HentKravgrunnlagDetaljDto kravgrunnlagDetaljDto, Long behandlingId, Long kravgrunnlagId, MmelDto mmel) {
+    private void validerMottattKvitteringVedHentingAvKravgrunnlag(HentKravgrunnlagDetaljDto kravgrunnlagDetaljDto, Long behandlingId, Long kravgrunnlagId, MmelDto mmel) {
         if (!ØkonomiKvitteringTolk.erKvitteringOK(mmel)) {
-            throw new GenerellSoapFaultException(String.format("FPT-539078: Fikk feil fra OS ved henting av kravgrunnlag for behandlingId=%s.%s",
-                behandlingId, formaterKvittering(mmel)));
-        } else if (ØkonomiKvitteringTolk.erKravgrunnlagetIkkeFinnes(mmel)) {
+            throw new GenerellSoapFaultException(String.format("FPT-539078: Fikk feil fra OS ved henting av kravgrunnlag for behandlingId=%s. %s", behandlingId, formaterKvittering(mmel)));
+        }
+        if (ØkonomiKvitteringTolk.erKravgrunnlagetIkkeFinnes(mmel)) {
             SECURE_LOG.info("Kravgrunnlag finnes ikke for request {}", kravgrunnlagDetaljDto);
             throw new MangledeKravgrunnlagException(behandlingId, kravgrunnlagId, formaterKvittering(mmel));
-        } else if (ØkonomiKvitteringTolk.erKravgrunnlagetSperret(mmel)) {
+        }
+        if (ØkonomiKvitteringTolk.erKravgrunnlagetSperret(mmel)) {
             throw new KravgrunnlagErSperretException(behandlingId, kravgrunnlagId, formaterKvittering(mmel));
-        } else if (ØkonomiKvitteringTolk.harKravgrunnlagNoeUkjentFeil(mmel)) {
-            throw new GenerellSoapFaultException(String.format("FPT-539085: Fikk ukjent feil fra OS ved henting av kravgrunnlag for behandlingId=%s og kravgrunnlagId=%s.%s",
-                behandlingId, kravgrunnlagId, formaterKvittering(mmel)));
+        }
+        if (ØkonomiKvitteringTolk.harKravgrunnlagNoeUkjentFeil(mmel)) {
+            throw new UkjentFeilFraOSException(behandlingId, kravgrunnlagId, formaterKvittering(mmel));
         }
     }
 

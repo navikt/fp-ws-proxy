@@ -1,8 +1,16 @@
 package no.nav.foreldrepenger.ws.proxy.error;
 
 import static java.util.Collections.emptyList;
+import static no.nav.foreldrepenger.ws.proxy.error.FeilType.GENERELL_FEIL;
+import static no.nav.foreldrepenger.ws.proxy.error.FeilType.KRAVGRUNNLAG_MANGLER;
+import static no.nav.foreldrepenger.ws.proxy.error.FeilType.KRAVGRUNNLAG_SPERRET;
+import static no.nav.foreldrepenger.ws.proxy.error.FeilType.KRAVGRUNNLAG_UKJENT_FEIL;
+import static no.nav.foreldrepenger.ws.proxy.error.FeilType.MANGLER_TILGANG_FEIL;
+import static no.nav.foreldrepenger.ws.proxy.error.FeilType.OPPDRAG_FORVENTET_NEDETID;
+import static no.nav.foreldrepenger.ws.proxy.error.FeilType.TOMT_RESULTAT_FEIL;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.GONE;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NON_AUTHORITATIVE_INFORMATION;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -33,6 +41,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import no.nav.foreldrepenger.ws.proxy.api.simulering.error.OppdragNedetidException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.KravgrunnlagErSperretException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.MangledeKravgrunnlagException;
+import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.UkjentFeilFraOSException;
 import no.nav.security.token.support.core.exceptions.JwtTokenValidatorException;
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException;
 
@@ -45,12 +54,12 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler
     public ResponseEntity<Object> handleOppdragNedetidException(OppdragNedetidException e, WebRequest req) {
-        return logAndRespond(SERVICE_UNAVAILABLE, e, req);
+        return logAndRespond(SERVICE_UNAVAILABLE, OPPDRAG_FORVENTET_NEDETID, e, req);
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> handleSikkerhetsbegrensingException(SikkerhetsbegrensingException e, WebRequest req) {
-        return logAndRespond(UNAUTHORIZED, e, req);
+        return logAndRespond(UNAUTHORIZED, MANGLER_TILGANG_FEIL, e, req);
     }
 
     @ExceptionHandler
@@ -60,17 +69,22 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<Object> handleMangledeKravgrunnlagException(MangledeKravgrunnlagException e, WebRequest req) {
-        return logAndRespond(NOT_FOUND, e, req);
+        return logAndRespond(GONE, KRAVGRUNNLAG_MANGLER, e, req);
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> handleKravgrunnlagErSperretException(KravgrunnlagErSperretException e, WebRequest req) {
-        return logAndRespond(NON_AUTHORITATIVE_INFORMATION, e, req); // TODO: 203??
+        return logAndRespond(NON_AUTHORITATIVE_INFORMATION, KRAVGRUNNLAG_SPERRET, e, req);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Object> handleUkjentFeilFraOSException(UkjentFeilFraOSException e, WebRequest req) {
+        return logAndRespond(INTERNAL_SERVER_ERROR, KRAVGRUNNLAG_UKJENT_FEIL, e, req);
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> handleFinnesIkkeException(FinnesIkkeException e, WebRequest req) {
-        return logAndRespond(NOT_FOUND, e, req);
+        return logAndRespond(NOT_FOUND, TOMT_RESULTAT_FEIL, e, req);
     }
 
     @ExceptionHandler
@@ -78,20 +92,19 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
         return logAndRespond(INTERNAL_SERVER_ERROR, e, req);
     }
 
-
     /**
      * Håndtering av ulike custom REST exceptions
      */
     @ExceptionHandler
     public ResponseEntity<Object> handleJwtUnauthorizedException(JwtTokenUnauthorizedException e, WebRequest req) {
-        return logAndRespond(UNAUTHORIZED, e, req);
+        return logAndRespond(UNAUTHORIZED, MANGLER_TILGANG_FEIL, e, req);
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> handleUnauthenticatedOIDCException(JwtTokenValidatorException e, WebRequest req) {
         Collection<FeltFeilDto> feilene = new ArrayList<>();
         feilene.add(new FeltFeilDto("Token utløper", e.getExpiryDate().toString()));
-        return logAndRespond(FORBIDDEN, e, req, feilene);
+        return logAndRespond(FORBIDDEN, MANGLER_TILGANG_FEIL, e, req, feilene);
     }
 
 
@@ -104,7 +117,7 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
         for (var fieldError : e.getBindingResult().getFieldErrors()) {
             feilene.add(new FeltFeilDto(fieldError.getField(), fieldError.getDefaultMessage()));
         }
-        return logAndRespond(UNPROCESSABLE_ENTITY, e, request, feilene);
+        return logAndRespond(UNPROCESSABLE_ENTITY, GENERELL_FEIL, e, request, feilene);
     }
 
     @ExceptionHandler
@@ -119,11 +132,7 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
             var feltNavn = getFeltNavn(constraintViolation.getPropertyPath());
             feilene.add(new FeltFeilDto(feltNavn, constraintViolation.getMessage()));
         }
-        return logAndRespond(UNPROCESSABLE_ENTITY, e, req, feilene);
-    }
-
-    private String getFeltNavn(Path propertyPath) {
-        return propertyPath instanceof PathImpl pi ? pi.getLeafNode().toString() : null;
+        return logAndRespond(UNPROCESSABLE_ENTITY, GENERELL_FEIL, e, req, feilene);
     }
 
     @ExceptionHandler
@@ -131,39 +140,38 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
         return logAndRespond(INTERNAL_SERVER_ERROR, e, req);
     }
 
+    private String getFeltNavn(Path propertyPath) {
+        return propertyPath instanceof PathImpl pi ? pi.getLeafNode().toString() : null;
+    }
+
     private ResponseEntity<Object> logAndRespond(HttpStatus status, Exception e, WebRequest req) {
-        return logAndRespond(status, e, req, emptyList());
+        return logAndRespond(status, GENERELL_FEIL, e, req, emptyList());
     }
 
-    private ResponseEntity<Object> logAndRespond(HttpStatus status, Exception e, WebRequest req, Collection<FeltFeilDto> feltFeil) {
+    private ResponseEntity<Object> logAndRespond(HttpStatus status, FeilType feilType, Exception e, WebRequest req) {
+        return logAndRespond(status, feilType, e, req, emptyList());
+    }
+
+    private ResponseEntity<Object> logAndRespond(HttpStatus status, FeilType feilType, Exception e, WebRequest req, Collection<FeltFeilDto> feltFeil) {
         logException(status, e, req);
-        var errorBody = new FeilDto(tilFeilType(status, e), e.getMessage(), feltFeil);
+        var errorBody = new FeilDto(feilType, e.getMessage(), feltFeil);
         return handleExceptionInternal(e, errorBody, new HttpHeaders(), status, req);
-    }
-
-    private FeilType tilFeilType(HttpStatus status, Exception e) {
-        return switch (status) {
-            case FORBIDDEN -> FeilType.MANGLER_TILGANG_FEIL;
-            case NOT_FOUND -> FeilType.TOMT_RESULTAT_FEIL;
-            case NON_AUTHORITATIVE_INFORMATION -> FeilType.KRAVGRUNNLAG_SPERRET;
-            case SERVICE_UNAVAILABLE -> {
-                if (e instanceof OppdragNedetidException) {
-                    yield FeilType.OPPDRAG_FORVENTET_NEDETID;
-                }
-                yield FeilType.GENERELL_FEIL;
-            }
-            default -> FeilType.GENERELL_FEIL;
-        };
     }
 
     private static void logException(HttpStatus status, Exception e, WebRequest req) {
         var path = fullPathTilKaltEndepunkt(req);
-        if (e instanceof KravgrunnlagErSperretException) return;
-        if (e instanceof OppdragNedetidException) {
+        if (loggExceptionPåInfoNivå(e)) {
             LOG.info("[{}] {} {}", path, status, e.getMessage(), e);
         } else {
             LOG.warn("[{}] {} {}", path, status, e.getMessage(), e);
         }
+    }
+
+    private static boolean loggExceptionPåInfoNivå(Exception e) {
+        if (e instanceof KravgrunnlagErSperretException) return true;
+        if (e instanceof MangledeKravgrunnlagException) return true;
+        if (e instanceof OppdragNedetidException) return true;
+        return false;
     }
 
     private static String fullPathTilKaltEndepunkt(WebRequest req) {
