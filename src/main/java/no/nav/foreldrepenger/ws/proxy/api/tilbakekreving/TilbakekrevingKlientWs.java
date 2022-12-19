@@ -30,10 +30,13 @@ class TilbakekrevingKlientWs {
         }
     }
 
-    public TilbakekrevingsvedtakResponse tilbakekrevingsvedtak(TilbakekrevingsvedtakRequest request) {
-        return klient.tilbakekrevingsvedtak(request); // TODO: Egen definer response dto!
+    public TilbakekrevingsvedtakResponse iverksettTilbakekrevingsvedtak(TilbakekrevingsvedtakRequest request) {
+        try {
+            return klient.tilbakekrevingsvedtak(request);
+        } catch (SOAPFaultException e) { // NOSONAR
+            throw new GenerellSoapFaultException("F-942048: Iverksetting av tilbakekrevingsvedtak feilet med følgende SOAP feil:", e);
+        }
     }
-
 
     public KravgrunnlagAnnulerResponse kravgrunnlagAnnuler(KravgrunnlagAnnulerRequest request) {
         return klient.kravgrunnlagAnnuler(request);

@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.request.HentKravgrunnlagDetaljDto;
 import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.FagOmrådeKode;
 import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.GjelderType;
 import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.KlasseType;
@@ -16,6 +17,7 @@ import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.Krav
 import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.KravgrunnlagPeriode432Dto;
 import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.Periode;
 import no.nav.foreldrepenger.ws.proxy.util.DateUtil;
+import no.nav.okonomi.tilbakekrevingservice.KravgrunnlagHentDetaljRequest;
 import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.DetaljertKravgrunnlagBelopDto;
 import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.DetaljertKravgrunnlagDto;
 import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.DetaljertKravgrunnlagPeriodeDto;
@@ -26,7 +28,18 @@ public class HentKravgrunnlagMapper {
     private HentKravgrunnlagMapper() {
     }
 
-    public static Kravgrunnlag431Dto mapTilDto(DetaljertKravgrunnlagDto dto) {
+    public static KravgrunnlagHentDetaljRequest tilKravgrunnlagHentDetaljRequest(HentKravgrunnlagDetaljDto kravgrunnlagDetaljDto) {
+        var hentKravgrunnlagDetalj = new no.nav.tilbakekreving.kravgrunnlag.detalj.v1.HentKravgrunnlagDetaljDto();
+        hentKravgrunnlagDetalj.setKodeAksjon(kravgrunnlagDetaljDto.kodeAksjon().getKode());
+        hentKravgrunnlagDetalj.setEnhetAnsvarlig(kravgrunnlagDetaljDto.enhetAnsvarlig());
+        hentKravgrunnlagDetalj.setKravgrunnlagId(kravgrunnlagDetaljDto.kravgrunnlagId());
+        hentKravgrunnlagDetalj.setSaksbehId(kravgrunnlagDetaljDto.saksbehId());
+        var hentKravgrunnlagRequest = new KravgrunnlagHentDetaljRequest();
+        hentKravgrunnlagRequest.setHentkravgrunnlag(hentKravgrunnlagDetalj);
+        return hentKravgrunnlagRequest;
+    }
+
+    public static Kravgrunnlag431Dto mapTilKravgrunnlag431DtoRespons(DetaljertKravgrunnlagDto dto) {
         return formKravgrunnlag431(dto);
     }
 

@@ -32,7 +32,7 @@ class HentKravgrunnlagMapperTest {
     @Test
     void skal_mapTilDomene_fraHentgrunnlagrespons() {
         var detaljertKravgrunnlagDto = hentGrunnlag();
-        var kravgrunnlag431 = HentKravgrunnlagMapper.mapTilDto(detaljertKravgrunnlagDto);
+        var kravgrunnlag431 = HentKravgrunnlagMapper.mapTilKravgrunnlag431DtoRespons(detaljertKravgrunnlagDto);
         verifiserAtMappingIkkeMisterNoeData(kravgrunnlag431, detaljertKravgrunnlagDto);
     }
 
@@ -54,7 +54,7 @@ class HentKravgrunnlagMapperTest {
         detaljertKravgrunnlagDto.getTilbakekrevingsPeriode().add(kravgrunnlagPeriode);
 
         // Act
-        var kravgrunnlag431 = HentKravgrunnlagMapper.mapTilDto(detaljertKravgrunnlagDto);
+        var kravgrunnlag431 = HentKravgrunnlagMapper.mapTilKravgrunnlag431DtoRespons(detaljertKravgrunnlagDto);
 
         // Verify
         verifiserAtMappingIkkeMisterNoeData(kravgrunnlag431, detaljertKravgrunnlagDto);
