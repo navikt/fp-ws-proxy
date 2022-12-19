@@ -45,15 +45,13 @@ class TilbakekrevingController {
 
     @PostMapping(KRAVGRUNNLAG_PATH)
     public Kravgrunnlag431Dto kravgrunnlagHentDetalj(@Valid @RequestBody HentKravgrunnlagDetaljDto kravgrunnlagDetaljDto) {
-        var behandlingId = kravgrunnlagDetaljDto.behandlingsId();
         var kravgrunnlagId = kravgrunnlagDetaljDto.kravgrunnlagId().longValue();
-        LOG.info("Henter kravgrunnlag for behandling {} med kravgrunnlagId {}", behandlingId, kravgrunnlagId);
+        LOG.info("Henter kravgrunnlag for kravgrunnlagId {}", kravgrunnlagId);
         var request = TilbakekrevingWSMapper.tilKravgrunnlagHentDetaljRequest(kravgrunnlagDetaljDto);
         var response = tilbakekrevingKlientWs.kravgrunnlagHentDetalj(request);
         var kvittering = response.getMmel();
-        validerMottattKvitteringVedHentingAvKravgrunnlag(kravgrunnlagDetaljDto, behandlingId, kravgrunnlagId, kvittering);
-        LOG.info("Hentet kravgrunnlag fra oppdragsystemet for behandlingId={} KravgrunnlagId={} Alvorlighetsgrad='{}' kodeMelding='{}' infomelding='{}'",
-            behandlingId,
+        validerMottattKvitteringVedHentingAvKravgrunnlag(kravgrunnlagDetaljDto, kravgrunnlagId, kvittering);
+        LOG.info("Kravgrunnlag hentet OK for kravgrunnlagId={} med Alvorlighetsgrad='{}' kodeMelding='{}' infomelding='{}'",
             kravgrunnlagId,
             kvittering.getAlvorlighetsgrad(),
             kvittering.getKodeMelding(),
@@ -62,19 +60,19 @@ class TilbakekrevingController {
         return HentKravgrunnlagMapper.mapTilDto(response.getDetaljertkravgrunnlag());
     }
 
-    private void validerMottattKvitteringVedHentingAvKravgrunnlag(HentKravgrunnlagDetaljDto kravgrunnlagDetaljDto, Long behandlingId, Long kravgrunnlagId, MmelDto mmel) {
+    private void validerMottattKvitteringVedHentingAvKravgrunnlag(HentKravgrunnlagDetaljDto kravgrunnlagDetaljDto, Long kravgrunnlagId, MmelDto mmel) {
         if (!ØkonomiKvitteringTolk.erKvitteringOK(mmel)) {
-            throw new GenerellSoapFaultException(String.format("FPT-539078: Fikk feil fra OS ved henting av kravgrunnlag for behandlingId=%s. %s", behandlingId, formaterKvittering(mmel)));
+            throw new GenerellSoapFaultException(String.format("FPT-539078: Fikk feil fra OS ved henting av kravgrunnlag for kravgrunnlagId=%s. %s", kravgrunnlagId, formaterKvittering(mmel)));
         }
         if (ØkonomiKvitteringTolk.erKravgrunnlagetIkkeFinnes(mmel)) {
             SECURE_LOG.info("Kravgrunnlag finnes ikke for request {}", kravgrunnlagDetaljDto);
-            throw new MangledeKravgrunnlagException(behandlingId, kravgrunnlagId, formaterKvittering(mmel));
+            throw new MangledeKravgrunnlagException(kravgrunnlagId, formaterKvittering(mmel));
         }
         if (ØkonomiKvitteringTolk.erKravgrunnlagetSperret(mmel)) {
-            throw new KravgrunnlagErSperretException(behandlingId, kravgrunnlagId, formaterKvittering(mmel));
+            throw new KravgrunnlagErSperretException(kravgrunnlagId, formaterKvittering(mmel));
         }
         if (ØkonomiKvitteringTolk.harKravgrunnlagNoeUkjentFeil(mmel)) {
-            throw new UkjentFeilFraOSException(behandlingId, kravgrunnlagId, formaterKvittering(mmel));
+            throw new UkjentFeilFraOSException(kravgrunnlagId, formaterKvittering(mmel));
         }
     }
 
