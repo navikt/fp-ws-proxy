@@ -6,17 +6,17 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.request.AnnullerKravGrunnlagDto;
-import no.nav.okonomi.tilbakekrevingservice.KravgrunnlagAnnulerRequest;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.request.AnnullerKravGrunnlagDto;
 
 class AnnullerKravgrunnlagRequestMapperTest {
 
-
     @Test
-    void vvsvdvs() {
-        AnnullerKravGrunnlagDto annullerKravGrunnlagDto = new AnnullerKravGrunnlagDto("A", BigInteger.valueOf(100000L), "W123456");
-        KravgrunnlagAnnulerRequest kravgrunnlagAnnulerRequest = AnnullerKravgrunnlagRequestMapper.tilKravgrunnlagAnnulerRequest(annullerKravGrunnlagDto);
+    void verifiserKorrektMappingAvAnnullerKravgrunnlagRequest() {
+        var annullerKravGrunnlagDto = new AnnullerKravGrunnlagDto("A", BigInteger.valueOf(100000L), "W123456");
+
+        var kravgrunnlagAnnulerRequest = AnnullerKravgrunnlagRequestMapper.tilKravgrunnlagAnnulerRequest(annullerKravGrunnlagDto);
         var annullerkravgrunnlagXML = kravgrunnlagAnnulerRequest.getAnnullerkravgrunnlag();
+
         assertThat(annullerkravgrunnlagXML).isNotNull();
         assertThat(annullerkravgrunnlagXML.getKodeAksjon()).isEqualTo(annullerKravGrunnlagDto.kodeAksjon());
         assertThat(annullerkravgrunnlagXML.getVedtakId()).isEqualTo(annullerKravGrunnlagDto.vedtakId());

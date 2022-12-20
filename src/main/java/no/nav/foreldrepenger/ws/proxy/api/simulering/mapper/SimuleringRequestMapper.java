@@ -5,8 +5,8 @@ import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.Økonomistøt
 import java.time.LocalDateTime;
 import java.util.List;
 
-import no.nav.foreldrepenger.kontrakter.simulering.request.Oppdrag110Dto;
-import no.nav.foreldrepenger.kontrakter.simulering.request.OppdragskontrollDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Oppdrag110Dto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.OppdragskontrollDto;
 import no.nav.foreldrepenger.ws.proxy.api.simulering.Fagområde;
 import no.nav.foreldrepenger.ws.proxy.api.simulering.YtelseType;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpservicegrensesnitt.ObjectFactory;

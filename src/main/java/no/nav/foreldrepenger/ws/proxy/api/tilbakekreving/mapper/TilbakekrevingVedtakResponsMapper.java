@@ -5,10 +5,10 @@ import static no.nav.foreldrepenger.ws.proxy.util.DateUtil.convertToLocalDate;
 
 import java.util.List;
 
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.iverksett.TilbakekrevingVedtakDTO;
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.iverksett.TilbakekrevingsbelopDTO;
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.iverksett.TilbakekrevingsperiodeDTO;
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.Periode;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.iverksett.TilbakekrevingVedtakDTO;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.iverksett.TilbakekrevingsbelopDTO;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.iverksett.TilbakekrevingsperiodeDTO;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.respons.Periode;
 import no.nav.okonomi.tilbakekrevingservice.TilbakekrevingsvedtakResponse;
 import no.nav.tilbakekreving.tilbakekrevingsvedtak.vedtak.v1.TilbakekrevingsbelopDto;
 import no.nav.tilbakekreving.tilbakekrevingsvedtak.vedtak.v1.TilbakekrevingsperiodeDto;

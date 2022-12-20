@@ -7,13 +7,13 @@ import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import no.nav.foreldrepenger.kontrakter.arena.request.ArenaRequestDto;
-import no.nav.foreldrepenger.kontrakter.arena.respons.BeløpDto;
-import no.nav.foreldrepenger.kontrakter.arena.respons.FagsystemDto;
-import no.nav.foreldrepenger.kontrakter.arena.respons.MeldekortUtbetalingsgrunnlagMeldekortDto;
-import no.nav.foreldrepenger.kontrakter.arena.respons.MeldekortUtbetalingsgrunnlagSakDto;
-import no.nav.foreldrepenger.kontrakter.arena.respons.YtelseStatusDto;
-import no.nav.foreldrepenger.kontrakter.arena.respons.YtelseTypeDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.request.ArenaRequestDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.respons.BeløpDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.respons.FagsystemDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.respons.MeldekortUtbetalingsgrunnlagMeldekortDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.respons.MeldekortUtbetalingsgrunnlagSakDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.respons.YtelseStatusDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.respons.YtelseTypeDto;
 import no.nav.foreldrepenger.ws.proxy.util.DateUtil;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.informasjon.Meldekort;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.informasjon.ObjectFactory;

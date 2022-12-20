@@ -7,39 +7,26 @@ import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.request.HentKravgrunnlagDetaljDto;
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.FagOmrådeKode;
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.GjelderType;
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.KlasseType;
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.KravStatusKode;
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.Kravgrunnlag431Dto;
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.KravgrunnlagBelop433Dto;
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.KravgrunnlagPeriode432Dto;
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.Periode;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.respons.FagOmrådeKode;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.respons.GjelderType;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.respons.KlasseType;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.respons.KravStatusKode;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.respons.Kravgrunnlag431Dto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.respons.KravgrunnlagBelop433Dto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.respons.KravgrunnlagPeriode432Dto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.respons.Periode;
 import no.nav.foreldrepenger.ws.proxy.util.DateUtil;
-import no.nav.okonomi.tilbakekrevingservice.KravgrunnlagHentDetaljRequest;
 import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.DetaljertKravgrunnlagBelopDto;
 import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.DetaljertKravgrunnlagDto;
 import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.DetaljertKravgrunnlagPeriodeDto;
 import no.nav.tilbakekreving.typer.v1.TypeKlasseDto;
 
-public class HentKravgrunnlagMapper {
+public class Kravgrunnlag431DtoMapper {
 
-    private HentKravgrunnlagMapper() {
+    private Kravgrunnlag431DtoMapper() {
     }
 
-    public static KravgrunnlagHentDetaljRequest tilKravgrunnlagHentDetaljRequest(HentKravgrunnlagDetaljDto kravgrunnlagDetaljDto) {
-        var hentKravgrunnlagDetalj = new no.nav.tilbakekreving.kravgrunnlag.detalj.v1.HentKravgrunnlagDetaljDto();
-        hentKravgrunnlagDetalj.setKodeAksjon(kravgrunnlagDetaljDto.kodeAksjon().getKode());
-        hentKravgrunnlagDetalj.setEnhetAnsvarlig(kravgrunnlagDetaljDto.enhetAnsvarlig());
-        hentKravgrunnlagDetalj.setKravgrunnlagId(kravgrunnlagDetaljDto.kravgrunnlagId());
-        hentKravgrunnlagDetalj.setSaksbehId(kravgrunnlagDetaljDto.saksbehId());
-        var hentKravgrunnlagRequest = new KravgrunnlagHentDetaljRequest();
-        hentKravgrunnlagRequest.setHentkravgrunnlag(hentKravgrunnlagDetalj);
-        return hentKravgrunnlagRequest;
-    }
-
-    public static Kravgrunnlag431Dto mapTilKravgrunnlag431DtoRespons(DetaljertKravgrunnlagDto dto) {
+    public static Kravgrunnlag431Dto tilDto(DetaljertKravgrunnlagDto dto) {
         return formKravgrunnlag431(dto);
     }
 
@@ -72,7 +59,7 @@ public class HentKravgrunnlagMapper {
 
     private static List<KravgrunnlagPeriode432Dto> formKravgrunnlagPeriode432Liste(DetaljertKravgrunnlagDto detaljertKravgrunnlagDto) {
         return safeStream(detaljertKravgrunnlagDto.getTilbakekrevingsPeriode())
-            .map(HentKravgrunnlagMapper::formKravgrunnlagPeriode432)
+            .map(Kravgrunnlag431DtoMapper::formKravgrunnlagPeriode432)
             .toList();
     }
 
@@ -88,7 +75,7 @@ public class HentKravgrunnlagMapper {
 
     private static List<KravgrunnlagBelop433Dto> formKravgrunnlagBelop433Liste(DetaljertKravgrunnlagPeriodeDto detaljertKravgrunnlagPeriodeDto) {
         return safeStream(detaljertKravgrunnlagPeriodeDto.getTilbakekrevingsBelop())
-            .map(HentKravgrunnlagMapper::formKravgrunnlagBelop433)
+            .map(Kravgrunnlag431DtoMapper::formKravgrunnlagBelop433)
             .toList();
     }
 

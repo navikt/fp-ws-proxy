@@ -1,13 +1,13 @@
 package no.nav.foreldrepenger.ws.proxy.error;
 
 import static java.util.Collections.emptyList;
-import static no.nav.foreldrepenger.ws.proxy.error.FeilType.GENERELL_FEIL;
-import static no.nav.foreldrepenger.ws.proxy.error.FeilType.KRAVGRUNNLAG_MANGLER;
-import static no.nav.foreldrepenger.ws.proxy.error.FeilType.KRAVGRUNNLAG_SPERRET;
-import static no.nav.foreldrepenger.ws.proxy.error.FeilType.KVITTERING_UKJENT_FEIL;
-import static no.nav.foreldrepenger.ws.proxy.error.FeilType.MANGLER_TILGANG_FEIL;
-import static no.nav.foreldrepenger.ws.proxy.error.FeilType.OPPDRAG_FORVENTET_NEDETID;
-import static no.nav.foreldrepenger.ws.proxy.error.FeilType.TOMT_RESULTAT_FEIL;
+import static no.nav.foreldrepenger.kontrakter.fpwsproxy.error.FeilType.GENERELL_FEIL;
+import static no.nav.foreldrepenger.kontrakter.fpwsproxy.error.FeilType.KRAVGRUNNLAG_MANGLER;
+import static no.nav.foreldrepenger.kontrakter.fpwsproxy.error.FeilType.KRAVGRUNNLAG_SPERRET;
+import static no.nav.foreldrepenger.kontrakter.fpwsproxy.error.FeilType.KVITTERING_UKJENT_FEIL;
+import static no.nav.foreldrepenger.kontrakter.fpwsproxy.error.FeilType.MANGLER_TILGANG_FEIL;
+import static no.nav.foreldrepenger.kontrakter.fpwsproxy.error.FeilType.OPPDRAG_FORVENTET_NEDETID;
+import static no.nav.foreldrepenger.kontrakter.fpwsproxy.error.FeilType.TOMT_RESULTAT_FEIL;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.GONE;
@@ -38,6 +38,9 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.error.FeilDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.error.FeilType;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.error.FeltFeilDto;
 import no.nav.foreldrepenger.ws.proxy.api.simulering.error.OppdragNedetidException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.KravgrunnlagErSperretException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.MangledeKravgrunnlagException;

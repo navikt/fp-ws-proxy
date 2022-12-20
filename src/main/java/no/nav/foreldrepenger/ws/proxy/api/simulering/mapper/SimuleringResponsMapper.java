@@ -4,10 +4,10 @@ import static no.nav.foreldrepenger.common.util.StreamUtil.safeStream;
 
 import java.util.List;
 
-import no.nav.foreldrepenger.kontrakter.simulering.respons.BeregningDto;
-import no.nav.foreldrepenger.kontrakter.simulering.respons.BeregningStoppnivåDetaljerDto;
-import no.nav.foreldrepenger.kontrakter.simulering.respons.BeregningStoppnivåDto;
-import no.nav.foreldrepenger.kontrakter.simulering.respons.BeregningsPeriodeDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.respons.BeregningDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.respons.BeregningStoppnivåDetaljerDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.respons.BeregningStoppnivåDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.respons.BeregningsPeriodeDto;
 import no.nav.system.os.entiteter.beregningskjema.BeregningStoppnivaa;
 import no.nav.system.os.entiteter.beregningskjema.BeregningStoppnivaaDetaljer;
 import no.nav.system.os.entiteter.beregningskjema.BeregningsPeriode;

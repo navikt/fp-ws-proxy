@@ -14,7 +14,7 @@ import no.nav.okonomi.tilbakekrevingservice.TilbakekrevingsvedtakRequest;
 import no.nav.okonomi.tilbakekrevingservice.TilbakekrevingsvedtakResponse;
 
 @Component
-class TilbakekrevingKlientWs {
+public class TilbakekrevingKlientWs {
 
     private final TilbakekrevingPortType klient;
 

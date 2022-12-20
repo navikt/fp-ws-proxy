@@ -3,19 +3,19 @@ package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 import java.time.LocalDate;
 import java.util.List;
 
-import no.nav.foreldrepenger.kontrakter.simulering.request.KodeEndring;
-import no.nav.foreldrepenger.kontrakter.simulering.request.KodeEndringLinje;
-import no.nav.foreldrepenger.kontrakter.simulering.request.KodeFagområde;
-import no.nav.foreldrepenger.kontrakter.simulering.request.KodeKlassifik;
-import no.nav.foreldrepenger.kontrakter.simulering.request.KodeStatusLinje;
-import no.nav.foreldrepenger.kontrakter.simulering.request.LukketPeriode;
-import no.nav.foreldrepenger.kontrakter.simulering.request.Ompostering116Dto;
-import no.nav.foreldrepenger.kontrakter.simulering.request.Oppdrag110Dto;
-import no.nav.foreldrepenger.kontrakter.simulering.request.Oppdragslinje150Dto;
-import no.nav.foreldrepenger.kontrakter.simulering.request.Refusjonsinfo156Dto;
-import no.nav.foreldrepenger.kontrakter.simulering.request.SatsDto;
-import no.nav.foreldrepenger.kontrakter.simulering.request.TypeSats;
-import no.nav.foreldrepenger.kontrakter.simulering.request.UtbetalingsgradDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeEndring;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeEndringLinje;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeFagområde;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeKlassifik;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeStatusLinje;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.LukketPeriode;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Ompostering116Dto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Oppdrag110Dto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Oppdragslinje150Dto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Refusjonsinfo156Dto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.SatsDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.TypeSats;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.UtbetalingsgradDto;
 
 public class OppdragTestdataGenerator {
 

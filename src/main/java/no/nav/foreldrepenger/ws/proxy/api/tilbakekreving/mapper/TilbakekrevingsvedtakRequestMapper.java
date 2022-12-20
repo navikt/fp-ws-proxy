@@ -5,10 +5,10 @@ import java.time.LocalDate;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.iverksett.TilbakekrevingVedtakDTO;
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.iverksett.TilbakekrevingsbelopDTO;
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.iverksett.TilbakekrevingsperiodeDTO;
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.Periode;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.iverksett.TilbakekrevingVedtakDTO;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.iverksett.TilbakekrevingsbelopDTO;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.iverksett.TilbakekrevingsperiodeDTO;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.respons.Periode;
 import no.nav.foreldrepenger.ws.proxy.util.DateUtil;
 import no.nav.okonomi.tilbakekrevingservice.TilbakekrevingsvedtakRequest;
 import no.nav.tilbakekreving.tilbakekrevingsvedtak.vedtak.v1.TilbakekrevingsbelopDto;
@@ -28,7 +28,7 @@ public class TilbakekrevingsvedtakRequestMapper {
         return request;
     }
 
-    private static TilbakekrevingsvedtakDto tilTilbakekrevingsvedtakDto(TilbakekrevingVedtakDTO tilbakekrevingVedtakDto) {
+    protected static TilbakekrevingsvedtakDto tilTilbakekrevingsvedtakDto(TilbakekrevingVedtakDTO tilbakekrevingVedtakDto) {
         var tilbakekrevingsvedtakXML = new TilbakekrevingsvedtakDto();
         tilbakekrevingsvedtakXML.setKodeAksjon(tilbakekrevingVedtakDto.kodeAksjon());
         tilbakekrevingsvedtakXML.setVedtakId(BigInteger.valueOf(tilbakekrevingVedtakDto.vedtakId()));

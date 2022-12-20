@@ -9,12 +9,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 
-import no.nav.foreldrepenger.kontrakter.simulering.request.KodeFagområde;
-import no.nav.foreldrepenger.kontrakter.simulering.request.Ompostering116Dto;
-import no.nav.foreldrepenger.kontrakter.simulering.request.Oppdrag110Dto;
-import no.nav.foreldrepenger.kontrakter.simulering.request.Oppdragslinje150Dto;
-import no.nav.foreldrepenger.kontrakter.simulering.request.Refusjonsinfo156Dto;
-import no.nav.foreldrepenger.kontrakter.simulering.request.UtbetalingsgradDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeFagområde;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Ompostering116Dto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Oppdrag110Dto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Oppdragslinje150Dto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Refusjonsinfo156Dto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.UtbetalingsgradDto;
 import no.nav.system.os.entiteter.oppdragskjema.Attestant;
 import no.nav.system.os.entiteter.oppdragskjema.Enhet;
 import no.nav.system.os.entiteter.oppdragskjema.Grad;

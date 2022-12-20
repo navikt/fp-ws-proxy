@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper;
 
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.request.AnnullerKravGrunnlagDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.request.AnnullerKravGrunnlagDto;
 import no.nav.okonomi.tilbakekrevingservice.KravgrunnlagAnnulerRequest;
 
 public class AnnullerKravgrunnlagRequestMapper {
