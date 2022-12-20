@@ -14,7 +14,7 @@ import no.nav.okonomi.tilbakekrevingservice.TilbakekrevingsvedtakRequest;
 import no.nav.okonomi.tilbakekrevingservice.TilbakekrevingsvedtakResponse;
 
 @Component
-class TilbakekrevingKlientWs {
+public class TilbakekrevingKlientWs {
 
     private final TilbakekrevingPortType klient;
 
@@ -30,10 +30,13 @@ class TilbakekrevingKlientWs {
         }
     }
 
-    public TilbakekrevingsvedtakResponse tilbakekrevingsvedtak(TilbakekrevingsvedtakRequest request) {
-        return klient.tilbakekrevingsvedtak(request); // TODO: Egen definer response dto!
+    public TilbakekrevingsvedtakResponse iverksettTilbakekrevingsvedtak(TilbakekrevingsvedtakRequest request) {
+        try {
+            return klient.tilbakekrevingsvedtak(request);
+        } catch (SOAPFaultException e) { // NOSONAR
+            throw new GenerellSoapFaultException("F-942048: Iverksetting av tilbakekrevingsvedtak feilet med følgende SOAP feil:", e);
+        }
     }
-
 
     public KravgrunnlagAnnulerResponse kravgrunnlagAnnuler(KravgrunnlagAnnulerRequest request) {
         return klient.kravgrunnlagAnnuler(request);

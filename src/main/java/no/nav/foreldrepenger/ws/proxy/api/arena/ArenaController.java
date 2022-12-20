@@ -15,8 +15,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import no.nav.foreldrepenger.kontrakter.arena.request.ArenaRequestDto;
-import no.nav.foreldrepenger.kontrakter.arena.respons.MeldekortUtbetalingsgrunnlagSakDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.request.ArenaRequestDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.respons.MeldekortUtbetalingsgrunnlagSakDto;
 import no.nav.foreldrepenger.ws.proxy.api.arena.mapper.ArenaMapperWS;
 import no.nav.security.token.support.spring.ProtectedRestController;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.FinnMeldekortUtbetalingsgrunnlagListeResponse;

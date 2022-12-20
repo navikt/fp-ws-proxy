@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.ws.proxy.api.arena;
 
-import static no.nav.foreldrepenger.kontrakter.arena.respons.YtelseTypeDto.DAG;
+import static no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.respons.YtelseTypeDto.DAG;
 import static no.nav.foreldrepenger.ws.proxy.util.DateUtil.convertToLocalDate;
 import static no.nav.foreldrepenger.ws.proxy.util.DateUtil.convertToXMLGregorianCalendar;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -9,10 +9,10 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.kontrakter.arena.request.ArenaRequestDto;
-import no.nav.foreldrepenger.kontrakter.arena.respons.MeldekortUtbetalingsgrunnlagSakDto;
-import no.nav.foreldrepenger.kontrakter.arena.respons.YtelseStatusDto;
-import no.nav.foreldrepenger.kontrakter.arena.respons.YtelseTypeDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.request.ArenaRequestDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.respons.MeldekortUtbetalingsgrunnlagSakDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.respons.YtelseStatusDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.respons.YtelseTypeDto;
 import no.nav.foreldrepenger.ws.proxy.api.arena.mapper.ArenaMapperWS;
 import no.nav.foreldrepenger.ws.proxy.api.arena.mapper.RelatertYtelseStatus;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.informasjon.Bruker;

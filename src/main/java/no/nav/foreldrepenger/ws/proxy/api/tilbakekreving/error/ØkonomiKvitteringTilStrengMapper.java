@@ -8,6 +8,10 @@ public class ØkonomiKvitteringTilStrengMapper {
     }
 
     public static String formaterKvittering(MmelDto kvittering) {
+        if (kvittering == null) {
+            return "Mottok ingen kvittering fra OS. Dette bør følges opp!";
+        }
+
         //HAXX ikke bruk dette som mal ved oppsett av deklarative feil
         //.... brukes her siden det er veldig mange parametre som skal logges
         //.... reduserer sjangsen for at parametre stokkes feil ved fremtidig endring

@@ -1,24 +1,33 @@
 package no.nav.foreldrepenger.ws.proxy.api.tilbakekreving;
 
+import static no.nav.boot.conditionals.EnvUtil.isDevOrLocal;
 import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.ØkonomiKvitteringTilStrengMapper.formaterKvittering;
+import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.AnnullerKravgrunnlagRequestMapper.tilKravgrunnlagAnnulerRequest;
+import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.HentKravgrunnlagDetaljRequestMapper.tilKravgrunnlagHentDetaljXMLRequest;
+import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.Kravgrunnlag431DtoMapper.tilDto;
 import static no.nav.foreldrepenger.ws.proxy.config.TokenUtilConfiguration.STS_RS;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.request.HentKravgrunnlagDetaljDto;
-import no.nav.foreldrepenger.kontrakter.tilbakekreving.kravgrunnlag.respons.Kravgrunnlag431Dto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.iverksett.TilbakekrevingVedtakDTO;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.request.AnnullerKravGrunnlagDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.request.HentKravgrunnlagDetaljDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.respons.Kravgrunnlag431Dto;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.KravgrunnlagErSperretException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.MangledeKravgrunnlagException;
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.UkjentFeilFraOSException;
+import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.UkjentFeilIKvitteringFraOSException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.ØkonomiKvitteringTolk;
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.HentKravgrunnlagMapper;
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.TilbakekrevingWSMapper;
+import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.TilbakekrevingVedtakResponsMapper;
+import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.TilbakekrevingsvedtakRequestMapper;
 import no.nav.foreldrepenger.ws.proxy.error.GenerellSoapFaultException;
 import no.nav.security.token.support.spring.ProtectedRestController;
 import no.nav.tilbakekreving.typer.v1.MmelDto;
@@ -29,7 +38,7 @@ import no.nav.tilbakekreving.typer.v1.MmelDto;
  */
 @Validated
 @ProtectedRestController(issuer = STS_RS, value = "/tilbakekreving", claimMap = {})
-class TilbakekrevingController {
+public class TilbakekrevingController {
 
     private static final Logger LOG = LoggerFactory.getLogger(TilbakekrevingController.class);
     private static final Logger SECURE_LOG = LoggerFactory.getLogger("secureLogger");
@@ -38,16 +47,32 @@ class TilbakekrevingController {
     private static final String TILBAKEKREVINGVEDTAK_PATH = "/tilbakekrevingsvedtak";
 
     private final TilbakekrevingKlientWs tilbakekrevingKlientWs;
+    private final Environment env;
 
-    public TilbakekrevingController(TilbakekrevingKlientWs tilbakekrevingKlientWs) {
+    public TilbakekrevingController(TilbakekrevingKlientWs tilbakekrevingKlientWs,
+                                    Environment env) {
         this.tilbakekrevingKlientWs = tilbakekrevingKlientWs;
+        this.env = env;
+    }
+
+    @PostMapping(TILBAKEKREVINGVEDTAK_PATH)
+    public TilbakekrevingVedtakDTO iverksettTilbakekrevingsvedtak(@Valid @NotNull @RequestBody TilbakekrevingVedtakDTO tilbakekrevingVedtakDto) {
+        if (isDevOrLocal(env)) {
+            LOG.info("Iverksetter tilbakekrevingsvedtak for vedtak {}", tilbakekrevingVedtakDto.vedtakId());
+            var request = TilbakekrevingsvedtakRequestMapper.tilTilbakekrevingsvedtakRequest(tilbakekrevingVedtakDto);
+            var respons = tilbakekrevingKlientWs.iverksettTilbakekrevingsvedtak(request);
+            validerKvitteringIverksettTilbakekrevingsvedtak(respons.getMmel());
+            LOG.info("Tilbakekrevingsvedtak iverksatt med kvittering OK");
+            return TilbakekrevingVedtakResponsMapper.tilDto(respons);
+        }
+        throw new UnsupportedOperationException("Iverksetting av tilbakekrevingsvedtak via fpwsproxy er ikke støttet enda!");
     }
 
     @PostMapping(KRAVGRUNNLAG_PATH)
-    public Kravgrunnlag431Dto kravgrunnlagHentDetalj(@Valid @RequestBody HentKravgrunnlagDetaljDto kravgrunnlagDetaljDto) {
+    public Kravgrunnlag431Dto kravgrunnlagHentDetalj(@Valid @NotNull @RequestBody HentKravgrunnlagDetaljDto kravgrunnlagDetaljDto) {
         var kravgrunnlagId = kravgrunnlagDetaljDto.kravgrunnlagId().longValue();
         LOG.info("Henter kravgrunnlag for kravgrunnlagId {}", kravgrunnlagId);
-        var request = TilbakekrevingWSMapper.tilKravgrunnlagHentDetaljRequest(kravgrunnlagDetaljDto);
+        var request = tilKravgrunnlagHentDetaljXMLRequest(kravgrunnlagDetaljDto);
         var response = tilbakekrevingKlientWs.kravgrunnlagHentDetalj(request);
         var kvittering = response.getMmel();
         validerMottattKvitteringVedHentingAvKravgrunnlag(kravgrunnlagDetaljDto, kravgrunnlagId, kvittering);
@@ -57,7 +82,34 @@ class TilbakekrevingController {
             kvittering.getKodeMelding(),
             kvittering.getBeskrMelding());
         LOG.info("Referanse fra WS: {}", response.getDetaljertkravgrunnlag().getReferanse());
-        return HentKravgrunnlagMapper.mapTilDto(response.getDetaljertkravgrunnlag());
+        return tilDto(response.getDetaljertkravgrunnlag());
+    }
+
+    @DeleteMapping(KRAVGRUNNLAG_PATH)
+    public void kravgrunnlagAnnuler(@Valid @NotNull @RequestBody AnnullerKravGrunnlagDto annulerKravGrunnlagDtoRest) {
+        if (isDevOrLocal(env)) {
+            LOG.info("Annulerer kravgrunnlag for vedtakid {}", annulerKravGrunnlagDtoRest.vedtakId());
+            var request = tilKravgrunnlagAnnulerRequest(annulerKravGrunnlagDtoRest);
+            var respons = tilbakekrevingKlientWs.kravgrunnlagAnnuler(request);
+            validerKvitteringForAnnulereGrunnlag(respons.getMmel());
+            var kvittering = respons.getMmel();
+            LOG.info("Annulering av kravgrunnlag OK. Alvorlighetsgrad='{}' infomelding='{}'",
+                kvittering.getAlvorlighetsgrad(),
+                kvittering.getBeskrMelding());
+        }
+        throw new UnsupportedOperationException("Annulering av kravgrunnlag via fpwsproxy er ikke støttet enda!");
+    }
+
+    private void validerKvitteringForAnnulereGrunnlag(MmelDto mmel) {
+        if (!ØkonomiKvitteringTolk.erKvitteringOK(mmel)) {
+            throw new GenerellSoapFaultException(String.format("FPT-539079: Fikk feil fra OS ved annulere av kravgrunnlag. %s", formaterKvittering(mmel)));
+        }
+    }
+
+    private void validerKvitteringIverksettTilbakekrevingsvedtak(MmelDto mmel) {
+        if (!ØkonomiKvitteringTolk.erKvitteringOK(mmel)) {
+            throw new UkjentFeilIKvitteringFraOSException(String.format("FPT-609912: Fikk feil fra OS ved iverksetting. %s", formaterKvittering(mmel)));
+        }
     }
 
     private void validerMottattKvitteringVedHentingAvKravgrunnlag(HentKravgrunnlagDetaljDto kravgrunnlagDetaljDto, Long kravgrunnlagId, MmelDto mmel) {
@@ -71,40 +123,10 @@ class TilbakekrevingController {
         if (ØkonomiKvitteringTolk.erKravgrunnlagetSperret(mmel)) {
             throw new KravgrunnlagErSperretException(kravgrunnlagId, formaterKvittering(mmel));
         }
-        if (ØkonomiKvitteringTolk.harKravgrunnlagNoeUkjentFeil(mmel)) {
-            throw new UkjentFeilFraOSException(kravgrunnlagId, formaterKvittering(mmel));
+        if (ØkonomiKvitteringTolk.erDetUkjentFeilIKvitteringen(mmel)) {
+            throw new UkjentFeilIKvitteringFraOSException(String.format("FPT-539085: Fikk ukjent feil fra OS ved henting av kravgrunnlag med kravgrunnlagId=%s. %s",
+                kravgrunnlagId, formaterKvittering(mmel)));
         }
     }
 
-
-    // TODO: Problemer:
-    //  Exceptions som catch (SOAPFaultException e) { blir oversatt til IntegrasjonException exception i fptilbake
-    //      SOAPFaultException kan mappes til Integrasjonsexcepiton og retuner new IntegrasjonException("F-942048", String.format("SOAP tjenesten [ %s ] returnerte en SOAP Fault:", webservice), e);
-    //  Returnerer kvittering som fptilbake kan aggerer på slik at den kan oversette til logiske Exceptions? Eller skal fp-ws-proxy gjøre dette?
-    //      Fptilbake aggerer på kvittering
-    //  Fptilbake lagrer XML requesten. Hvordan løse dette? Logge dett i secure logs?
-    //      Løsning: Logg til secure loggs ved feil
-//  @PostMapping(TILBAKEKREVINGVEDTAK_PATH)
-//  public Kvittering tilbakekrevingsvedtak(@Valid @RequestBody TilbakekrevingVedtakDto tilbakekrevingDto) {
-//      LOG.info("Sender request til tilbakekrevingsvedtak til økonomi");
-//      var request = TilbakekrevingWSMapper.tilTilbakekrevingsvedtakRequest(tilbakekrevingDto);
-//      var respons = tilbakekrevingKlientWs.tilbakekrevingsvedtak(request);
-//        return HentKravgrunnlagMapper.tilKvitteringDto(respons.getMmel());
-//      return null;
-//  }
-
-//    @PostMapping(KRAVGRUNNLAG_PATH)
-//    public Kvittering kravgrunnlagAnnuler(@Valid @RequestBody AnnulerKravGrunnlagDtoRest annulerKravGrunnlagDtoRest) {
-//        var behandlingId = annulerKravGrunnlagDtoRest.behandlingId();
-//        LOG.info("Starter Anullerekravgrunnlag for behandlingId={}", behandlingId);
-//        var request = TilbakekrevingWSMapper.tilKravgrunnlagAnnulerRequest(annulerKravGrunnlagDtoRest);
-//        var respons = tilbakekrevingKlientWs.kravgrunnlagAnnuler(request);
-//        var kvittering = respons.getMmel();
-//        LOG.info("AnnulereKravgrunnlag sendt til oppdragssystemet. BehandlingId={} Alvorlighetsgrad='{}' infomelding='{}'",
-//            behandlingId,
-//            kvittering.getAlvorlighetsgrad(),
-//            kvittering.getBeskrMelding());
-//        return HentKravgrunnlagMapper.tilKvitteringDto(kvittering);
-//        return null;
-//    }
 }

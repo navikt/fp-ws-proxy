@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.ws.proxy.api.arena.mapper;
 
 import java.util.Arrays;
 
-import no.nav.foreldrepenger.kontrakter.arena.respons.YtelseStatusDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.respons.YtelseStatusDto;
 
 public class RelatertYtelseStatusReverse {
 

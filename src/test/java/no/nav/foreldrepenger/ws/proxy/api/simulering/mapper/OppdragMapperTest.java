@@ -15,13 +15,13 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.kontrakter.simulering.request.KodeFagområde;
-import no.nav.foreldrepenger.kontrakter.simulering.request.KodeKlassifik;
-import no.nav.foreldrepenger.kontrakter.simulering.request.KodeStatusLinje;
-import no.nav.foreldrepenger.kontrakter.simulering.request.Oppdrag110Dto;
-import no.nav.foreldrepenger.kontrakter.simulering.request.OppdragskontrollDto;
-import no.nav.foreldrepenger.kontrakter.simulering.request.Oppdragslinje150Dto;
-import no.nav.foreldrepenger.kontrakter.simulering.request.TypeSats;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeFagområde;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeKlassifik;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeStatusLinje;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Oppdrag110Dto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.OppdragskontrollDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Oppdragslinje150Dto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.TypeSats;
 import no.nav.system.os.entiteter.oppdragskjema.Attestant;
 import no.nav.system.os.entiteter.oppdragskjema.Oppdragslinje;
 import no.nav.system.os.entiteter.typer.simpletypes.FradragTillegg;
