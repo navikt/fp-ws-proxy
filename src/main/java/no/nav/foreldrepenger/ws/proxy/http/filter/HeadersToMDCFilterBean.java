@@ -24,9 +24,8 @@ import no.nav.foreldrepenger.common.util.CallIdGenerator;
 
 /**
  * Brukes ved innkommende requester for å hente ut headere fra request og sette tilsvarende MDC verdier
- *  -   Nav-ConsumerId
- *  -   callid
- *  -   JTI
+ *  -   Nav-Consumer-Id
+ *  -   Nav-CallId
  */
 @Component
 public class HeadersToMDCFilterBean extends GenericFilterBean {
@@ -49,7 +48,7 @@ public class HeadersToMDCFilterBean extends GenericFilterBean {
 
     private void putValues(HttpServletRequest request) {
         try {
-            toMDC("Nav-ConsumerId", getConsumerId(request), applicationName);
+            toMDC(NAV_CONSUMER_ID, getConsumerId(request), applicationName);
             toMDC(NAV_CALL_ID, getCallIdFraRequest(request), generator.create());
         } catch (Exception e) {
             LOG.warn("Noe gikk feil ved propagering av header-verdier for request {}, MDC-verdier er inkomplette",
@@ -58,13 +57,14 @@ public class HeadersToMDCFilterBean extends GenericFilterBean {
     }
 
     private static String getConsumerId(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader("Nav-ConsumerId")) // fpoppdrag, fpabakus, fptilbake/k9-tilbake
-            .orElseGet(() -> request.getHeader(NAV_CONSUMER_ID));
+        return Optional.ofNullable(request.getHeader(NAV_CONSUMER_ID)) // Native client sender over denne, men
+            .orElseGet(() -> request.getHeader("Nav-ConsumerId"));  // Nav-ConsumerId logges av: fpoppdrag, fpabakus, fptilbake/k9-tilbake
     }
 
     private static String getCallIdFraRequest(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader(NAV_CALL_ID))  // fpoppdrag
-            .orElseGet(() -> request.getHeader(NAV_CALL_ID2));      // fpabakus og fptilbake/k9-tilbake
+        return Optional.ofNullable(request.getHeader("Nav-Callid")) // Nav-Callid: Settes av felles Native Rest klient.
+            .orElseGet(() -> Optional.ofNullable(request.getHeader(NAV_CALL_ID)) // getHeader() skal være case insensitve, men i tilfelle
+            .orElseGet(() -> request.getHeader(NAV_CALL_ID2)));
     }
 
     @Override
