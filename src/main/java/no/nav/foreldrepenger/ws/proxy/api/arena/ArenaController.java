@@ -21,9 +21,6 @@ import no.nav.foreldrepenger.ws.proxy.api.arena.mapper.ArenaMapperWS;
 import no.nav.security.token.support.spring.ProtectedRestController;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.FinnMeldekortUtbetalingsgrunnlagListeResponse;
 
-/**
- * Skal erstatte Meldekorttjenesten i fpabakus: https://github.com/navikt/fp-abakus/blob/master/domenetjenester/iay/src/main/java/no/nav/foreldrepenger/abakus/registerdata/ytelse/arena/MeldekortTjeneste.java
- */
 @Validated
 @ProtectedRestController(issuer = STS_RS, value = "/arena", claimMap = {})
 public class ArenaController {
