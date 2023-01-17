@@ -7,19 +7,20 @@ import java.math.BigInteger;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.request.AnnullerKravGrunnlagDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.request.KodeAksjon;
 
 class AnnullerKravgrunnlagRequestMapperTest {
 
     @Test
     void verifiserKorrektMappingAvAnnullerKravgrunnlagRequest() {
-        var annullerKravGrunnlagDto = new AnnullerKravGrunnlagDto("A", BigInteger.valueOf(100000L), "W123456");
+        var annullerKravGrunnlagDto = new AnnullerKravGrunnlagDto(BigInteger.valueOf(100000L));
 
         var kravgrunnlagAnnulerRequest = AnnullerKravgrunnlagRequestMapper.tilKravgrunnlagAnnulerRequest(annullerKravGrunnlagDto);
         var annullerkravgrunnlagXML = kravgrunnlagAnnulerRequest.getAnnullerkravgrunnlag();
 
         assertThat(annullerkravgrunnlagXML).isNotNull();
-        assertThat(annullerkravgrunnlagXML.getKodeAksjon()).isEqualTo(annullerKravGrunnlagDto.kodeAksjon());
+        assertThat(annullerkravgrunnlagXML.getKodeAksjon()).isEqualTo(KodeAksjon.ANNULERE_GRUNNLAG.getKode());
         assertThat(annullerkravgrunnlagXML.getVedtakId()).isEqualTo(annullerKravGrunnlagDto.vedtakId());
-        assertThat(annullerkravgrunnlagXML.getSaksbehId()).isEqualTo(annullerKravGrunnlagDto.saksbehId());
+        assertThat(annullerkravgrunnlagXML.getSaksbehId()).isEqualTo(AnnullerKravgrunnlagRequestMapper.OKO_SAKSBEH_ID);
     }
 }
