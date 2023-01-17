@@ -14,8 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.iverksett.TilbakekrevingVedtakDTO;
@@ -44,6 +44,7 @@ public class TilbakekrevingController {
     private static final Logger SECURE_LOG = LoggerFactory.getLogger("secureLogger");
 
     private static final String KRAVGRUNNLAG_PATH = "/kravgrunnlag";
+    private static final String KRAVGRUNNLAG_ANNULLER_PATH = "/kravgrunnlag/annuller";
     private static final String TILBAKEKREVINGVEDTAK_PATH = "/tilbakekrevingsvedtak";
 
     private final TilbakekrevingKlientWs tilbakekrevingKlientWs;
@@ -85,19 +86,16 @@ public class TilbakekrevingController {
         return tilDto(response.getDetaljertkravgrunnlag());
     }
 
-    @DeleteMapping(KRAVGRUNNLAG_PATH)
+    @PutMapping(KRAVGRUNNLAG_ANNULLER_PATH)
     public void kravgrunnlagAnnuler(@Valid @NotNull @RequestBody AnnullerKravGrunnlagDto annulerKravGrunnlagDtoRest) {
-        if (isDevOrLocal(env)) {
-            LOG.info("Annulerer kravgrunnlag for vedtakid {}", annulerKravGrunnlagDtoRest.vedtakId());
-            var request = tilKravgrunnlagAnnulerRequest(annulerKravGrunnlagDtoRest);
-            var respons = tilbakekrevingKlientWs.kravgrunnlagAnnuler(request);
-            validerKvitteringForAnnulereGrunnlag(respons.getMmel());
-            var kvittering = respons.getMmel();
-            LOG.info("Annulering av kravgrunnlag OK. Alvorlighetsgrad='{}' infomelding='{}'",
-                kvittering.getAlvorlighetsgrad(),
-                kvittering.getBeskrMelding());
-        }
-        throw new UnsupportedOperationException("Annulering av kravgrunnlag via fpwsproxy er ikke støttet enda!");
+        LOG.info("Annulerer kravgrunnlag for vedtakid {}", annulerKravGrunnlagDtoRest.vedtakId());
+        var request = tilKravgrunnlagAnnulerRequest(annulerKravGrunnlagDtoRest);
+        var respons = tilbakekrevingKlientWs.kravgrunnlagAnnuler(request);
+        validerKvitteringForAnnulereGrunnlag(respons.getMmel());
+        var kvittering = respons.getMmel();
+        LOG.info("Annulering av kravgrunnlag OK. Alvorlighetsgrad='{}' infomelding='{}'",
+            kvittering.getAlvorlighetsgrad(),
+            kvittering.getBeskrMelding());
     }
 
     private void validerKvitteringForAnnulereGrunnlag(MmelDto mmel) {
