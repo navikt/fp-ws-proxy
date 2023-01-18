@@ -73,7 +73,6 @@ public class TilbakekrevingController {
 
     @PostMapping("/tilbakekrevingsvedtak/sammenligning")
     public TilbakekrevingVedtakDtoResponsMidlertidig hentIverksettingXMLRequest(@Valid @NotNull @RequestBody TilbakekrevingVedtakDTO tilbakekrevingVedtakDto) {
-        LOG.info("Iverksetter tilbakekrevingsvedtak for vedtak {}", tilbakekrevingVedtakDto.vedtakId());
         var request = tilTilbakekrevingsvedtakRequest(tilbakekrevingVedtakDto);
         return new TilbakekrevingVedtakDtoResponsMidlertidig(marshall(request));
     }
