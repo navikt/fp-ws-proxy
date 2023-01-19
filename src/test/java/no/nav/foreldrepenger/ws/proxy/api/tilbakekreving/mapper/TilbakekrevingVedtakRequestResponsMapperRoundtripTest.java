@@ -21,10 +21,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.iverksett.TilbakekrevingsperiodeDTO;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.TilbakekrevingController;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.TilbakekrevingKlientWs;
-import no.nav.tilbakekreving.tilbakekrevingsvedtak.vedtak.v1.TilbakekrevingsvedtakDto;
 import no.nav.tilbakekreving.typer.v1.MmelDto;
 
 /**
@@ -56,10 +54,10 @@ class TilbakekrevingVedtakRequestResponsMapperRoundtripTest {
     void sjekkRequestMarshallOKOgVerifiserAtOSIkkeBlirKalt() {
         // 1) Bygg opp en TilbakekrevingVedtakDTO
         var tilbakekrevingsperider = List.of(
-            lagTilbakekrevingsperiodeDTO(List.of(lagTilbakekrevingsbelop()), null),
-            lagTilbakekrevingsperiodeDTO(List.of(lagTilbakekrevingsbelop(), lagTilbakekrevingsbelop()), null)
+            lagTilbakekrevingsperiodeDTO(List.of(lagTilbakekrevingsbelop())),
+            lagTilbakekrevingsperiodeDTO(List.of(lagTilbakekrevingsbelop(), lagTilbakekrevingsbelop()))
         );
-        var orginalTilbakekrevingVedtakDto = lagTilbakekrevingVedtakDTORequest(tilbakekrevingsperider, null);
+        var orginalTilbakekrevingVedtakDto = lagTilbakekrevingVedtakDTORequest(tilbakekrevingsperider);
 
         // 2) ACT: IverksettTilbakekrevingsvedtak
         var respons = tilbakekrevingController.hentIverksettingXMLRequest(orginalTilbakekrevingVedtakDto);
@@ -77,10 +75,10 @@ class TilbakekrevingVedtakRequestResponsMapperRoundtripTest {
     void verifiserMappingFraRequestOgResponsHarErLike() {
         // 1) Bygg opp en TilbakekrevingVedtakDTO
         var tilbakekrevingsperider = List.of(
-            lagTilbakekrevingsperiodeDTO(List.of(lagTilbakekrevingsbelop()), null),
-            lagTilbakekrevingsperiodeDTO(List.of(lagTilbakekrevingsbelop(), lagTilbakekrevingsbelop()), null)
+            lagTilbakekrevingsperiodeDTO(List.of(lagTilbakekrevingsbelop())),
+            lagTilbakekrevingsperiodeDTO(List.of(lagTilbakekrevingsbelop(), lagTilbakekrevingsbelop()))
         );
-        var orginalTilbakekrevingVedtakDto = lagTilbakekrevingVedtakDTORequest(tilbakekrevingsperider, null);
+        var orginalTilbakekrevingVedtakDto = lagTilbakekrevingVedtakDTORequest(tilbakekrevingsperider);
 
         // 2) Lag en TilbakekrevingVedtakDTO respons XML basert på denne
         when(tilbakekrevingKlientWs.iverksettTilbakekrevingsvedtak(any()))
@@ -90,40 +88,6 @@ class TilbakekrevingVedtakRequestResponsMapperRoundtripTest {
         var respons = tilbakekrevingController.iverksettTilbakekrevingsvedtak(orginalTilbakekrevingVedtakDto);
 
         // 4) Assert at objektet i 1) er likt objektet i 3).
-        assertThat(respons).isEqualTo(orginalTilbakekrevingVedtakDto);
-    }
-
-    @Test
-    void verifiserResponsOgsåMapperFelteneRetnerBeregnes() {
-        // 1) Bygg opp en TilbakekrevingVedtakDTO
-        var renterBeregnesPeriode1 = "RENTER BEREGNEES I PERIODE1";
-        var renterBeregnesPeriode2 = "RENTER BEREGNEES I PERIODE2";
-        var tilbakekrevingsperider = List.of(
-            lagTilbakekrevingsperiodeDTO(List.of(lagTilbakekrevingsbelop()), renterBeregnesPeriode1),
-            lagTilbakekrevingsperiodeDTO(List.of(lagTilbakekrevingsbelop(), lagTilbakekrevingsbelop()), renterBeregnesPeriode2)
-        );
-        var renterBeregnesVedtak = "RENTER BEREGNEES!";
-        var orginalTilbakekrevingVedtakDto = lagTilbakekrevingVedtakDTORequest(tilbakekrevingsperider, renterBeregnesVedtak);
-
-        // 2) Lag en TilbakekrevingVedtakDTO respons XML basert på denne + setter renterBeregnes
-        var tilbakekrevingsvedtakResponse1 = lagTilbakekrevingsvedtakResponsXMLFraRequest(orginalTilbakekrevingVedtakDto, kvitteringOK());
-        // Setter renterBergenesVedtak manuelt ettersom det ikke følger med request-mappingen
-        TilbakekrevingsvedtakDto tilbakekrevingsvedtak1 = tilbakekrevingsvedtakResponse1.getTilbakekrevingsvedtak();
-        tilbakekrevingsvedtak1.setRenterBeregnes(renterBeregnesVedtak);
-        tilbakekrevingsvedtak1.getTilbakekrevingsperiode().get(0).setRenterBeregnes(renterBeregnesPeriode1);
-        tilbakekrevingsvedtak1.getTilbakekrevingsperiode().get(1).setRenterBeregnes(renterBeregnesPeriode2);
-
-        when(tilbakekrevingKlientWs.iverksettTilbakekrevingsvedtak(any()))
-            .thenReturn(tilbakekrevingsvedtakResponse1);
-
-        // 3) ACT: IverksettTilbakekrevingsvedtak
-        var respons = tilbakekrevingController.iverksettTilbakekrevingsvedtak(orginalTilbakekrevingVedtakDto);
-
-        // 4) Assert at objektet i 1) er likt objektet i 3).
-        assertThat(respons.renterBeregnes()).isEqualTo(renterBeregnesVedtak);
-        assertThat(respons.tilbakekrevingsperiode())
-            .extracting(TilbakekrevingsperiodeDTO::renterBeregnes)
-            .containsExactlyInAnyOrder(renterBeregnesPeriode1, renterBeregnesPeriode2);
         assertThat(respons).isEqualTo(orginalTilbakekrevingVedtakDto);
     }
 

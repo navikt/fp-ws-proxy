@@ -86,9 +86,9 @@ class TilbakekrevingControllerIverksettVedtakTest {
     private static TilbakekrevingVedtakDTO lagGyldigTilbakekrevingsVedtakRequest() {
         // 1) Bygg opp en TilbakekrevingVedtakDTO
         var tilbakekrevingsperider = List.of(
-            lagTilbakekrevingsperiodeDTO(List.of(lagTilbakekrevingsbelop()), null)
+            lagTilbakekrevingsperiodeDTO(List.of(lagTilbakekrevingsbelop()))
         );
-        return lagTilbakekrevingVedtakDTORequest(tilbakekrevingsperider, null);
+        return lagTilbakekrevingVedtakDTORequest(tilbakekrevingsperider);
     }
 
 }

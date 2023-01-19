@@ -25,13 +25,12 @@ public class TilbakekrevingsVedtakTestDataBygger {
         return tilbakekrevingsvedtakResponse;
     }
 
-    public static TilbakekrevingVedtakDTO lagTilbakekrevingVedtakDTORequest(List<TilbakekrevingsperiodeDTO> tilbakekrevingsperider, String retnerBeregnes) {
+    public static TilbakekrevingVedtakDTO lagTilbakekrevingVedtakDTORequest(List<TilbakekrevingsperiodeDTO> tilbakekrevingsperider) {
         return new TilbakekrevingVedtakDTO.Builder()
             .kodeAksjon("8")
             .vedtakId(10000000L)
             .datoVedtakFagsystem(LocalDate.now())
             .kodeHjemmel("22-15")
-            .renterBeregnes(retnerBeregnes) // OBS: Settes ikke i request, uvisst om respons setter dette feltet
             .enhetAnsvarlig("8042")
             .kontrollfelt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss.SSSSSS")))
             .saksbehId("W123456")
@@ -39,10 +38,9 @@ public class TilbakekrevingsVedtakTestDataBygger {
             .build();
     }
 
-    public static TilbakekrevingsperiodeDTO lagTilbakekrevingsperiodeDTO(List<TilbakekrevingsbelopDTO> tilbakekrevingsbelop, String retnerBeregness) {
+    public static TilbakekrevingsperiodeDTO lagTilbakekrevingsperiodeDTO(List<TilbakekrevingsbelopDTO> tilbakekrevingsbelop) {
         return new TilbakekrevingsperiodeDTO.Builder()
             .periode(new Periode(LocalDate.now().minusMonths(4), LocalDate.now()))
-            .renterBeregnes(retnerBeregness) // OBS: Settes ikke i request, uvisst om respons setter dette feltet
             .belopRenter(BigDecimal.TEN)
             .tilbakekrevingsbelop(tilbakekrevingsbelop)
             .build();

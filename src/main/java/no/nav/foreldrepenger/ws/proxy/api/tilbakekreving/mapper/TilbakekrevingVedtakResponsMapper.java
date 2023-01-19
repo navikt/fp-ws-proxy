@@ -14,6 +14,7 @@ import no.nav.tilbakekreving.tilbakekrevingsvedtak.vedtak.v1.Tilbakekrevingsbelo
 import no.nav.tilbakekreving.tilbakekrevingsvedtak.vedtak.v1.TilbakekrevingsperiodeDto;
 import no.nav.tilbakekreving.typer.v1.PeriodeDto;
 
+@Deprecated
 public class TilbakekrevingVedtakResponsMapper {
 
     private TilbakekrevingVedtakResponsMapper() {
@@ -45,7 +46,7 @@ public class TilbakekrevingVedtakResponsMapper {
     private static TilbakekrevingsperiodeDTO tilTilbakekrevingsperiodeDTO(TilbakekrevingsperiodeDto tilbakekrevingsperiodeDtoXML) {
         return new TilbakekrevingsperiodeDTO.Builder()
             .periode(tilPeriode(tilbakekrevingsperiodeDtoXML.getPeriode()))
-            .renterBeregnes(tilbakekrevingsperiodeDtoXML.getRenterBeregnes())
+            //.renterBeregnes(tilbakekrevingsperiodeDtoXML.getRenterBeregnes())
             .belopRenter(tilbakekrevingsperiodeDtoXML.getBelopRenter())
             .tilbakekrevingsbelop(tilTilbakekrevingsbelopDTO(tilbakekrevingsperiodeDtoXML.getTilbakekrevingsbelop()))
             .build();
