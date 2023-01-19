@@ -7,6 +7,8 @@ import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.util.Tilbakekrev
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -40,13 +42,36 @@ class TilbakekrevingVedtakRequestResponsMapperRoundtripTest {
     @Autowired
     private Environment env;
     private TilbakekrevingController tilbakekrevingController;
-    private final TilbakekrevingKlientWs tilbakekrevingKlientWs = mock(TilbakekrevingKlientWs.class);
+    private TilbakekrevingKlientWs tilbakekrevingKlientWs;
 
     @BeforeEach
     public void setup() {
+        tilbakekrevingKlientWs = mock(TilbakekrevingKlientWs.class);
         tilbakekrevingController = new TilbakekrevingController(tilbakekrevingKlientWs, env);
     }
 
+
+    // TODO: Fjern etter sammenliginig
+    @Test
+    void sjekkRequestMarshallOKOgVerifiserAtOSIkkeBlirKalt() {
+        // 1) Bygg opp en TilbakekrevingVedtakDTO
+        var tilbakekrevingsperider = List.of(
+            lagTilbakekrevingsperiodeDTO(List.of(lagTilbakekrevingsbelop()), null),
+            lagTilbakekrevingsperiodeDTO(List.of(lagTilbakekrevingsbelop(), lagTilbakekrevingsbelop()), null)
+        );
+        var orginalTilbakekrevingVedtakDto = lagTilbakekrevingVedtakDTORequest(tilbakekrevingsperider, null);
+
+        // 2) ACT: IverksettTilbakekrevingsvedtak
+        var respons = tilbakekrevingController.hentIverksettingXMLRequest(orginalTilbakekrevingVedtakDto);
+
+        assertThat(respons.requestXml())
+            .isNotNull()
+            .isNotBlank()
+            .contains("W123456");
+
+        verify(tilbakekrevingKlientWs, never()).iverksettTilbakekrevingsvedtak(any());
+
+    }
 
     @Test
     void verifiserMappingFraRequestOgResponsHarErLike() {
