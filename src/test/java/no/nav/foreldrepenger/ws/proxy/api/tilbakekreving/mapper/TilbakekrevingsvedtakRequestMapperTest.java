@@ -15,36 +15,22 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.TilbakekrevingController;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.TilbakekrevingKlientWs;
 import no.nav.foreldrepenger.ws.proxy.util.DateUtil;
 
-/**
- * Testene følger følgende struktur:
- *  1) Lag en TilbakekrevingVedtakDTO som er DTOen for APIet
- *  2.1) Bruk request mapperen til å mappe denne til en TilbakekrevingsvedtakDto XML request
- *  2.2) Siden XML request og respons har like objekter så setter vi TilbakekrevingsvedtakResponse basert på denne requesten.
- *  3) ACT: IverksettTilbakekrevingsvedtak
- *  4) Assert at objektet i 1) er likt objektet i 3).
- */
-@ActiveProfiles(value = "local")
 @ExtendWith(SpringExtension.class)
 class TilbakekrevingsvedtakRequestMapperTest {
 
-    @Autowired
-    private Environment env;
     private TilbakekrevingController tilbakekrevingController;
     private TilbakekrevingKlientWs tilbakekrevingKlientWs;
 
     @BeforeEach
     public void setup() {
         tilbakekrevingKlientWs = mock(TilbakekrevingKlientWs.class);
-        tilbakekrevingController = new TilbakekrevingController(tilbakekrevingKlientWs, env);
+        tilbakekrevingController = new TilbakekrevingController(tilbakekrevingKlientWs, null);
     }
 
 
