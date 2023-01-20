@@ -65,8 +65,9 @@ public class TilbakekrevingController {
             var respons = tilbakekrevingKlientWs.iverksettTilbakekrevingsvedtak(request);
             validerKvitteringIverksettTilbakekrevingsvedtak(respons.getMmel());
             LOG.info("Tilbakekrevingsvedtak iverksatt med kvittering OK");
+        } else {
+            throw new UnsupportedOperationException("Iverksetting av tilbakekrevingsvedtak via fpwsproxy er ikke støttet enda!");
         }
-        throw new UnsupportedOperationException("Iverksetting av tilbakekrevingsvedtak via fpwsproxy er ikke støttet enda!");
     }
 
     @PostMapping("/tilbakekrevingsvedtak/sammenligning")
