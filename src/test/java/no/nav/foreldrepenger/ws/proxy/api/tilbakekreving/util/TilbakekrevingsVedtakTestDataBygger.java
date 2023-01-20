@@ -1,5 +1,8 @@
 package no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.util;
 
+import static no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.iverksett.KodeResultat.FEILREGISTRERT;
+import static no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.iverksett.KodeSkyld.IKKE_FORDELT;
+import static no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.iverksett.KodeÅrsak.ANNET;
 import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.TilbakekrevingsvedtakRequestMapper.tilTilbakekrevingsvedtakRequest;
 
 import java.math.BigDecimal;
@@ -27,10 +30,8 @@ public class TilbakekrevingsVedtakTestDataBygger {
 
     public static TilbakekrevingVedtakDTO lagTilbakekrevingVedtakDTORequest(List<TilbakekrevingsperiodeDTO> tilbakekrevingsperider) {
         return new TilbakekrevingVedtakDTO.Builder()
-            .kodeAksjon("8")
             .vedtakId(10000000L)
             .datoVedtakFagsystem(LocalDate.now())
-            .kodeHjemmel("22-15")
             .enhetAnsvarlig("8042")
             .kontrollfelt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss.SSSSSS")))
             .saksbehId("W123456")
@@ -54,9 +55,9 @@ public class TilbakekrevingsVedtakTestDataBygger {
             .belopTilbakekreves(BigDecimal.ZERO)
             .belopUinnkrevd(BigDecimal.TEN)
             .belopSkatt(BigDecimal.valueOf(5))
-            .kodeResultat("FEILREGISTRERT")
-            .kodeAarsak("ANNET")
-            .kodeSkyld("IKKE_FORDELT")
+            .kodeResultat(FEILREGISTRERT)
+            .kodeAarsak(ANNET)
+            .kodeSkyld(IKKE_FORDELT)
             .build();
     }
 }

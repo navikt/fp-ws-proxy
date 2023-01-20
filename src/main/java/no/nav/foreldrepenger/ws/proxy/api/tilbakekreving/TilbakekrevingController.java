@@ -28,7 +28,6 @@ import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.KravgrunnlagErSpe
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.MangledeKravgrunnlagException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.UkjentFeilIKvitteringFraOSException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.ØkonomiKvitteringTolk;
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.TilbakekrevingVedtakResponsMapper;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.sammenligning.TilbakekrevingVedtakDtoResponsMidlertidig;
 import no.nav.foreldrepenger.ws.proxy.error.GenerellSoapFaultException;
 import no.nav.security.token.support.spring.ProtectedRestController;
@@ -59,16 +58,16 @@ public class TilbakekrevingController {
     }
 
     @PostMapping(TILBAKEKREVINGVEDTAK_PATH)
-    public TilbakekrevingVedtakDTO iverksettTilbakekrevingsvedtak(@Valid @NotNull @RequestBody TilbakekrevingVedtakDTO tilbakekrevingVedtakDto) {
+    public void iverksettTilbakekrevingsvedtak(@Valid @NotNull @RequestBody TilbakekrevingVedtakDTO tilbakekrevingVedtakDto) {
         if (isDevOrLocal(env)) {
             LOG.info("Iverksetter tilbakekrevingsvedtak for vedtak {}", tilbakekrevingVedtakDto.vedtakId());
             var request = tilTilbakekrevingsvedtakRequest(tilbakekrevingVedtakDto);
             var respons = tilbakekrevingKlientWs.iverksettTilbakekrevingsvedtak(request);
             validerKvitteringIverksettTilbakekrevingsvedtak(respons.getMmel());
             LOG.info("Tilbakekrevingsvedtak iverksatt med kvittering OK");
-            return TilbakekrevingVedtakResponsMapper.tilDto(respons);
+        } else {
+            throw new UnsupportedOperationException("Iverksetting av tilbakekrevingsvedtak via fpwsproxy er ikke støttet enda!");
         }
-        throw new UnsupportedOperationException("Iverksetting av tilbakekrevingsvedtak via fpwsproxy er ikke støttet enda!");
     }
 
     @PostMapping("/tilbakekrevingsvedtak/sammenligning")
