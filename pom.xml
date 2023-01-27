@@ -36,7 +36,7 @@
         <!-- Interne avhengigheter -->
         <boot-conditionals.version>5.0.2</boot-conditionals.version>
         <fp-kontrakter.version>6.2.8</fp-kontrakter.version>
-        <fpsoknad-felles.version>0.8.38</fpsoknad-felles.version>
+        <fpsoknad-felles.version>0.8.41</fpsoknad-felles.version>
         <tjenestespesifikasjon.version>2610.9b6de22</tjenestespesifikasjon.version>
         <legacy-avhengigheter.version>2.0_20190412163011_bb51d0e</legacy-avhengigheter.version>
 
