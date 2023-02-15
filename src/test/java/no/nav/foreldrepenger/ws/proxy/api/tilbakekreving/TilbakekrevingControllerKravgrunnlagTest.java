@@ -13,8 +13,6 @@ import java.math.BigInteger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -32,14 +30,12 @@ import no.nav.tilbakekreving.typer.v1.MmelDto;
 @ExtendWith(SpringExtension.class)
 class TilbakekrevingControllerKravgrunnlagTest {
 
-    @Autowired
-    private Environment env;
     private TilbakekrevingController tilbakekrevingController;
     private final TilbakekrevingKlientWs tilbakekrevingKlientWs = mock(TilbakekrevingKlientWs.class);
 
     @BeforeEach
     public void setup() {
-        tilbakekrevingController = new TilbakekrevingController(tilbakekrevingKlientWs, env);
+        tilbakekrevingController = new TilbakekrevingController(tilbakekrevingKlientWs);
     }
 
     @Test

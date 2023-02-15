@@ -25,7 +25,7 @@ public class TilbakekrevingKlientWs {
     public KravgrunnlagHentDetaljResponse kravgrunnlagHentDetalj(KravgrunnlagHentDetaljRequest request) {
         try {
             return klient.kravgrunnlagHentDetalj(request);
-        } catch (SOAPFaultException e) { // NOSONAR
+        } catch (SOAPFaultException e) {
             throw new GenerellSoapFaultException("Henting av kravgrunnlag feilet for TilbakekrevingServiceV1", e);
         }
     }
@@ -33,12 +33,16 @@ public class TilbakekrevingKlientWs {
     public TilbakekrevingsvedtakResponse iverksettTilbakekrevingsvedtak(TilbakekrevingsvedtakRequest request) {
         try {
             return klient.tilbakekrevingsvedtak(request);
-        } catch (SOAPFaultException e) { // NOSONAR
+        } catch (SOAPFaultException e) {
             throw new GenerellSoapFaultException("F-942048: Iverksetting av tilbakekrevingsvedtak feilet med følgende SOAP feil:", e);
         }
     }
 
     public KravgrunnlagAnnulerResponse kravgrunnlagAnnuler(KravgrunnlagAnnulerRequest request) {
-        return klient.kravgrunnlagAnnuler(request);
+        try {
+            return klient.kravgrunnlagAnnuler(request);
+        } catch (SOAPFaultException e) {
+            throw new GenerellSoapFaultException("F-942048: Annullering av kravgrunnlag feilet med en generell SOAP feil:", e);
+        }
     }
 }

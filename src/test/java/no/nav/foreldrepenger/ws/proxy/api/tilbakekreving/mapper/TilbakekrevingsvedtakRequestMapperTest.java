@@ -30,7 +30,7 @@ class TilbakekrevingsvedtakRequestMapperTest {
     @BeforeEach
     public void setup() {
         tilbakekrevingKlientWs = mock(TilbakekrevingKlientWs.class);
-        tilbakekrevingController = new TilbakekrevingController(tilbakekrevingKlientWs, null);
+        tilbakekrevingController = new TilbakekrevingController(tilbakekrevingKlientWs);
     }
 
 

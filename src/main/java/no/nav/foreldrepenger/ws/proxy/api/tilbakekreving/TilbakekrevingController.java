@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.ws.proxy.api.tilbakekreving;
 
-import static no.nav.boot.conditionals.EnvUtil.isDevOrLocal;
 import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.ØkonomiKvitteringTilStrengMapper.formaterKvittering;
 import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.AnnullerKravgrunnlagRequestMapper.tilKravgrunnlagAnnulerRequest;
 import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.HentKravgrunnlagDetaljRequestMapper.tilKravgrunnlagHentDetaljXMLRequest;
@@ -14,7 +13,6 @@ import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.env.Environment;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -49,27 +47,36 @@ public class TilbakekrevingController {
     private static final String TILBAKEKREVINGVEDTAK_PATH = "/tilbakekrevingsvedtak";
 
     private final TilbakekrevingKlientWs tilbakekrevingKlientWs;
-    private final Environment env;
 
-    public TilbakekrevingController(TilbakekrevingKlientWs tilbakekrevingKlientWs,
-                                    Environment env) {
+    public TilbakekrevingController(TilbakekrevingKlientWs tilbakekrevingKlientWs) {
         this.tilbakekrevingKlientWs = tilbakekrevingKlientWs;
-        this.env = env;
     }
 
     @PostMapping(TILBAKEKREVINGVEDTAK_PATH)
     public void iverksettTilbakekrevingsvedtak(@Valid @NotNull @RequestBody TilbakekrevingVedtakDTO tilbakekrevingVedtakDto) {
-        if (isDevOrLocal(env)) {
+        try {
             LOG.info("Iverksetter tilbakekrevingsvedtak for vedtak {}", tilbakekrevingVedtakDto.vedtakId());
             var request = tilTilbakekrevingsvedtakRequest(tilbakekrevingVedtakDto);
             var respons = tilbakekrevingKlientWs.iverksettTilbakekrevingsvedtak(request);
-            validerKvitteringIverksettTilbakekrevingsvedtak(respons.getMmel());
-            LOG.info("Tilbakekrevingsvedtak iverksatt med kvittering OK");
-        } else {
-            throw new UnsupportedOperationException("Iverksetting av tilbakekrevingsvedtak via fpwsproxy er ikke støttet enda!");
+            var kvittering = respons.getMmel();
+            validerKvitteringIverksettTilbakekrevingsvedtak(kvittering);
+            LOG.info("Tilbakekrevingsvedtak sendt til oppdragsystemet OK. Alvorlighetsgrad='{}' infomelding='{}'", kvittering.getAlvorlighetsgrad(), kvittering.getBeskrMelding());
+        } catch (Exception e) {
+            loggRequestTilSecureLogsIForbindelseMedFeil(tilbakekrevingVedtakDto);
+            throw e;
         }
     }
 
+    private static void loggRequestTilSecureLogsIForbindelseMedFeil(TilbakekrevingVedtakDTO tilbakekrevingVedtakDto) {
+        try {
+            var request = tilTilbakekrevingsvedtakRequest(tilbakekrevingVedtakDto);
+            SECURE_LOG.info("Iverksetting av tilbakekrevingsvedtak feilet for følgende request {}", marshall(request));
+        } catch (Exception exceptionIMapping) {
+            SECURE_LOG.info("Iverksetting av tilbakekrevingsvedtak feilet ved mapping fra JSON til XML for følgende request {}", tilbakekrevingVedtakDto);
+        }
+    }
+
+    @Deprecated
     @PostMapping("/tilbakekrevingsvedtak/sammenligning")
     public TilbakekrevingVedtakDtoResponsMidlertidig hentIverksettingXMLRequest(@Valid @NotNull @RequestBody TilbakekrevingVedtakDTO tilbakekrevingVedtakDto) {
         var request = tilTilbakekrevingsvedtakRequest(tilbakekrevingVedtakDto);
