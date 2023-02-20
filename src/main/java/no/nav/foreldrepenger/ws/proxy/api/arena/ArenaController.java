@@ -26,10 +26,10 @@ import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.Finn
 public class ArenaController {
     private static final Logger LOG = LoggerFactory.getLogger(ArenaController.class);
 
-    private final ArenaKlientWs arenaKlientWs;
+    private final ArenaSoapClient arenaSoapClient;
 
-    public ArenaController(ArenaKlientWs arenaKlientWs) {
-        this.arenaKlientWs = arenaKlientWs;
+    public ArenaController(ArenaSoapClient arenaSoapClient) {
+        this.arenaSoapClient = arenaSoapClient;
     }
 
     @PostMapping
@@ -37,7 +37,7 @@ public class ArenaController {
         LOG.info("Henter dagpenger/AAP for {}", arenaDto);
         var arenaWSRequest = tilWSRequest(arenaDto);
 
-        var meldekortUtbetalingsgrunnlagListe = Optional.ofNullable(arenaKlientWs.finnMeldekortUtbetalingsgrunnlagListe(arenaWSRequest))
+        var meldekortUtbetalingsgrunnlagListe = Optional.ofNullable(arenaSoapClient.finnMeldekortUtbetalingsgrunnlagListe(arenaWSRequest))
             .map(FinnMeldekortUtbetalingsgrunnlagListeResponse::getMeldekortUtbetalingsgrunnlagListe)
             .orElse(List.of())
             .stream()

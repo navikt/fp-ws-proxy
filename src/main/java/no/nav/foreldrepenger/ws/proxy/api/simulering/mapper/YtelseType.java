@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.ws.proxy.api.simulering;
+package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 
 public enum YtelseType {
     ES,
@@ -9,5 +9,4 @@ public enum YtelseType {
     PLEIEPENGER_NÆRSTÅENDE,
     OMSORGSPENGER,
     OPPLÆRINGSPENGER,
-    ;
 }

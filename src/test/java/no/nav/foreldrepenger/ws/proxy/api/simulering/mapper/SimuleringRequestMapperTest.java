@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.YtelseType.FP;
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.YtelseType.FP;
 import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragMapperTest.verifiserAtMappingIkkeMisterNoeData;
 import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdrag110Dto;
 import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragFPEnkel;

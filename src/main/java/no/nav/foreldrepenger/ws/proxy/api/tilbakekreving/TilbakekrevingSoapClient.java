@@ -14,11 +14,11 @@ import no.nav.okonomi.tilbakekrevingservice.TilbakekrevingsvedtakRequest;
 import no.nav.okonomi.tilbakekrevingservice.TilbakekrevingsvedtakResponse;
 
 @Component
-public class TilbakekrevingKlientWs {
+public class TilbakekrevingSoapClient {
 
     private final TilbakekrevingPortType klient;
 
-    public TilbakekrevingKlientWs(TilbakekrevingPortType klient) {
+    public TilbakekrevingSoapClient(TilbakekrevingPortType klient) {
         this.klient = klient;
     }
 

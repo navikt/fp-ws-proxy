@@ -46,9 +46,9 @@ public class TilbakekrevingController {
     private static final String KRAVGRUNNLAG_ANNULLER_PATH = "/kravgrunnlag/annuller";
     private static final String TILBAKEKREVINGVEDTAK_PATH = "/tilbakekrevingsvedtak";
 
-    private final TilbakekrevingKlientWs tilbakekrevingKlientWs;
+    private final TilbakekrevingSoapClient tilbakekrevingKlientWs;
 
-    public TilbakekrevingController(TilbakekrevingKlientWs tilbakekrevingKlientWs) {
+    public TilbakekrevingController(TilbakekrevingSoapClient tilbakekrevingKlientWs) {
         this.tilbakekrevingKlientWs = tilbakekrevingKlientWs;
     }
 

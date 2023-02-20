@@ -21,7 +21,7 @@ import no.nav.system.os.tjenester.simulerfpservice.simulerfpservicegrensesnitt.S
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpservicegrensesnitt.SimulerBeregningResponse;
 
 @Component
-class SimuleringKlientWs {
+class SimuleringSoapClient {
     /**
      * oppdragssytemet (OS) har offisiell åpningstid mandag-fredag 0700-1900, men det er ofte åpent utenom de offisielle åpningstidene.
      * utenom åpningstid styrer vi logging slik at feilmeldinger fra OS som vanligvis forekommer ved nedetid logges som Info, for å ikke skape støy i loggene
@@ -38,7 +38,7 @@ class SimuleringKlientWs {
 
     private final SimulerFpService klient;
 
-    public SimuleringKlientWs(SimulerFpService klient) {
+    public SimuleringSoapClient(SimulerFpService klient) {
         this.klient = klient;
     }
 
