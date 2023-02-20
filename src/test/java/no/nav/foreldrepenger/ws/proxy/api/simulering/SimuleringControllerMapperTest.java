@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
+import no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.Fagområde;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.SimuleringResponsMapper;

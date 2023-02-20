@@ -22,12 +22,7 @@ no.nav.security.jwt:
 securitytokenservice:
   username: ${systembruker.username}
   password: ${systembruker.password}
-  url: ${securitytokenservice.url}
-
-sts:
-  username: ${systembruker.username}
-  password: ${systembruker.password}
-  baseUri: ${oidc.sts.issuer.url}
+  url: ${STSClientConfig}
 
 ## INTEGRASJONER ##
 meldekortutbetalingsgrunnlag:

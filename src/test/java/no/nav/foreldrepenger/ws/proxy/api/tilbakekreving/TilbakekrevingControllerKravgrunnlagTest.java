@@ -31,7 +31,7 @@ import no.nav.tilbakekreving.typer.v1.MmelDto;
 class TilbakekrevingControllerKravgrunnlagTest {
 
     private TilbakekrevingController tilbakekrevingController;
-    private final TilbakekrevingKlientWs tilbakekrevingKlientWs = mock(TilbakekrevingKlientWs.class);
+    private final TilbakekrevingSoapClient tilbakekrevingKlientWs = mock(TilbakekrevingSoapClient.class);
 
     @BeforeEach
     public void setup() {

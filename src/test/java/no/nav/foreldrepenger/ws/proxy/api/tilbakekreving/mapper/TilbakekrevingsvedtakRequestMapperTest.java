@@ -18,18 +18,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.TilbakekrevingController;
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.TilbakekrevingKlientWs;
+import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.TilbakekrevingSoapClient;
 import no.nav.foreldrepenger.ws.proxy.util.DateUtil;
 
 @ExtendWith(SpringExtension.class)
 class TilbakekrevingsvedtakRequestMapperTest {
 
     private TilbakekrevingController tilbakekrevingController;
-    private TilbakekrevingKlientWs tilbakekrevingKlientWs;
+    private TilbakekrevingSoapClient tilbakekrevingKlientWs;
 
     @BeforeEach
     public void setup() {
-        tilbakekrevingKlientWs = mock(TilbakekrevingKlientWs.class);
+        tilbakekrevingKlientWs = mock(TilbakekrevingSoapClient.class);
         tilbakekrevingController = new TilbakekrevingController(tilbakekrevingKlientWs);
     }
 
@@ -66,8 +66,8 @@ class TilbakekrevingsvedtakRequestMapperTest {
 
         var requestXML = TilbakekrevingsvedtakRequestMapper.tilTilbakekrevingsvedtakDto(orginalTilbakekrevingVedtakDto);
 
-        assertThat("8").isEqualTo(requestXML.getKodeAksjon()); // fast verdi!
-        assertThat("22-15").isEqualTo(requestXML.getKodeHjemmel()); // fast verdi!
+        assertThat(requestXML.getKodeAksjon()).isEqualTo("8"); // fast verdi!
+        assertThat(requestXML.getKodeHjemmel()).isEqualTo("22-15"); // fast verdi!
         assertThat(requestXML.getRenterBeregnes()).isNull();
 
 

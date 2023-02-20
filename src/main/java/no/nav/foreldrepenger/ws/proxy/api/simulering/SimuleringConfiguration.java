@@ -1,22 +1,21 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering;
 
-import java.util.Objects;
-
+import no.nav.foreldrepenger.ws.proxy.http.ws.WsClient;
+import no.nav.system.os.eksponering.simulerfpservicewsbinding.SimulerFpService;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import org.apache.cxf.ws.security.trust.STSClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
-import no.nav.foreldrepenger.ws.proxy.http.ws.EndpointSTSClientConfig;
-import no.nav.foreldrepenger.ws.proxy.http.ws.WsClient;
-import no.nav.system.os.eksponering.simulerfpservicewsbinding.SimulerFpService;
+import java.util.Objects;
 
 @Configuration
 public class SimuleringConfiguration extends WsClient<SimulerFpService> {
 
-    public SimuleringConfiguration(EndpointSTSClientConfig endpointStsClientConfig, Environment env) {
-        super(endpointStsClientConfig, env);
+    public SimuleringConfiguration(STSClient stsClient, Environment env) {
+        super(stsClient, env);
     }
 
     @Bean

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.ws.proxy.api.simulering;
+package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

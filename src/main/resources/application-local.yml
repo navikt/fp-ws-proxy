@@ -23,11 +23,6 @@ securitytokenservice:
   username: vtp
   password: vtp
   url: http://localhost:8060/soap/SecurityTokenServiceProvider/
-sts:
-  username: vtp
-  password: vtp
-  baseUri: http://localhost:8060
-
 
 ## INTEGRASJONER ##
 meldekortutbetalingsgrunnlag:

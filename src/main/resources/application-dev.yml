@@ -35,8 +35,6 @@ no.nav.security.jwt:
 # Brukers av clientene på utgående kall (WS eller RS)
 securitytokenservice:
   url: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
-sts:
-  baseUri: https://security-token-service.nais.preprod.local
 
 ## INTEGRASJONER ##
 meldekortutbetalingsgrunnlag:

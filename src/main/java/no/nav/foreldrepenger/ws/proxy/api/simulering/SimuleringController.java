@@ -9,6 +9,7 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.YtelseType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.bind.DefaultValue;
@@ -27,10 +28,10 @@ public class SimuleringController {
     private static final Logger LOG = LoggerFactory.getLogger(SimuleringController.class);
     private static final Logger SECURE_LOG = LoggerFactory.getLogger("secureLogger");
 
-    private final SimuleringKlientWs simuleringKlientWs;
+    private final SimuleringSoapClient simuleringSoapClient;
 
-    public SimuleringController(SimuleringKlientWs simuleringKlientWs) {
-        this.simuleringKlientWs = simuleringKlientWs;
+    public SimuleringController(SimuleringSoapClient simuleringSoapClient) {
+        this.simuleringSoapClient = simuleringSoapClient;
     }
 
     @PostMapping("/start")
@@ -47,7 +48,7 @@ public class SimuleringController {
                 behandlingId,
                 simuleringWSRequest.size());
 
-            var simulerBeregningResponse = simuleringKlientWs.simulerBeregningene(simuleringWSRequest);
+            var simulerBeregningResponse = simuleringSoapClient.simulerBeregningene(simuleringWSRequest);
             LOG.info("Simulering {} svarmeldinger mottatt for behandlingID={} tidsforbruk={} ms",
                 tekstMedUtenInntrekk,
                 behandlingId,

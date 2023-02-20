@@ -33,11 +33,6 @@ securitytokenservice:
   username: ${systembruker.username}  # Kommer fra vault
   password: ${systembruker.password} # Kommer fra vault
   url: https://sts.adeo.no/SecurityTokenServiceProvider/
-sts:
-  username: ${systembruker.username}  # Kommer fra vault
-  password: ${systembruker.password} # Kommer fra vault
-  baseUri: https://security-token-service.nais.adeo.no
-
 
 ## INTEGRASJONER ##
 meldekortutbetalingsgrunnlag:
