@@ -38,7 +38,7 @@ public class WsClient<T> {
             client.getInInterceptors().add(loggingInInterceptor);
             client.getInFaultInterceptors().add(loggingInInterceptor);
             client.getOutInterceptors().add(loggingOutInterceptor);
-            client.getOutFaultInterceptors().add(loggingInInterceptor);
+            client.getOutFaultInterceptors().add(loggingOutInterceptor);
         }
         return port;
     }
