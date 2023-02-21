@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
+import no.nav.foreldrepenger.ws.proxy.api.SyntetiskTestData;
 import no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.Fagområde;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +21,7 @@ class SimuleringControllerMapperTest {
 
     @Test
     void mapperTilResponsDtoMapperKorrektAntallElementer() {
-        var simulerBeregningResponse = lagRespons("gjelderid1232456", "123456789");
+        var simulerBeregningResponse = lagRespons(SyntetiskTestData.SYNTETISK_FNR, "123456789");
         var simuleringsresponser = List.of(simulerBeregningResponse);
 
         var beregningDtos = SimuleringResponsMapper.tilBeregningDtoListe(simuleringsresponser);

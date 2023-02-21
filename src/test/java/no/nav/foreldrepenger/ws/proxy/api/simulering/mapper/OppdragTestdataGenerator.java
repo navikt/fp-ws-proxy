@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Refusjonsin
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.SatsDto;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.TypeSats;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.UtbetalingsgradDto;
+import no.nav.foreldrepenger.ws.proxy.api.SyntetiskTestData;
 
 public class OppdragTestdataGenerator {
 
@@ -29,7 +30,7 @@ public class OppdragTestdataGenerator {
             tom,
             KodeKlassifik.FPF_FRILANSER,
             TypeSats.DAG,
-            refusjon ? lagRefusjon("12345678910") : null
+            refusjon ? lagRefusjon(SyntetiskTestData.SYNTETISK_FNR) : null
         );
         return lagOppdrag110Dto(refusjon ? KodeFagområde.FPREF : KodeFagområde.FP, null, List.of(oppdrag));
     }
@@ -82,8 +83,8 @@ public class OppdragTestdataGenerator {
             KodeEndring.NY,
             kodeFagområde,
             130158784100L,
-            "15088011020",
-            "Z991097",
+            SyntetiskTestData.SYNTETISK_FNR,
+            "Z123456",
             ompostering116,
             oppdragslinje150Dto
         );
@@ -123,7 +124,7 @@ public class OppdragTestdataGenerator {
             UtbetalingsgradDto.valueOf(100),
             KodeStatusLinje.OPPH,
             null,
-            "15088011020",
+            SyntetiskTestData.SYNTETISK_FNR,
             null,
             null,
             refusjon

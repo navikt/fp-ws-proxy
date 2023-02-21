@@ -9,6 +9,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.google.common.collect.Lists;
 
+import no.nav.foreldrepenger.ws.proxy.api.SyntetiskTestData;
 import no.nav.foreldrepenger.ws.proxy.util.DateUtil;
 import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.DetaljertKravgrunnlagBelopDto;
 import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.DetaljertKravgrunnlagDto;
@@ -34,14 +35,14 @@ public class KravgrunnlagTestDataBuilder {
         detaljertKravgrunnlag.setKontrollfelt("42354353453454");
         detaljertKravgrunnlag.setReferanse("1");
         detaljertKravgrunnlag.setRenterBeregnes(JaNeiDto.N);
-        detaljertKravgrunnlag.setSaksbehId("Z9901136");
-        detaljertKravgrunnlag.setUtbetalesTilId("12345678901");
+        detaljertKravgrunnlag.setSaksbehId("W123456");
+        detaljertKravgrunnlag.setUtbetalesTilId(SyntetiskTestData.SYNTETISK_FNR);
         detaljertKravgrunnlag.setEnhetBehandl(ENHET);
         detaljertKravgrunnlag.setEnhetBosted(ENHET);
         detaljertKravgrunnlag.setKodeStatusKrav("BEHA");
         detaljertKravgrunnlag.setTypeGjelderId(TypeGjelderDto.PERSON);
         detaljertKravgrunnlag.setTypeUtbetId(TypeGjelderDto.PERSON);
-        detaljertKravgrunnlag.setVedtakGjelderId("12345678901");
+        detaljertKravgrunnlag.setVedtakGjelderId(SyntetiskTestData.SYNTETISK_FNR);
         detaljertKravgrunnlag.setVedtakIdOmgjort(BigInteger.valueOf(207407));
         detaljertKravgrunnlag.getTilbakekrevingsPeriode().addAll(hentPerioder());
 

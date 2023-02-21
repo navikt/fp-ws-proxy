@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
+import no.nav.foreldrepenger.ws.proxy.api.SyntetiskTestData;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.request.ArenaRequestDto;
@@ -61,7 +62,7 @@ class ArenaMapperWSTest {
         var vedtak2 = lagVedtak(fomVedtak2, tomVedtak2);
         sak.getVedtakListe().add(vedtak1);
         sak.getVedtakListe().add(vedtak2);
-        var fnrFAKE = "123456789";
+        var fnrFAKE = SyntetiskTestData.SYNTETISK_FNR;
         sak.setFagsystemSakId(fnrFAKE);
 
         var ytelseStatus = YtelseStatusDto.LOP;
@@ -105,7 +106,7 @@ class ArenaMapperWSTest {
     }
 
     protected static ArenaRequestDto lagArenaRequestDto() {
-        var fnr = "11111122222";
+        var fnr = SyntetiskTestData.SYNTETISK_FNR;
         var fom = LocalDate.now().minusMonths(2);
         var tom = LocalDate.now();
         return new ArenaRequestDto(fnr, fom, tom);
@@ -121,7 +122,7 @@ class ArenaMapperWSTest {
         var vedtak2 = lagVedtak(fomVedtak2, tomVedtak2);
         sak.getVedtakListe().add(vedtak1);
         sak.getVedtakListe().add(vedtak2);
-        var fnrFAKE = "123456789";
+        var fnrFAKE = SyntetiskTestData.SYNTETISK_FNR;
         sak.setFagsystemSakId(fnrFAKE);
 
         var ytelseStatus = YtelseStatusDto.LOP;

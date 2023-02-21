@@ -12,6 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.util.List;
 
+import no.nav.foreldrepenger.ws.proxy.api.SyntetiskTestData;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeEndringLinje;
@@ -40,10 +41,10 @@ class SimuleringRequestMapperTest {
             UtbetalingsgradDto.valueOf(100),
             null,
             null,
-            "15088011020",
+            SyntetiskTestData.SYNTETISK_FNR,
             135702910101100L,
             135702910101L,
-            lagRefusjon("12345678910")
+            lagRefusjon(SyntetiskTestData.SYNTETISK_FNR)
         );
         var oppdragslinje150_2 = new Oppdragslinje150Dto(
             KodeEndringLinje.NY,
@@ -56,10 +57,10 @@ class SimuleringRequestMapperTest {
             UtbetalingsgradDto.valueOf(100),
             null,
             null,
-            "15088011020",
+            SyntetiskTestData.SYNTETISK_FNR,
             135702910101101L,
             135702910101L,
-            lagRefusjon("12345678910")
+            lagRefusjon(SyntetiskTestData.SYNTETISK_FNR)
         );
         var oppdragslinje150_3 = new Oppdragslinje150Dto(
             KodeEndringLinje.NY,
@@ -72,10 +73,10 @@ class SimuleringRequestMapperTest {
             UtbetalingsgradDto.valueOf(100),
             null,
             null,
-            "15088011020",
+            SyntetiskTestData.SYNTETISK_FNR,
             135702910101102L,
             135702910101L,
-            lagRefusjon("12345678910")
+            lagRefusjon(SyntetiskTestData.SYNTETISK_FNR)
         );
         var oppdragslinje150_4 = new Oppdragslinje150Dto(
             KodeEndringLinje.NY,
@@ -88,10 +89,10 @@ class SimuleringRequestMapperTest {
             UtbetalingsgradDto.valueOf(100),
             null,
             null,
-            "15088011020",
+            SyntetiskTestData.SYNTETISK_FNR,
             135702910101103L,
             135702910101L,
-            lagRefusjon("12345678910")
+            lagRefusjon(SyntetiskTestData.SYNTETISK_FNR)
         );
         var oppdrag110Dto = lagOppdrag110Dto(KodeFagområde.FPREF, null,
             List.of(oppdragslinje150_1, oppdragslinje150_2, oppdragslinje150_3, oppdragslinje150_4));
