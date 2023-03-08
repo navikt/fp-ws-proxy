@@ -15,6 +15,10 @@ spring:
 
 no.nav.security.jwt:
   issuer:
+    aad:
+      discovery_url: http://authserver:8086/azureAd/.well-known/openid-configuration
+      accepted_audience: api://vtp, vtp
+      proxy-url: http://authserver:8086
     sts-rs:
       discoveryurl: http://localhost:8060/rest/v1/sts/.well-known/openid-configuration
       accepted_audience: OIDC, vtp, srvfpabakus, srvfpoppdrag, srvfptilbake, srvk9-tilbake
