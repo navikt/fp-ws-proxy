@@ -15,7 +15,7 @@ spring:
 
 no.nav.security.jwt:
   issuer:
-    sts-rs:
+    sts:
       discoveryurl: ${oidc.sts.well.known.url}
       accepted_audience: OIDC, vtp, fpsak-autotest
 

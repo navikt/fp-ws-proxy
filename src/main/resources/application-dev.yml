@@ -29,7 +29,7 @@ spring:
 ## SIKKERHET ##
 no.nav.security.jwt:
   issuer:
-    sts-rs:
+    sts:
       discoveryurl: https://security-token-service.nais.preprod.local/.well-known/openid-configuration
 
 # Brukers av clientene på utgående kall (WS eller RS)
