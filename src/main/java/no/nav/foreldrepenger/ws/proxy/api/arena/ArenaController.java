@@ -1,28 +1,23 @@
 package no.nav.foreldrepenger.ws.proxy.api.arena;
 
-import static no.nav.foreldrepenger.ws.proxy.api.arena.mapper.ArenaMapperWS.tilWSRequest;
-import static no.nav.foreldrepenger.ws.proxy.config.TokenUtilConfiguration.STS_RS;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.request.ArenaRequestDto;
+import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.respons.MeldekortUtbetalingsgrunnlagSakDto;
+import no.nav.foreldrepenger.ws.proxy.api.arena.mapper.ArenaMapperWS;
+import no.nav.foreldrepenger.ws.proxy.http.ProtectedRestController;
+import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.FinnMeldekortUtbetalingsgrunnlagListeResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.Valid;
+import static no.nav.foreldrepenger.ws.proxy.api.arena.mapper.ArenaMapperWS.tilWSRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.request.ArenaRequestDto;
-import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.respons.MeldekortUtbetalingsgrunnlagSakDto;
-import no.nav.foreldrepenger.ws.proxy.api.arena.mapper.ArenaMapperWS;
-import no.nav.security.token.support.spring.ProtectedRestController;
-import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.FinnMeldekortUtbetalingsgrunnlagListeResponse;
-
-@Validated
-@ProtectedRestController(issuer = STS_RS, value = "/arena", claimMap = {})
+@ProtectedRestController(value = "/arena")
 public class ArenaController {
     private static final Logger LOG = LoggerFactory.getLogger(ArenaController.class);
 

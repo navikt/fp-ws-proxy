@@ -11,5 +11,32 @@
     "requests": {
         "cpu": "1",
         "mem": "1024Mi"
-    }
+    },
+    "AZURE_IAC_RULES": [
+        {
+            "app": "fpabakus",
+            "namespace": "teamforeldrepenger",
+            "cluster": "prod-fss"
+        },
+        {
+            "app": "fpoppdrag",
+            "namespace": "teamforeldrepenger",
+            "cluster": "prod-fss"
+        },
+        {
+            "app": "fptilbake",
+            "namespace": "teamforeldrepenger",
+            "cluster": "prod-fss"
+        },
+        {
+            "app": "k9-oppdrag",
+            "namespace": "k9saksbehandling",
+            "cluster": "prod-fss"
+        },
+        {
+            "app": "k9-tilbake",
+            "namespace": "k9saksbehandling",
+            "cluster": "prod-fss"
+        }
+    ]
 }

@@ -1,23 +1,5 @@
 package no.nav.foreldrepenger.ws.proxy.api.tilbakekreving;
 
-import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.ØkonomiKvitteringTilStrengMapper.formaterKvittering;
-import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.AnnullerKravgrunnlagRequestMapper.tilKravgrunnlagAnnulerRequest;
-import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.HentKravgrunnlagDetaljRequestMapper.tilKravgrunnlagHentDetaljXMLRequest;
-import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.Kravgrunnlag431DtoMapper.tilDto;
-import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.TilbakekrevingsvedtakRequestMapper.tilTilbakekrevingsvedtakRequest;
-import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.sammenligning.TilbakekrevingsvedtakMarshaller.marshall;
-import static no.nav.foreldrepenger.ws.proxy.config.TokenUtilConfiguration.STS_RS;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.iverksett.TilbakekrevingVedtakDTO;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.request.AnnullerKravGrunnlagDto;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.request.HentKravgrunnlagDetaljDto;
@@ -28,15 +10,29 @@ import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.UkjentFeilIKvitte
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.ØkonomiKvitteringTolk;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.sammenligning.TilbakekrevingVedtakDtoResponsMidlertidig;
 import no.nav.foreldrepenger.ws.proxy.error.GenerellSoapFaultException;
-import no.nav.security.token.support.spring.ProtectedRestController;
+import no.nav.foreldrepenger.ws.proxy.http.ProtectedRestController;
 import no.nav.tilbakekreving.typer.v1.MmelDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.ØkonomiKvitteringTilStrengMapper.formaterKvittering;
+import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.AnnullerKravgrunnlagRequestMapper.tilKravgrunnlagAnnulerRequest;
+import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.HentKravgrunnlagDetaljRequestMapper.tilKravgrunnlagHentDetaljXMLRequest;
+import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.Kravgrunnlag431DtoMapper.tilDto;
+import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.TilbakekrevingsvedtakRequestMapper.tilTilbakekrevingsvedtakRequest;
+import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.sammenligning.TilbakekrevingsvedtakMarshaller.marshall;
 
 /**
  * Skal på sikt ersatte WS kall fra fptilbake til økonomi som gjøres i
  * https://github.com/navikt/fptilbake/blob/master/integrasjontjenester/oekonomi-tilbakekreving-klient/src/main/java/no/nav/foreldrepenger/tilbakekreving/integrasjon/økonomi/ØkonomiConsumerImpl.java
  */
-@Validated
-@ProtectedRestController(issuer = STS_RS, value = "/tilbakekreving", claimMap = {})
+@ProtectedRestController(value = "/tilbakekreving")
 public class TilbakekrevingController {
 
     private static final Logger LOG = LoggerFactory.getLogger(TilbakekrevingController.class);
