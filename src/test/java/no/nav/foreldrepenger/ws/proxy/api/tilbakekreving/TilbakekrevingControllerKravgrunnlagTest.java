@@ -26,7 +26,6 @@ import no.nav.foreldrepenger.ws.proxy.error.GenerellSoapFaultException;
 import no.nav.okonomi.tilbakekrevingservice.KravgrunnlagHentDetaljResponse;
 import no.nav.tilbakekreving.typer.v1.MmelDto;
 
-@ActiveProfiles(value = "local")
 @ExtendWith(SpringExtension.class)
 class TilbakekrevingControllerKravgrunnlagTest {
 

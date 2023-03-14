@@ -8,7 +8,6 @@ import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.KravgrunnlagErSpe
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.MangledeKravgrunnlagException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.UkjentFeilIKvitteringFraOSException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.ØkonomiKvitteringTolk;
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.sammenligning.TilbakekrevingVedtakDtoResponsMidlertidig;
 import no.nav.foreldrepenger.ws.proxy.error.GenerellSoapFaultException;
 import no.nav.foreldrepenger.ws.proxy.http.ProtectedRestController;
 import no.nav.tilbakekreving.typer.v1.MmelDto;
@@ -26,7 +25,7 @@ import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.AnnullerK
 import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.HentKravgrunnlagDetaljRequestMapper.tilKravgrunnlagHentDetaljXMLRequest;
 import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.Kravgrunnlag431DtoMapper.tilDto;
 import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.TilbakekrevingsvedtakRequestMapper.tilTilbakekrevingsvedtakRequest;
-import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.sammenligning.TilbakekrevingsvedtakMarshaller.marshall;
+import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.util.TilbakekrevingsvedtakMarshaller.marshall;
 
 /**
  * Skal på sikt ersatte WS kall fra fptilbake til økonomi som gjøres i
@@ -63,22 +62,6 @@ public class TilbakekrevingController {
         }
     }
 
-    private static void loggRequestTilSecureLogsIForbindelseMedFeil(TilbakekrevingVedtakDTO tilbakekrevingVedtakDto) {
-        try {
-            var request = tilTilbakekrevingsvedtakRequest(tilbakekrevingVedtakDto);
-            SECURE_LOG.info("Iverksetting av tilbakekrevingsvedtak feilet for følgende request {}", marshall(request));
-        } catch (Exception exceptionIMapping) {
-            SECURE_LOG.info("Iverksetting av tilbakekrevingsvedtak feilet ved mapping fra JSON til XML for følgende request {}", tilbakekrevingVedtakDto);
-        }
-    }
-
-    @Deprecated
-    @PostMapping("/tilbakekrevingsvedtak/sammenligning")
-    public TilbakekrevingVedtakDtoResponsMidlertidig hentIverksettingXMLRequest(@Valid @NotNull @RequestBody TilbakekrevingVedtakDTO tilbakekrevingVedtakDto) {
-        var request = tilTilbakekrevingsvedtakRequest(tilbakekrevingVedtakDto);
-        return new TilbakekrevingVedtakDtoResponsMidlertidig(marshall(request));
-    }
-
     @PostMapping(KRAVGRUNNLAG_PATH)
     public Kravgrunnlag431Dto kravgrunnlagHentDetalj(@Valid @NotNull @RequestBody HentKravgrunnlagDetaljDto kravgrunnlagDetaljDto) {
         var kravgrunnlagId = kravgrunnlagDetaljDto.kravgrunnlagId().longValue();
@@ -106,6 +89,15 @@ public class TilbakekrevingController {
         LOG.info("Annulering av kravgrunnlag OK. Alvorlighetsgrad='{}' infomelding='{}'",
             kvittering.getAlvorlighetsgrad(),
             kvittering.getBeskrMelding());
+    }
+
+    private static void loggRequestTilSecureLogsIForbindelseMedFeil(TilbakekrevingVedtakDTO tilbakekrevingVedtakDto) {
+        try {
+            var request = tilTilbakekrevingsvedtakRequest(tilbakekrevingVedtakDto);
+            SECURE_LOG.info("Iverksetting av tilbakekrevingsvedtak feilet for følgende request {}", marshall(request));
+        } catch (Exception exceptionIMapping) {
+            SECURE_LOG.info("Iverksetting av tilbakekrevingsvedtak feilet ved mapping fra JSON til XML for følgende request {}", tilbakekrevingVedtakDto);
+        }
     }
 
     private void validerKvitteringForAnnulereGrunnlag(MmelDto mmel) {

@@ -22,7 +22,6 @@ import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.iverksett.Tilba
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.UkjentFeilIKvitteringFraOSException;
 import no.nav.tilbakekreving.typer.v1.MmelDto;
 
-@ActiveProfiles(value = "local")
 @ExtendWith(SpringExtension.class)
 class TilbakekrevingControllerIverksettVedtakTest {
 
