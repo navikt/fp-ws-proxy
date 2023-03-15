@@ -42,7 +42,7 @@
 
         <!-- Eksterne avhengigheter -->
         <cxf.version>3.5.5</cxf.version>
-        <token-validation-version>2.1.9</token-validation-version>
+        <token-validation-version>3.0.8</token-validation-version>
         <logstash-logback-encoder.version>7.2</logstash-logback-encoder.version>
     </properties>
 
