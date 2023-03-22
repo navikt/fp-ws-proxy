@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.sammenligning;
+package no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.util;
 
 import java.io.StringWriter;
 

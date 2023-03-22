@@ -1,60 +1,21 @@
 package no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper;
 
-import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.util.TilbakekrevingsVedtakTestDataBygger.lagTilbakekrevingVedtakDTORequest;
-import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.util.TilbakekrevingsVedtakTestDataBygger.lagTilbakekrevingsbelop;
-import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.util.TilbakekrevingsVedtakTestDataBygger.lagTilbakekrevingsperiodeDTO;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-
-import java.math.BigInteger;
-import java.util.List;
-
-import org.junit.jupiter.api.BeforeEach;
+import no.nav.foreldrepenger.ws.proxy.util.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.TilbakekrevingController;
-import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.TilbakekrevingSoapClient;
-import no.nav.foreldrepenger.ws.proxy.util.DateUtil;
+import java.math.BigInteger;
+import java.util.List;
+
+import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.util.TilbakekrevingsVedtakTestDataBygger.lagTilbakekrevingVedtakDTORequest;
+import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.util.TilbakekrevingsVedtakTestDataBygger.lagTilbakekrevingsbelop;
+import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.util.TilbakekrevingsVedtakTestDataBygger.lagTilbakekrevingsperiodeDTO;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 class TilbakekrevingsvedtakRequestMapperTest {
 
-    private TilbakekrevingController tilbakekrevingController;
-    private TilbakekrevingSoapClient tilbakekrevingKlientWs;
-
-    @BeforeEach
-    public void setup() {
-        tilbakekrevingKlientWs = mock(TilbakekrevingSoapClient.class);
-        tilbakekrevingController = new TilbakekrevingController(tilbakekrevingKlientWs);
-    }
-
-
-    // TODO: Fjern etter sammenliginig
-    @Test
-    void sjekkRequestMarshallOKOgVerifiserAtOSIkkeBlirKalt() {
-        // 1) Bygg opp en TilbakekrevingVedtakDTO
-        var tilbakekrevingsperider = List.of(
-            lagTilbakekrevingsperiodeDTO(List.of(lagTilbakekrevingsbelop())),
-            lagTilbakekrevingsperiodeDTO(List.of(lagTilbakekrevingsbelop(), lagTilbakekrevingsbelop()))
-        );
-        var orginalTilbakekrevingVedtakDto = lagTilbakekrevingVedtakDTORequest(tilbakekrevingsperider);
-
-        // 2) ACT: IverksettTilbakekrevingsvedtak
-        var respons = tilbakekrevingController.hentIverksettingXMLRequest(orginalTilbakekrevingVedtakDto);
-
-        assertThat(respons.requestXml())
-            .isNotNull()
-            .isNotBlank()
-            .contains("W123456");
-
-        verify(tilbakekrevingKlientWs, never()).iverksettTilbakekrevingsvedtak(any());
-
-    }
 
     @Test
     void requestMapperTest() {
