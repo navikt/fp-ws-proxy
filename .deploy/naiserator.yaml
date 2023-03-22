@@ -18,13 +18,13 @@ spec:
     cpuThresholdPercentage: 80
   liveness:
     path: /fpwsproxy/actuator/health/liveness
-    initialDelay: 15
+    initialDelay: 5
     timeout: 5
     periodSeconds: 10
     failureThreshold: 27
   readiness:
     path: /fpwsproxy/actuator/health/readiness
-    initialDelay: 15
+    initialDelay: 5
     timeout: 5
     periodSeconds: 10
     failureThreshold: 27
