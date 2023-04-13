@@ -1,6 +1,10 @@
 package no.nav.foreldrepenger.ws.proxy.http.ws;
 
-import jakarta.xml.bind.JAXBException;
+import static no.nav.foreldrepenger.common.util.Constants.NAV_CALL_ID;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.namespace.QName;
+
 import org.apache.cxf.binding.soap.SoapHeader;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
@@ -11,10 +15,6 @@ import org.apache.cxf.phase.Phase;
 import org.jboss.logging.MDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.xml.namespace.QName;
-
-import static no.nav.foreldrepenger.common.util.Constants.NAV_CALL_ID;
 
 public class CallIdHeaderInterceptor extends AbstractPhaseInterceptor<Message> {
 

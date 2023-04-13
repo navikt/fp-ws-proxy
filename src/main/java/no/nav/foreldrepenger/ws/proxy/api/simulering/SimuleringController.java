@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.OppdragskontrollDto;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.respons.BeregningDto;
 import no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.YtelseType;
@@ -13,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.SimuleringRequestMapper.tilSimulerBeregingsRequester;

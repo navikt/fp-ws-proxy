@@ -1,6 +1,9 @@
 package no.nav.foreldrepenger.ws.proxy.api.tilbakekreving;
 
-import jakarta.xml.ws.soap.SOAPFaultException;
+import javax.xml.ws.soap.SOAPFaultException;
+
+import org.springframework.stereotype.Component;
+
 import no.nav.foreldrepenger.ws.proxy.error.GenerellSoapFaultException;
 import no.nav.okonomi.tilbakekrevingservice.KravgrunnlagAnnulerRequest;
 import no.nav.okonomi.tilbakekrevingservice.KravgrunnlagAnnulerResponse;
@@ -9,7 +12,6 @@ import no.nav.okonomi.tilbakekrevingservice.KravgrunnlagHentDetaljResponse;
 import no.nav.okonomi.tilbakekrevingservice.TilbakekrevingPortType;
 import no.nav.okonomi.tilbakekrevingservice.TilbakekrevingsvedtakRequest;
 import no.nav.okonomi.tilbakekrevingservice.TilbakekrevingsvedtakResponse;
-import org.springframework.stereotype.Component;
 
 @Component
 public class TilbakekrevingSoapClient {
