@@ -44,7 +44,7 @@
         <!-- Eksterne avhengigheter -->
         <cxf.version>4.0.0</cxf.version>
         <spring.vault.version>4.0.1</spring.vault.version>
-        <logstash-logback-encoder.version>7.2</logstash-logback-encoder.version>
+        <logstash-logback-encoder.version>7.3</logstash-logback-encoder.version>
     </properties>
 
     <scm>
