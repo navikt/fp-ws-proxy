@@ -1,13 +1,12 @@
 package no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.util;
 
-import java.io.StringWriter;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 import no.nav.foreldrepenger.ws.proxy.error.GenerellSoapFaultException;
 import no.nav.okonomi.tilbakekrevingservice.TilbakekrevingsvedtakRequest;
+
+import java.io.StringWriter;
 
 public class TilbakekrevingsvedtakMarshaller {
 

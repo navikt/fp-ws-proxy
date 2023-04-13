@@ -1,9 +1,6 @@
 package no.nav.foreldrepenger.ws.proxy.api.arena;
 
-import javax.xml.ws.soap.SOAPFaultException;
-
-import org.springframework.stereotype.Component;
-
+import jakarta.xml.ws.soap.SOAPFaultException;
 import no.nav.foreldrepenger.ws.proxy.error.FinnesIkkeException;
 import no.nav.foreldrepenger.ws.proxy.error.GenerellSoapFaultException;
 import no.nav.foreldrepenger.ws.proxy.error.SikkerhetsbegrensingException;
@@ -15,6 +12,7 @@ import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.binding.Meldek
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.feil.ForretningsmessigUnntak;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.FinnMeldekortUtbetalingsgrunnlagListeRequest;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.FinnMeldekortUtbetalingsgrunnlagListeResponse;
+import org.springframework.stereotype.Component;
 
 
 /**
