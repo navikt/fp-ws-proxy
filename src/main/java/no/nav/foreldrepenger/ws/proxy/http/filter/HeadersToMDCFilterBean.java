@@ -1,26 +1,24 @@
 package no.nav.foreldrepenger.ws.proxy.http.filter;
 
-import static no.nav.foreldrepenger.common.util.Constants.NAV_CALL_ID;
-import static no.nav.foreldrepenger.common.util.Constants.NAV_CALL_ID2;
-import static no.nav.foreldrepenger.common.util.Constants.NAV_CONSUMER_ID;
-import static no.nav.foreldrepenger.common.util.MDCUtil.toMDC;
-
-import java.io.IOException;
-import java.util.Optional;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import no.nav.foreldrepenger.common.util.CallIdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
-import no.nav.foreldrepenger.common.util.CallIdGenerator;
+import java.io.IOException;
+import java.util.Optional;
+
+import static no.nav.foreldrepenger.common.util.Constants.NAV_CALL_ID;
+import static no.nav.foreldrepenger.common.util.Constants.NAV_CALL_ID2;
+import static no.nav.foreldrepenger.common.util.Constants.NAV_CONSUMER_ID;
+import static no.nav.foreldrepenger.common.util.MDCUtil.toMDC;
 
 /**
  * Brukes ved innkommende requester for å hente ut headere fra request og sette tilsvarende MDC verdier

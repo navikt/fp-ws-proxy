@@ -17,7 +17,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.8</version>
+        <version>3.0.5</version>
         <relativePath/>
     </parent>
     <properties>
@@ -34,16 +34,17 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <!-- Interne avhengigheter -->
-        <boot-conditionals.version>5.0.2</boot-conditionals.version>
-        <fp-kontrakter.version>6.2.15</fp-kontrakter.version>
-        <fpsoknad-felles.version>1.0.1</fpsoknad-felles.version>
+        <token-validation-version>3.0.10</token-validation-version>
+        <boot-conditionals.version>5.0.6</boot-conditionals.version>
+        <fp-kontrakter.version>6.2.17</fp-kontrakter.version>
+        <fpsoknad-felles.version>2.0.1</fpsoknad-felles.version>
         <tjenestespesifikasjon.version>2612.db4dc68</tjenestespesifikasjon.version>
         <legacy-avhengigheter.version>2.0_20190412163011_bb51d0e</legacy-avhengigheter.version>
 
         <!-- Eksterne avhengigheter -->
-        <cxf.version>3.5.5</cxf.version>
-        <token-validation-version>2.1.9</token-validation-version>
-        <logstash-logback-encoder.version>7.3</logstash-logback-encoder.version>
+        <cxf.version>4.0.0</cxf.version>
+        <spring.vault.version>4.0.1</spring.vault.version>
+        <logstash-logback-encoder.version>7.2</logstash-logback-encoder.version>
     </properties>
 
     <scm>
@@ -57,7 +58,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-vault-dependencies</artifactId>
-                <version>3.1.1</version>
+                <version>${spring.vault.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
@@ -95,7 +96,7 @@
 
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
-            <artifactId>fp-ws-proxy-v1</artifactId>
+            <artifactId>fp-ws-proxy-v1-jakarta</artifactId>
             <version>${fp-kontrakter.version}</version>
         </dependency>
         <dependency>
@@ -118,16 +119,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jetty</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
