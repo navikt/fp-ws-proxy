@@ -41,7 +41,7 @@
         <legacy-avhengigheter.version>2.0_20190412163011_bb51d0e</legacy-avhengigheter.version>
 
         <!-- Eksterne avhengigheter -->
-        <cxf.version>3.5.5</cxf.version>
+        <cxf.version>4.0.2</cxf.version>
         <token-validation-version>2.1.9</token-validation-version>
         <logstash-logback-encoder.version>7.3</logstash-logback-encoder.version>
     </properties>
