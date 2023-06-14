@@ -38,7 +38,6 @@
         <fp-kontrakter.version>6.2.15</fp-kontrakter.version>
         <fpsoknad-felles.version>1.0.1</fpsoknad-felles.version>
         <tjenestespesifikasjon.version>2612.db4dc68</tjenestespesifikasjon.version>
-        <legacy-avhengigheter.version>2.0_20190412163011_bb51d0e</legacy-avhengigheter.version>
 
         <!-- Eksterne avhengigheter -->
         <cxf.version>3.5.5</cxf.version>
@@ -78,13 +77,7 @@
             <artifactId>nav-system-os-simuler-fp-service-tjenestespesifikasjon</artifactId>
             <version>${tjenestespesifikasjon.version}</version>
         </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
-            <artifactId>okonomistotte-v1</artifactId>
-            <version>${legacy-avhengigheter.version}</version>
-            <classifier>jaxb</classifier>
-            <scope>compile</scope>
-        </dependency>
+
 
         <!-- TILBAKEKREVING -->
         <dependency>
