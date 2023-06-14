@@ -34,7 +34,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <!-- Interne avhengigheter -->
-        <boot-conditionals.version>5.0.2</boot-conditionals.version>
+        <boot-conditionals.version>5.0.8</boot-conditionals.version>
         <fp-kontrakter.version>6.2.21</fp-kontrakter.version>
         <fpsoknad-felles.version>1.0.1</fpsoknad-felles.version>
         <tjenestespesifikasjon.version>2612.db4dc68</tjenestespesifikasjon.version>
