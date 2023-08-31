@@ -34,7 +34,7 @@ no.nav.security.jwt:
 
 # Brukers av clientene på utgående kall (WS eller RS)
 securitytokenservice:
-  url: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
+  url: https://sts-q2.preprod.local/SecurityTokenServiceProvider/
 
 ## INTEGRASJONER ##
 meldekortutbetalingsgrunnlag:

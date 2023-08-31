@@ -36,7 +36,7 @@
         <!-- Interne avhengigheter -->
         <boot-conditionals.version>5.0.8</boot-conditionals.version>
         <fp-kontrakter.version>6.2.21</fp-kontrakter.version>
-        <fpsoknad-felles.version>2.3.6</fpsoknad-felles.version>
+        <fpsoknad-felles.version>2.5.0</fpsoknad-felles.version>
         <tjenestespesifikasjon.version>2616.df1f47c</tjenestespesifikasjon.version>
 
         <!-- Eksterne avhengigheter -->
