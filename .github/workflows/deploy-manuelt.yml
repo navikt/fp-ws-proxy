@@ -22,6 +22,6 @@ jobs:
     uses: navikt/fp-gha-workflows/.github/workflows/deploy.yml@main
     with:
       gar: true
-      image: ghcr.io/${{ github.repository }}:${{ inputs.image }}
+      image: ${{ inputs.image }}
       cluster: ${{ inputs.environment }}-fss
     secrets: inherit
