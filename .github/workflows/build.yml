@@ -51,6 +51,6 @@ jobs:
     uses: navikt/fp-gha-workflows/.github/workflows/deploy.yml@main
     with:
       gar: true
-      image: ghcr.io/${{ github.repository }}:${{ needs.build-app.outputs.build-version }}
+      image: ${{ needs.build-app.outputs.build-version }}
       cluster: prod-fss
     secrets: inherit
