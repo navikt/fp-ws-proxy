@@ -34,17 +34,17 @@ no.nav.security.jwt:
 
 # Brukers av clientene på utgående kall (WS eller RS)
 securitytokenservice:
-  url: https://sts-q2.preprod.local/SecurityTokenServiceProvider/
+  url: ${SECURITYTOKENSERVICE_URL}
 
 ## INTEGRASJONER ##
 meldekortutbetalingsgrunnlag:
   v1:
-    url: https://arena-q2.adeo.no/ail_ws/MeldekortUtbetalingsgrunnlag_v1
+    url: ${MELDEKORTUTBETALINGSGRUNNLAG_URL}
 oppdrag:
   service:
-    url: https://cics-q2.adeo.no/oppdrag/simulerFpServiceWSBinding
+    url: ${OPPDRAG_BASE_URL}/simulerFpServiceWSBinding
 tilbakekreving:
   v1:
-    url: https://cics-q2.adeo.no/oppdrag/K231CW80
+    url: ${OPPDRAG_BASE_URL}/K231CW80
 
 

@@ -2,9 +2,9 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: fpwsproxy
-  namespace: teamforeldrepenger
+  namespace: {{namepsace}}
   labels:
-    team: teamforeldrepenger
+    team: {{namepsace}}
 spec:
   image: {{image}}
   port: 8080
@@ -43,6 +43,13 @@ spec:
   azure:
     application:
       enabled: true
+  {{#if env}}
+  env:
+  {{#each env}}
+  - name: {{@key}}
+    value: "{{this}}"
+  {{/each}}
+  {{/if}}
   {{#if AZURE_IAC_RULES}}
   accessPolicy:
     inbound:

@@ -1,4 +1,5 @@
 {
+    "namespace": "teamforeldrepenger",
     "ingresses":  [
         "https://fpwsproxy.dev.intern.nav.no"
     ],
@@ -38,5 +39,10 @@
             "namespace": "k9saksbehandling",
             "cluster": "dev-fss"
         }
-    ]
+    ],
+    "env": {
+        "SECURITYTOKENSERVICE_URL": "https://sts-q2.preprod.local/SecurityTokenServiceProvider/",
+        "MELDEKORTUTBETALINGSGRUNNLAG_URL": "https://arena-q2.adeo.no/ail_ws/MeldekortUtbetalingsgrunnlag_v1",
+        "OPPDRAG_BASE_URL": "https://cics-q2.adeo.no/oppdrag"
+    }
 }

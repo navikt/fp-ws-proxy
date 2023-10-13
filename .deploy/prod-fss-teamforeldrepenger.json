@@ -1,4 +1,5 @@
 {
+    "namespace": "teamforeldrepenger",
     "ingresses": [
         "https://fpwsproxy.intern.nav.no"
     ],
