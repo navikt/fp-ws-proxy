@@ -46,11 +46,11 @@ public class OppdragMapper {
      * @param oppdrag110
      * @return
      */
-    public static Oppdrag mapTilSimuleringOppdrag(Oppdrag110Dto oppdrag110, Long behandlingId) {
+    public static Oppdrag mapTilSimuleringOppdrag(Oppdrag110Dto oppdrag110, String behandlingId) {
         var oppdrag = new ObjectFactory().createOppdrag();
         oppdrag.setKodeEndring(oppdrag110.kodeEndring().name());
         oppdrag.setKodeFagomraade(oppdrag110.kodeFagomrade().name());
-        oppdrag.setFagsystemId(oppdrag110.fagsystemId().toString());
+        oppdrag.setFagsystemId(oppdrag110.fagsystemId());
         oppdrag.setUtbetFrekvens(UTBET_FREKVENS);
         oppdrag.setOppdragGjelderId(oppdrag110.oppdragGjelderId());
         oppdrag.setDatoOppdragGjelderFom(localdateTilString(DATO_OPPDRAG_GJELDER_FOM));
@@ -87,14 +87,14 @@ public class OppdragMapper {
         return enhet;
     }
 
-    private static List<Oppdragslinje> mapOppdragslinje150(List<Oppdragslinje150Dto> oppdragsLinje150Liste, KodeFagområde kodeFagområde, String saksbehId, Long behandlingId) {
+    private static List<Oppdragslinje> mapOppdragslinje150(List<Oppdragslinje150Dto> oppdragsLinje150Liste, KodeFagområde kodeFagområde, String saksbehId, String behandlingId) {
         return safeStream(oppdragsLinje150Liste)
             .map(oppdragsLinje150 -> mapOppdragslinje150(oppdragsLinje150, kodeFagområde, saksbehId, behandlingId))
-            .sorted(Comparator.comparing(opp150 -> Long.parseLong(opp150.getDelytelseId())))
+            .sorted(Comparator.comparing(no.nav.system.os.entiteter.oppdragskjema.Oppdragslinje::getDelytelseId))
             .toList();
     }
 
-    private static Oppdragslinje mapOppdragslinje150(Oppdragslinje150Dto oppdragsLinje150, KodeFagområde kodeFagområde, String saksbehId, Long behandlingId) {
+    private static Oppdragslinje mapOppdragslinje150(Oppdragslinje150Dto oppdragsLinje150, KodeFagområde kodeFagområde, String saksbehId, String behandlingId) {
         var oppdragslinje = new Oppdragslinje();
 
         // mapper enkeltelementer
@@ -115,10 +115,10 @@ public class OppdragMapper {
 
 
         if (oppdragsLinje150.refFagsystemId() != null) {
-            oppdragslinje.setRefFagsystemId(String.valueOf(oppdragsLinje150.refFagsystemId()));
+            oppdragslinje.setRefFagsystemId(oppdragsLinje150.refFagsystemId());
         }
         if (oppdragsLinje150.refDelytelseId() != null) {
-            oppdragslinje.setRefDelytelseId(String.valueOf(oppdragsLinje150.refDelytelseId()));
+            oppdragslinje.setRefDelytelseId(oppdragsLinje150.refDelytelseId());
         }
         if (oppdragsLinje150.datoStatusFom() != null) {
             oppdragslinje.setDatoStatusFom(localdateTilString(oppdragsLinje150.datoStatusFom()));

@@ -1,18 +1,17 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.YtelseType.FP;
 import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragMapperTest.verifiserAtMappingIkkeMisterNoeData;
 import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdrag110Dto;
 import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragFPEnkel;
 import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragMedOmposteringEnkel;
 import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragSVPEnkel;
 import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagRefusjon;
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.YtelseType.FP;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import no.nav.foreldrepenger.ws.proxy.api.SyntetiskTestData;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeEndringLinje;
@@ -24,6 +23,7 @@ import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Oppdragslin
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.SatsDto;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.TypeSats;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.UtbetalingsgradDto;
+import no.nav.foreldrepenger.ws.proxy.api.SyntetiskTestData;
 
 class SimuleringRequestMapperTest {
 
@@ -33,7 +33,7 @@ class SimuleringRequestMapperTest {
         var oppdragslinje150_1 = new Oppdragslinje150Dto(
             KodeEndringLinje.NY,
             "2018-08-16",
-            135702910101100L,
+            "135702910101100",
             KodeKlassifik.FPF_REFUSJON_AG,
             new LukketPeriode(startTidspunkt, startTidspunkt.plusDays(5)),
             SatsDto.valueOf(1177),
@@ -42,14 +42,14 @@ class SimuleringRequestMapperTest {
             null,
             null,
             SyntetiskTestData.SYNTETISK_FNR,
-            135702910101100L,
-            135702910101L,
+            "135702910101100",
+            "135702910101",
             lagRefusjon(SyntetiskTestData.SYNTETISK_FNR)
         );
         var oppdragslinje150_2 = new Oppdragslinje150Dto(
             KodeEndringLinje.NY,
             "2018-08-16",
-            135702910101101L,
+            "135702910101101",
             KodeKlassifik.FPF_REFUSJON_AG,
             new LukketPeriode(startTidspunkt.plusDays(6), startTidspunkt.plusDays(6).plusWeeks(2)),
             SatsDto.valueOf(1177),
@@ -58,14 +58,14 @@ class SimuleringRequestMapperTest {
             null,
             null,
             SyntetiskTestData.SYNTETISK_FNR,
-            135702910101101L,
-            135702910101L,
+            "135702910101101",
+            "135702910101",
             lagRefusjon(SyntetiskTestData.SYNTETISK_FNR)
         );
         var oppdragslinje150_3 = new Oppdragslinje150Dto(
             KodeEndringLinje.NY,
             "2018-08-16",
-            135702910101102L,
+            "135702910101102",
             KodeKlassifik.FPF_REFUSJON_AG,
             new LukketPeriode(startTidspunkt.plusMonths(1), startTidspunkt.plusMonths(1).plusWeeks(1)),
             SatsDto.valueOf(1177),
@@ -74,14 +74,14 @@ class SimuleringRequestMapperTest {
             null,
             null,
             SyntetiskTestData.SYNTETISK_FNR,
-            135702910101102L,
-            135702910101L,
+            "135702910101102",
+            "135702910101",
             lagRefusjon(SyntetiskTestData.SYNTETISK_FNR)
         );
         var oppdragslinje150_4 = new Oppdragslinje150Dto(
             KodeEndringLinje.NY,
             "2018-08-16",
-            135702910101103L,
+            "135702910101103",
             KodeKlassifik.FPF_FERIEPENGER_AG,
             new LukketPeriode(startTidspunkt.plusMonths(6), startTidspunkt.plusMonths(7)),
             SatsDto.valueOf(2881),
@@ -90,13 +90,13 @@ class SimuleringRequestMapperTest {
             null,
             null,
             SyntetiskTestData.SYNTETISK_FNR,
-            135702910101103L,
-            135702910101L,
+            "135702910101103",
+            "135702910101",
             lagRefusjon(SyntetiskTestData.SYNTETISK_FNR)
         );
         var oppdrag110Dto = lagOppdrag110Dto(KodeFagområde.FPREF, null,
             List.of(oppdragslinje150_1, oppdragslinje150_2, oppdragslinje150_3, oppdragslinje150_4));
-        var oppdragskontroll = new OppdragskontrollDto(1000202L, List.of(oppdrag110Dto));
+        var oppdragskontroll = new OppdragskontrollDto("1000202", List.of(oppdrag110Dto));
         var simuleringsrequest = SimuleringRequestMapper.tilSimulerBeregingsRequester(oppdragskontroll, null, false);
 
         assertThat(simuleringsrequest).hasSize(1);
@@ -110,7 +110,7 @@ class SimuleringRequestMapperTest {
     void verifiserAtSimuleringUtenInntrekkGjøresBareMedRiktigYtelseTypeSamtOmposteringLikNAlleOppdragsXMLerMatcher() {
         var oppdragFP = lagOppdragFPEnkel(LocalDate.now().minusMonths(2), LocalDate.now().minusMonths(1), false);
         var oppdragSVP = lagOppdragSVPEnkel(LocalDate.now().minusMonths(2), LocalDate.now().minusMonths(1));
-        var oppdragskontroll = new OppdragskontrollDto(123456789L, List.of(oppdragFP, oppdragSVP));
+        var oppdragskontroll = new OppdragskontrollDto("123456789", List.of(oppdragFP, oppdragSVP));
         var simuleringsrequest = SimuleringRequestMapper.tilSimulerBeregingsRequester(oppdragskontroll, FP, true);
 
         assertThat(simuleringsrequest).hasSize(1)
@@ -126,7 +126,7 @@ class SimuleringRequestMapperTest {
     void verifiserAtSimuleringUtenInntrekkGjøresBareMedRiktigYtelseTypeSamtOmposteringLikNBareEnXMLMatcher() {
         var oppdragFP = lagOppdragFPEnkel(LocalDate.now().minusMonths(2), LocalDate.now().minusMonths(1), false);
         var oppdragFPOmpostering = lagOppdragMedOmposteringEnkel(KodeFagområde.FP, LocalDate.now().minusMonths(2), LocalDate.now().minusMonths(1));
-        var oppdragskontroll = new OppdragskontrollDto(123456789L, List.of(oppdragFP, oppdragFPOmpostering));
+        var oppdragskontroll = new OppdragskontrollDto("123456789", List.of(oppdragFP, oppdragFPOmpostering));
         var simuleringsrequest = SimuleringRequestMapper.tilSimulerBeregingsRequester(oppdragskontroll, FP, true);
 
         assertThat(simuleringsrequest).hasSize(2)

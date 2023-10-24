@@ -38,7 +38,7 @@ public class SimuleringRequestMapper {
             .toList();
     }
 
-    private static SimulerBeregningRequest lagSimulerBeregningRequest(Oppdrag110Dto oppdrag, Long behandlingId) {
+    private static SimulerBeregningRequest lagSimulerBeregningRequest(Oppdrag110Dto oppdrag, String behandlingId) {
         var innerRequest = new no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.ObjectFactory().createSimulerBeregningRequest();
         innerRequest.setOppdrag(OppdragMapper.mapTilSimuleringOppdrag(oppdrag, behandlingId));
         innerRequest.setSimuleringsPeriode(new no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.SimulerBeregningRequest.SimuleringsPeriode());

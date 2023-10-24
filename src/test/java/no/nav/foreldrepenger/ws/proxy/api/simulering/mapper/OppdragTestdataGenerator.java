@@ -82,7 +82,7 @@ public class OppdragTestdataGenerator {
         return new Oppdrag110Dto(
             KodeEndring.NY,
             kodeFagområde,
-            130158784100L,
+            "130158784100",
             SyntetiskTestData.SYNTETISK_FNR,
             "Z123456",
             ompostering116,
@@ -108,11 +108,11 @@ public class OppdragTestdataGenerator {
 
     public static Oppdragslinje150Dto oppdragslinje150Dto(LocalDate fom, LocalDate tom, KodeKlassifik kodeKlassifik,
                                                           TypeSats typeSats, Refusjonsinfo156Dto refusjon) {
-        return oppdragslinje150Dto(fom, tom, kodeKlassifik, typeSats, 130158784100100L, 738, refusjon);
+        return oppdragslinje150Dto(fom, tom, kodeKlassifik, typeSats, "130158784100100", 738, refusjon);
     }
 
     public static Oppdragslinje150Dto oppdragslinje150Dto(LocalDate fom, LocalDate tom, KodeKlassifik kodeKlassifik,
-                                                          TypeSats typeSats, Long delytelseId, Integer sats, Refusjonsinfo156Dto refusjon) {
+                                                          TypeSats typeSats, String delytelseId, Integer sats, Refusjonsinfo156Dto refusjon) {
         return new Oppdragslinje150Dto(
             KodeEndringLinje.NY,
             "2018-08-16",
