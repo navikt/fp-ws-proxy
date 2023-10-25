@@ -13,5 +13,5 @@ spring:
       kv:
         enabled: true
         backend: kv/prod/fss
-        application-name: k9wsproxy/teamforeldrepenger
-        default-context: k9wsproxy/teamforeldrepenger
+        application-name: k9wsproxy/k9saksbehandling
+        default-context: k9wsproxy/k9saksbehandling
