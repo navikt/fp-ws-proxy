@@ -14,10 +14,10 @@ management:
             enabled: true
 server:
   servlet:
-    context-path: /fpwsproxy
+    context-path: /k9wsproxy
 spring:
   application:
-    name: fpwsproxy
+    name: k9wsproxy
   mvc:
     log-request-details: true
 

@@ -1,6 +1,6 @@
 {
     "ingresses":  [
-        "https://fpwsproxy.dev.intern.nav.no"
+        "https://k9wsproxy.dev.intern.nav.no"
     ],
     "minReplicas": "1",
     "maxReplicas": "2",
@@ -13,21 +13,6 @@
         "mem": "1024Mi"
     },
     "AZURE_IAC_RULES": [
-        {
-            "app": "fpabakus",
-            "namespace": "teamforeldrepenger",
-            "cluster": "dev-fss"
-        },
-        {
-            "app": "fpoppdrag",
-            "namespace": "teamforeldrepenger",
-            "cluster": "dev-fss"
-        },
-        {
-            "app": "fptilbake",
-            "namespace": "teamforeldrepenger",
-            "cluster": "dev-fss"
-        },
         {
             "app": "k9-oppdrag",
             "namespace": "k9saksbehandling",

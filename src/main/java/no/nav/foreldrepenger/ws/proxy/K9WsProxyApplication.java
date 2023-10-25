@@ -12,10 +12,10 @@ import static no.nav.boot.conditionals.Cluster.profiler;
 @EnableJwtTokenValidation
 @ConfigurationPropertiesScan("no.nav.foreldrepenger.ws.proxy")
 @SpringBootApplication
-public class FpWsProxyApplication {
+public class K9WsProxyApplication {
 
     public static void main(String[] args) {
-        new SpringApplicationBuilder(FpWsProxyApplication.class)
+        new SpringApplicationBuilder(K9WsProxyApplication.class)
                 .profiles(profiler())
                 .run(args);
     }

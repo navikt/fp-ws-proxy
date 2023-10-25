@@ -1,10 +1,10 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: fpwsproxy
-  namespace: teamforeldrepenger
+  name: k9wsproxy
+  namespace: k9saksbehandling
   labels:
-    team: teamforeldrepenger
+    team: k9saksbehandling
 spec:
   image: {{image}}
   port: 8080
@@ -17,20 +17,20 @@ spec:
     max: {{maxReplicas}}
     cpuThresholdPercentage: 80
   liveness:
-    path: /fpwsproxy/actuator/health/liveness
+    path: /k9wsproxy/actuator/health/liveness
     initialDelay: 5
     timeout: 5
     periodSeconds: 10
     failureThreshold: 27
   readiness:
-    path: /fpwsproxy/actuator/health/readiness
+    path: /k9wsproxy/actuator/health/readiness
     initialDelay: 5
     timeout: 5
     periodSeconds: 10
     failureThreshold: 27
   prometheus:
     enabled: true
-    path: /fpwsproxy/actuator/prometheus
+    path: /k9wsproxy/actuator/prometheus
   resources:
     limits:
       cpu: "{{limits.cpu}}"

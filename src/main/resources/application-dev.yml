@@ -16,13 +16,13 @@ spring:
       uri: https://vault.adeo.no
       authentication: KUBERNETES
       kubernetes:
-        role: fpwsproxy
+        role: k9wsproxy
         kubernetes-path: kubernetes/preprod/fss
       kv:
         enabled: true
         backend: kv/preprod/fss
-        application-name: fpwsproxy/teamforeldrepenger
-        default-context: fpwsproxy/teamforeldrepenger
+        application-name: k9wsproxy/teamforeldrepenger
+        default-context: k9wsproxy/teamforeldrepenger
   mvc:
     log-request-details: true
 
