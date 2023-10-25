@@ -14,7 +14,7 @@ management:
             enabled: true
 server:
   servlet:
-    context-path: /k9wsproxy
+    context-path: /k9/wsproxy
 spring:
   application:
     name: k9wsproxy
