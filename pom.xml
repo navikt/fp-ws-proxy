@@ -64,12 +64,6 @@
     </dependencyManagement>
     <dependencies>
         <!--    NAV INTERNE AVHENGIGHETER    -->
-        <!-- ARENA -->
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>nav-meldekortUtbetalingsgrunnlag-v1-tjenestespesifikasjon</artifactId>
-            <version>${tjenestespesifikasjon.version}</version>
-        </dependency>
 
         <!-- SIMULERING -->
         <dependency>

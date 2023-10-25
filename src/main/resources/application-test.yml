@@ -25,9 +25,6 @@ securitytokenservice:
   url: ${STSClientConfig}
 
 ## INTEGRASJONER ##
-meldekortutbetalingsgrunnlag:
-  v1:
-    url: ${meldekortutbetalingsgrunnlag.v1.url}
 oppdrag:
   service:
     url: ${oppdrag.service.url}

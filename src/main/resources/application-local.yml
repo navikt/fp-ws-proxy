@@ -29,9 +29,6 @@ securitytokenservice:
   url: http://localhost:8060/soap/SecurityTokenServiceProvider/
 
 ## INTEGRASJONER ##
-meldekortutbetalingsgrunnlag:
-  v1:
-    url: https://localhost:8063/soap/ail_ws/MeldekortUtbetalingsgrunnlag_v1
 oppdrag:
   service:
     url: https://localhost:8063/soap/cics/services/oppdragService
