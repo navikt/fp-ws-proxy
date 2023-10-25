@@ -17,7 +17,7 @@ no.nav.security.jwt:
   issuer:
     sts:
       discoveryurl: ${oidc.sts.well.known.url}
-      accepted_audience: OIDC, vtp, fpsak-autotest
+      accepted_audience: OIDC, vtp
 
 securitytokenservice:
   username: ${systembruker.username}

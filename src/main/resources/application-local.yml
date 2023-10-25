@@ -21,7 +21,7 @@ no.nav.security.jwt:
       proxy-url: http://authserver:8086
     sts:
       discoveryurl: http://localhost:8060/rest/v1/sts/.well-known/openid-configuration
-      accepted_audience: OIDC, vtp, srvfpabakus, srvfpoppdrag, srvfptilbake, srvk9-tilbake
+      accepted_audience: OIDC, vtp, srvk9-tilbake, srvk9-oppdrag
 
 securitytokenservice:
   username: vtp
