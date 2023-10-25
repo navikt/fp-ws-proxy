@@ -42,9 +42,9 @@ meldekortutbetalingsgrunnlag:
     url: https://arena-q2.adeo.no/ail_ws/MeldekortUtbetalingsgrunnlag_v1
 oppdrag:
   service:
-    url: https://cics-q2.adeo.no/oppdrag/simulerFpServiceWSBinding
+    url: https://cics-q1.adeo.no/oppdrag/simulerFpServiceWSBinding
 tilbakekreving:
   v1:
-    url: https://cics-q2.adeo.no/oppdrag/K231CW80
+    url: https://cics-q1.adeo.no/oppdrag/K231CW80
 
 
