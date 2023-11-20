@@ -37,4 +37,3 @@ application-dev.properties
 .loadpath
 .recommenders
 .DS_Store
-src/main/resources/wsdl/

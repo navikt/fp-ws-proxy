@@ -6,12 +6,6 @@ management:
     web:
       exposure:
         include: env, configprops, info, health, metrics, prometheus
-  metrics:
-    web:
-      server:
-        request:
-          autotime:
-            enabled: true
 server:
   servlet:
     context-path: /fpwsproxy
