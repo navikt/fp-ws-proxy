@@ -1,8 +1,5 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeEndring;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeEndringLinje;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeFagområde;
@@ -17,6 +14,9 @@ import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.SatsDto;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.TypeSats;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.UtbetalingsgradDto;
 import no.nav.foreldrepenger.ws.proxy.api.SyntetiskTestData;
+
+import java.time.LocalDate;
+import java.util.List;
 
 public class OppdragTestdataGenerator {
 
@@ -82,7 +82,7 @@ public class OppdragTestdataGenerator {
         return new Oppdrag110Dto(
             KodeEndring.NY,
             kodeFagområde,
-            130158784100L,
+            "130158784100",
             SyntetiskTestData.SYNTETISK_FNR,
             "Z123456",
             ompostering116,
@@ -108,11 +108,11 @@ public class OppdragTestdataGenerator {
 
     public static Oppdragslinje150Dto oppdragslinje150Dto(LocalDate fom, LocalDate tom, KodeKlassifik kodeKlassifik,
                                                           TypeSats typeSats, Refusjonsinfo156Dto refusjon) {
-        return oppdragslinje150Dto(fom, tom, kodeKlassifik, typeSats, 130158784100100L, 738, refusjon);
+        return oppdragslinje150Dto(fom, tom, kodeKlassifik, typeSats, "130158784100100", 738, refusjon);
     }
 
     public static Oppdragslinje150Dto oppdragslinje150Dto(LocalDate fom, LocalDate tom, KodeKlassifik kodeKlassifik,
-                                                          TypeSats typeSats, Long delytelseId, Integer sats, Refusjonsinfo156Dto refusjon) {
+                                                          TypeSats typeSats, String delytelseId, Integer sats, Refusjonsinfo156Dto refusjon) {
         return new Oppdragslinje150Dto(
             KodeEndringLinje.NY,
             "2018-08-16",

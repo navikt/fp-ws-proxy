@@ -1,14 +1,14 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.ØkonomistøtteUtils.tilSpesialkodetDatoOgKlokkeslett;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Oppdrag110Dto;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.OppdragskontrollDto;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpservicegrensesnitt.ObjectFactory;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpservicegrensesnitt.SimulerBeregningRequest;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.ØkonomistøtteUtils.tilSpesialkodetDatoOgKlokkeslett;
 
 /**
  * Matcher mapper i fpoppdrag som mapper List<String> oppdragXmlListe til List<SimulerBeregningRequest>
@@ -38,7 +38,7 @@ public class SimuleringRequestMapper {
             .toList();
     }
 
-    private static SimulerBeregningRequest lagSimulerBeregningRequest(Oppdrag110Dto oppdrag, Long behandlingId) {
+    private static SimulerBeregningRequest lagSimulerBeregningRequest(Oppdrag110Dto oppdrag, String behandlingId) {
         var innerRequest = new no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.ObjectFactory().createSimulerBeregningRequest();
         innerRequest.setOppdrag(OppdragMapper.mapTilSimuleringOppdrag(oppdrag, behandlingId));
         innerRequest.setSimuleringsPeriode(new no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.SimulerBeregningRequest.SimuleringsPeriode());

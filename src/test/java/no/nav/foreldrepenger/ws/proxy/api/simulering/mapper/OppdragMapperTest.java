@@ -1,20 +1,5 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragMapper.DATE_TIME_FORMATTER;
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdrag110Dto;
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragESEnkel;
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragFPEnkel;
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragMedOmposteringEnkel;
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.oppdragslinje150Dto;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.junit.jupiter.api.Test;
-
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeFagområde;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeKlassifik;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeStatusLinje;
@@ -26,6 +11,20 @@ import no.nav.system.os.entiteter.oppdragskjema.Attestant;
 import no.nav.system.os.entiteter.oppdragskjema.Oppdragslinje;
 import no.nav.system.os.entiteter.typer.simpletypes.FradragTillegg;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.Oppdrag;
+import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragMapper.DATE_TIME_FORMATTER;
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdrag110Dto;
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragESEnkel;
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragFPEnkel;
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragMedOmposteringEnkel;
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.oppdragslinje150Dto;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class OppdragMapperTest {
 
@@ -33,7 +32,7 @@ public class OppdragMapperTest {
     void test_skalMappeFPOppdrag110TilOppdrag() {
         var oppdrag110Dto = lagOppdragFPEnkel(LocalDate.now().minusMonths(2), LocalDate.now().minusMonths(1), false);
 
-        var oppdragXML = OppdragMapper.mapTilSimuleringOppdrag(oppdrag110Dto, 1000202L);
+        var oppdragXML = OppdragMapper.mapTilSimuleringOppdrag(oppdrag110Dto, "1000202");
 
         verifiserAtMappingIkkeMisterNoeData(oppdrag110Dto, oppdragXML);
 
@@ -42,7 +41,7 @@ public class OppdragMapperTest {
     @Test
     void test_skalMappeFPOppdrag110MedOmpostering116TilOppdrag() {
         var oppdrag110Dto = lagOppdragMedOmposteringEnkel(KodeFagområde.FP, LocalDate.now().minusMonths(2), LocalDate.now().minusMonths(1));
-        var oppdragskontroll = new OppdragskontrollDto(1000202L, List.of(oppdrag110Dto));
+        var oppdragskontroll = new OppdragskontrollDto("1000202", List.of(oppdrag110Dto));
 
         var oppdragXML = OppdragMapper.mapTilSimuleringOppdrag(oppdrag110Dto, oppdragskontroll.behandlingId());
 
@@ -52,7 +51,7 @@ public class OppdragMapperTest {
     @Test
     void testMapVedtaksDataToOppdragES() {
         var oppdrag110Dto = lagOppdragESEnkel(LocalDate.now().minusMonths(2), LocalDate.now().minusMonths(1));
-        var oppdragskontroll = new OppdragskontrollDto(1000202L, List.of(oppdrag110Dto));
+        var oppdragskontroll = new OppdragskontrollDto("1000202", List.of(oppdrag110Dto));
 
         var oppdragXML = OppdragMapper.mapTilSimuleringOppdrag(oppdrag110Dto, oppdragskontroll.behandlingId());
 
@@ -66,7 +65,7 @@ public class OppdragMapperTest {
             startTidspunkt, startTidspunkt.plusDays(5),
             KodeKlassifik.FPF_FRILANSER,
             TypeSats.DAG,
-            1L,
+            "1",
             1234,
             null
             );
@@ -74,12 +73,12 @@ public class OppdragMapperTest {
             startTidspunkt.plusWeeks(1), startTidspunkt.plusMonths(1),
             KodeKlassifik.FPF_FRILANSER,
             TypeSats.DAG,
-            2L,
+            "2",
             324,
             null
             );
         var oppdrag110DtoUsortert = lagOppdrag110Dto(KodeFagområde.FP, null, List.of(oppdragslinje150_2, oppdragslinje150_1));
-        var oppdragXMLUsortertInput = OppdragMapper.mapTilSimuleringOppdrag(oppdrag110DtoUsortert, 1234L);
+        var oppdragXMLUsortertInput = OppdragMapper.mapTilSimuleringOppdrag(oppdrag110DtoUsortert, "1234");
 
         // Assert
         var delytelseIdFraOpp150GenerertListXML = oppdragXMLUsortertInput.getOppdragslinje()
