@@ -37,7 +37,7 @@
         <!-- Interne avhengigheter -->
         <boot-conditionals.version>5.0.8</boot-conditionals.version>
         <fp-kontrakter.version>7.1.3</fp-kontrakter.version>
-        <fpsoknad-felles.version>2.3.6</fpsoknad-felles.version>
+        <fpsoknad-felles.version>3.0.0</fpsoknad-felles.version>
 
         <!-- Eksterne avhengigheter -->
         <cxf.version>4.0.2</cxf.version>
