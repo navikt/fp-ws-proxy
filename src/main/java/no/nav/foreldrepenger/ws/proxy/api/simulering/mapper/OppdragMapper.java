@@ -1,14 +1,5 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 
-import static no.nav.foreldrepenger.common.util.StreamUtil.safeStream;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.List;
-
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeFagområde;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Ompostering116Dto;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Oppdrag110Dto;
@@ -25,6 +16,15 @@ import no.nav.system.os.entiteter.typer.simpletypes.KodeStatusLinje;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.ObjectFactory;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.Oppdrag;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.Oppdragslinje;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
+
+import static no.nav.foreldrepenger.common.util.StreamUtil.safeStream;
 
 public class OppdragMapper {
     static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -46,11 +46,11 @@ public class OppdragMapper {
      * @param oppdrag110
      * @return
      */
-    public static Oppdrag mapTilSimuleringOppdrag(Oppdrag110Dto oppdrag110, Long behandlingId) {
+    public static Oppdrag mapTilSimuleringOppdrag(Oppdrag110Dto oppdrag110, String behandlingId) {
         var oppdrag = new ObjectFactory().createOppdrag();
         oppdrag.setKodeEndring(oppdrag110.kodeEndring().name());
         oppdrag.setKodeFagomraade(oppdrag110.kodeFagomrade().name());
-        oppdrag.setFagsystemId(oppdrag110.fagsystemId().toString());
+        oppdrag.setFagsystemId(oppdrag110.fagsystemId());
         oppdrag.setUtbetFrekvens(UTBET_FREKVENS);
         oppdrag.setOppdragGjelderId(oppdrag110.oppdragGjelderId());
         oppdrag.setDatoOppdragGjelderFom(localdateTilString(DATO_OPPDRAG_GJELDER_FOM));
@@ -87,20 +87,20 @@ public class OppdragMapper {
         return enhet;
     }
 
-    private static List<Oppdragslinje> mapOppdragslinje150(List<Oppdragslinje150Dto> oppdragsLinje150Liste, KodeFagområde kodeFagområde, String saksbehId, Long behandlingId) {
+    private static List<Oppdragslinje> mapOppdragslinje150(List<Oppdragslinje150Dto> oppdragsLinje150Liste, KodeFagområde kodeFagområde, String saksbehId, String behandlingId) {
         return safeStream(oppdragsLinje150Liste)
             .map(oppdragsLinje150 -> mapOppdragslinje150(oppdragsLinje150, kodeFagområde, saksbehId, behandlingId))
             .sorted(Comparator.comparing(opp150 -> Long.parseLong(opp150.getDelytelseId())))
             .toList();
     }
 
-    private static Oppdragslinje mapOppdragslinje150(Oppdragslinje150Dto oppdragsLinje150, KodeFagområde kodeFagområde, String saksbehId, Long behandlingId) {
+    private static Oppdragslinje mapOppdragslinje150(Oppdragslinje150Dto oppdragsLinje150, KodeFagområde kodeFagområde, String saksbehId, String behandlingId) {
         var oppdragslinje = new Oppdragslinje();
 
         // mapper enkeltelementer
         oppdragslinje.setKodeEndringLinje(oppdragsLinje150.kodeEndringLinje().name());
         oppdragslinje.setVedtakId(oppdragsLinje150.vedtakId());
-        oppdragslinje.setDelytelseId(String.valueOf(oppdragsLinje150.delytelseId()));
+        oppdragslinje.setDelytelseId(oppdragsLinje150.delytelseId());
         oppdragslinje.setKodeKlassifik(oppdragsLinje150.kodeKlassifik().getKode());
         oppdragslinje.setDatoVedtakFom(localdateTilString(oppdragsLinje150.getDatoVedtakFom()));
         oppdragslinje.setDatoVedtakTom(localdateTilString(oppdragsLinje150.getDatoVedtakTom()));
@@ -109,16 +109,16 @@ public class OppdragMapper {
         oppdragslinje.setTypeSats(oppdragsLinje150.typeSats().name());
         oppdragslinje.setBrukKjoreplan(BRUK_KJOREPLAN);
         oppdragslinje.setSaksbehId(saksbehId);
-        oppdragslinje.setHenvisning(String.valueOf(behandlingId));
+        oppdragslinje.setHenvisning(behandlingId);
         oppdragslinje.setUtbetalesTilId(oppdragsLinje150.utbetalesTilId());
         oppdragslinje.getAttestant().addAll(mapAttestant180(saksbehId));
 
 
         if (oppdragsLinje150.refFagsystemId() != null) {
-            oppdragslinje.setRefFagsystemId(String.valueOf(oppdragsLinje150.refFagsystemId()));
+            oppdragslinje.setRefFagsystemId(oppdragsLinje150.refFagsystemId());
         }
         if (oppdragsLinje150.refDelytelseId() != null) {
-            oppdragslinje.setRefDelytelseId(String.valueOf(oppdragsLinje150.refDelytelseId()));
+            oppdragslinje.setRefDelytelseId(oppdragsLinje150.refDelytelseId());
         }
         if (oppdragsLinje150.datoStatusFom() != null) {
             oppdragslinje.setDatoStatusFom(localdateTilString(oppdragsLinje150.datoStatusFom()));
