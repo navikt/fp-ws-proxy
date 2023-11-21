@@ -40,7 +40,7 @@
         <fpsoknad-felles.version>2.3.6</fpsoknad-felles.version>
 
         <!-- Eksterne avhengigheter -->
-        <cxf.version>4.0.2</cxf.version>
+        <cxf.version>4.0.3</cxf.version>
         <token-validation-version>3.1.5</token-validation-version>
         <logstash-logback-encoder.version>7.3</logstash-logback-encoder.version>
     </properties>
