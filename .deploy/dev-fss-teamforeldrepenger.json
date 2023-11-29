@@ -1,6 +1,6 @@
 {
     "ingresses":  [
-        "https://fpwsproxy.dev.intern.nav.no"
+        "https://fpwsproxy.intern.dev.nav.no"
     ],
     "minReplicas": "1",
     "maxReplicas": "2",
