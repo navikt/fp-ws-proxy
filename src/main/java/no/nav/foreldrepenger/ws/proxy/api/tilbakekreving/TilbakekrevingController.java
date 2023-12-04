@@ -12,12 +12,16 @@ import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.UkjentFeilIKvitte
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.ØkonomiKvitteringTolk;
 import no.nav.foreldrepenger.ws.proxy.error.GenerellSoapFaultException;
 import no.nav.foreldrepenger.ws.proxy.http.ProtectedRestController;
+import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.DetaljertKravgrunnlagDto;
 import no.nav.tilbakekreving.typer.v1.MmelDto;
+import no.nav.tilbakekreving.typer.v1.PeriodeDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.stream.Collectors;
 
 import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.ØkonomiKvitteringTilStrengMapper.formaterKvittering;
 import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.AnnullerKravgrunnlagRequestMapper.tilKravgrunnlagAnnulerRequest;
@@ -66,16 +70,30 @@ public class TilbakekrevingController {
         var kravgrunnlagId = kravgrunnlagDetaljDto.kravgrunnlagId().longValue();
         LOG.info("Henter kravgrunnlag for kravgrunnlagId {}", kravgrunnlagId);
         var request = tilKravgrunnlagHentDetaljXMLRequest(kravgrunnlagDetaljDto);
+        {
+            // Midlertidig for feilanalyse
+            var req = request.getHentkravgrunnlag();
+            LOG.info("Henter kravgrunnlag for {}, med: kode: {}, enhet: {}, saksbeh: {}", req.getKravgrunnlagId(), req.getKodeAksjon(), req.getEnhetAnsvarlig(), req.getSaksbehId());
+        }
         var response = tilbakekrevingKlientWs.kravgrunnlagHentDetalj(request);
         var kvittering = response.getMmel();
+        var nyKrav = response.getDetaljertkravgrunnlag();
+        {
+            // Midlertidig for feilanalyse
+            LOG.info("Hentet kravgrunnlag for {}, med: vedtak: {}, vedtakOmgjort: {}, perioder: {}, liste fom: {}", nyKrav.getKravgrunnlagId(),
+                nyKrav.getVedtakId(),
+                nyKrav.getVedtakIdOmgjort(),
+                (long) nyKrav.getTilbakekrevingsPeriode().size(),
+                nyKrav.getTilbakekrevingsPeriode().stream().map(p -> p.getPeriode().getFom().toString()).sorted().collect(Collectors.joining(", ")));
+        }
         validerMottattKvitteringVedHentingAvKravgrunnlag(kravgrunnlagDetaljDto, kravgrunnlagId, kvittering);
         LOG.info("Kravgrunnlag hentet OK for kravgrunnlagId={} med Alvorlighetsgrad='{}' kodeMelding='{}' infomelding='{}'",
             kravgrunnlagId,
             kvittering.getAlvorlighetsgrad(),
             kvittering.getKodeMelding(),
             kvittering.getBeskrMelding());
-        LOG.info("Referanse fra WS: {}", response.getDetaljertkravgrunnlag().getReferanse());
-        return tilDto(response.getDetaljertkravgrunnlag());
+        LOG.info("Referanse fra WS: {}", nyKrav.getReferanse());
+        return tilDto(nyKrav);
     }
 
     @PutMapping(KRAVGRUNNLAG_ANNULLER_PATH)
