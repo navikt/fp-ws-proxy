@@ -70,30 +70,19 @@ public class TilbakekrevingController {
         var kravgrunnlagId = kravgrunnlagDetaljDto.kravgrunnlagId().longValue();
         LOG.info("Henter kravgrunnlag for kravgrunnlagId {}", kravgrunnlagId);
         var request = tilKravgrunnlagHentDetaljXMLRequest(kravgrunnlagDetaljDto);
-        {
-            // Midlertidig for feilanalyse
-            var req = request.getHentkravgrunnlag();
-            LOG.info("Henter kravgrunnlag for {}, med: kode: {}, enhet: {}, saksbeh: {}", req.getKravgrunnlagId(), req.getKodeAksjon(), req.getEnhetAnsvarlig(), req.getSaksbehId());
-        }
+
         var response = tilbakekrevingKlientWs.kravgrunnlagHentDetalj(request);
         var kvittering = response.getMmel();
-        var nyKrav = response.getDetaljertkravgrunnlag();
-        {
-            // Midlertidig for feilanalyse
-            LOG.info("Hentet kravgrunnlag for {}, med: vedtak: {}, vedtakOmgjort: {}, perioder: {}, liste fom: {}", nyKrav.getKravgrunnlagId(),
-                nyKrav.getVedtakId(),
-                nyKrav.getVedtakIdOmgjort(),
-                (long) nyKrav.getTilbakekrevingsPeriode().size(),
-                nyKrav.getTilbakekrevingsPeriode().stream().map(p -> p.getPeriode().getFom().toString()).sorted().collect(Collectors.joining(", ")));
-        }
         validerMottattKvitteringVedHentingAvKravgrunnlag(kravgrunnlagDetaljDto, kravgrunnlagId, kvittering);
+
         LOG.info("Kravgrunnlag hentet OK for kravgrunnlagId={} med Alvorlighetsgrad='{}' kodeMelding='{}' infomelding='{}'",
             kravgrunnlagId,
             kvittering.getAlvorlighetsgrad(),
             kvittering.getKodeMelding(),
             kvittering.getBeskrMelding());
-        LOG.info("Referanse fra WS: {}", nyKrav.getReferanse());
-        return tilDto(nyKrav);
+
+        LOG.info("Referanse fra WS: {}", response.getDetaljertkravgrunnlag().getReferanse());
+        return tilDto(response.getDetaljertkravgrunnlag());
     }
 
     @PutMapping(KRAVGRUNNLAG_ANNULLER_PATH)
