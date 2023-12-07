@@ -28,8 +28,8 @@ no.nav.security.jwt:
 
 # Brukers av klientene på utgående kall (WS eller RS)
 securitytokenservice:
-  username: ${systembruker.username}  # Kommer fra vault
-  password: ${systembruker.password} # Kommer fra vault
+  username: ${SYSTEMBRUKER_USERNAME}  # Kommer fra vault
+  password: ${SYSTEMBRUKER_PASSWORD} # Kommer fra vault
   url: https://sts.adeo.no/SecurityTokenServiceProvider/
 
 ## INTEGRASJONER ##
