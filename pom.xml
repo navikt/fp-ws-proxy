@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.5</version>
+        <version>3.2.0</version>
         <relativePath/>
     </parent>
 
@@ -46,7 +46,7 @@
         <jaxws-maven-plugin.version>4.0.2</jaxws-maven-plugin.version>
         <jacoco.version>0.8.11</jacoco.version>
         <logstash-logback-encoder.version>7.4</logstash-logback-encoder.version>
-        <spring.vault.version>4.0.1</spring.vault.version>
+        <spring.vault.version>4.1.0</spring.vault.version>
     </properties>
 
     <scm>
