@@ -40,6 +40,11 @@ spec:
       memory: "{{requests.mem}}"
   secureLogs:
     enabled: true
+  vault:
+    enabled: true
+    paths:
+      - kvPath: {{serviceuserkv}}
+        mountPath: /var/run/secrets/nais.io/serviceuser/
   azure:
     application:
       enabled: true

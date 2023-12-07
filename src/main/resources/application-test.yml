@@ -8,10 +8,6 @@ management:
       enabled: false
 server:
   port: 8292
-spring:
-  cloud:
-    vault:
-      enabled: false
 
 no.nav.security.jwt:
   issuer:
