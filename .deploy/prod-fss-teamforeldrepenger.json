@@ -28,16 +28,6 @@
             "app": "fptilbake",
             "namespace": "teamforeldrepenger",
             "cluster": "prod-fss"
-        },
-        {
-            "app": "k9-oppdrag",
-            "namespace": "k9saksbehandling",
-            "cluster": "prod-fss"
-        },
-        {
-            "app": "k9-tilbake",
-            "namespace": "k9saksbehandling",
-            "cluster": "prod-fss"
         }
     ]
 }
