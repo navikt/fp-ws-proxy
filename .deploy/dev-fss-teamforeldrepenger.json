@@ -1,7 +1,4 @@
 {
-    "ingresses":  [
-        "https://fpwsproxy.intern.dev.nav.no"
-    ],
     "serviceuserkv": "/serviceuser/data/dev/srvfpwsproxy",
     "minReplicas": "1",
     "maxReplicas": "2",
@@ -11,7 +8,7 @@
     },
     "requests": {
         "cpu": "200m",
-        "mem": "1024Mi"
+        "mem": "512Mi"
     },
     "AZURE_IAC_RULES": [
         {

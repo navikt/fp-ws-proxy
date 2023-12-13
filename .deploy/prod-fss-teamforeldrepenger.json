@@ -1,7 +1,4 @@
 {
-    "ingresses": [
-        "https://fpwsproxy.intern.nav.no"
-    ],
     "serviceuserkv": "/serviceuser/data/prod/srvfpwsproxy",
     "minReplicas": "2",
     "maxReplicas": "3",
