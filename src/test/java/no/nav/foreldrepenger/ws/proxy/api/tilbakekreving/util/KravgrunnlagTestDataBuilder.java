@@ -1,14 +1,5 @@
 package no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.util;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.List;
-
-import javax.xml.datatype.XMLGregorianCalendar;
-
-import com.google.common.collect.Lists;
-
 import no.nav.foreldrepenger.ws.proxy.api.SyntetiskTestData;
 import no.nav.foreldrepenger.ws.proxy.util.DateUtil;
 import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.DetaljertKravgrunnlagBelopDto;
@@ -18,6 +9,13 @@ import no.nav.tilbakekreving.typer.v1.JaNeiDto;
 import no.nav.tilbakekreving.typer.v1.PeriodeDto;
 import no.nav.tilbakekreving.typer.v1.TypeGjelderDto;
 import no.nav.tilbakekreving.typer.v1.TypeKlasseDto;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KravgrunnlagTestDataBuilder {
 
@@ -77,7 +75,7 @@ public class KravgrunnlagTestDataBuilder {
         kravgrunnlagPeriode3.getTilbakekrevingsBelop().add(hentBeløp(BigDecimal.valueOf(21000.00), BigDecimal.ZERO, BigDecimal.ZERO, TypeKlasseDto.FEIL));
         kravgrunnlagPeriode3.getTilbakekrevingsBelop().add(hentBeløp(BigDecimal.ZERO, BigDecimal.valueOf(21000.00), BigDecimal.valueOf(21000.00), TypeKlasseDto.YTEL));
 
-        return Lists.newArrayList(kravgrunnlagPeriode1, kravgrunnlagPeriode2, kravgrunnlagPeriode3);
+        return new ArrayList<>(List.of(kravgrunnlagPeriode1, kravgrunnlagPeriode2, kravgrunnlagPeriode3));
     }
 
     public static DetaljertKravgrunnlagBelopDto hentBeløp(BigDecimal nyBeløp, BigDecimal tilbakekrevesBeløp, BigDecimal opprUtbetBeløp, TypeKlasseDto typeKlasse) {
