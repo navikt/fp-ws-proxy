@@ -37,7 +37,6 @@
         <!-- Interne avhengigheter -->
         <boot-conditionals.version>5.1.1</boot-conditionals.version>
         <fp-kontrakter.version>9.0.2</fp-kontrakter.version>
-        <fpsoknad-felles.version>3.0.1</fpsoknad-felles.version>
         <token-validation-version>3.2.0</token-validation-version>
 
         <!-- Eksterne avhengigheter -->
@@ -60,11 +59,6 @@
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
             <artifactId>fp-ws-proxy-v1</artifactId>
             <version>${fp-kontrakter.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger</groupId>
-            <artifactId>fpsoknad-felles</artifactId>
-            <version>${fpsoknad-felles.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.boot</groupId>

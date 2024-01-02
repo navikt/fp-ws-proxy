@@ -14,11 +14,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.xml.namespace.QName;
 
-import static no.nav.foreldrepenger.common.util.Constants.NAV_CALL_ID;
-
 public class CallIdHeaderInterceptor extends AbstractPhaseInterceptor<Message> {
 
     private static final Logger logger = LoggerFactory.getLogger(CallIdHeaderInterceptor.class);
+    private static final String NAV_CALL_ID = "Nav-CallId";
 
     public CallIdHeaderInterceptor() {
         super(Phase.PRE_STREAM);

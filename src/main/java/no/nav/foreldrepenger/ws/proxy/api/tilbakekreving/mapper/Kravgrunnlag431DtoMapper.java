@@ -1,12 +1,5 @@
 package no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper;
 
-import static no.nav.foreldrepenger.common.util.StreamUtil.safeStream;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.respons.FagOmrådeKode;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.respons.GjelderType;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.tilbakekreving.kravgrunnlag.respons.KlasseType;
@@ -20,6 +13,12 @@ import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.DetaljertKravgrunnlagBelopDt
 import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.DetaljertKravgrunnlagDto;
 import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.DetaljertKravgrunnlagPeriodeDto;
 import no.nav.tilbakekreving.typer.v1.TypeKlasseDto;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.time.LocalDate;
+import java.util.List;
+
+import static no.nav.foreldrepenger.ws.proxy.util.StreamUtil.safeStream;
 
 public class Kravgrunnlag431DtoMapper {
 
