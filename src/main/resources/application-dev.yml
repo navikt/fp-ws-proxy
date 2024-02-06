@@ -10,12 +10,6 @@ spring:
   mvc:
     log-request-details: true
 
-## SIKKERHET ##
-no.nav.security.jwt:
-  issuer:
-    sts:
-      discoveryurl: https://security-token-service.nais.preprod.local/.well-known/openid-configuration
-
 # Brukers av clientene på utgående kall (WS eller RS)
 securitytokenservice:
   url: https://sts-q2.preprod.local/SecurityTokenServiceProvider/
