@@ -9,12 +9,6 @@ management:
 server:
   port: 8292
 
-no.nav.security.jwt:
-  issuer:
-    sts:
-      discoveryurl: ${oidc.sts.well.known.url}
-      accepted_audience: OIDC, vtp, fpsak-autotest
-
 securitytokenservice:
   username: ${systembruker.username}
   password: ${systembruker.password}

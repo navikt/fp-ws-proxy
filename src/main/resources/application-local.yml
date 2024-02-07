@@ -15,9 +15,6 @@ no.nav.security.jwt:
       discovery_url: http://vtp:8060/rest/azuread/.well-known/openid-configuration
       accepted_audience: api://vtp, vtp, api://vtp.teamforeldrepenger.vtp/.default
       proxy-url: http://vtp:8060
-    sts:
-      discoveryurl: http://localhost:8060/rest/v1/sts/.well-known/openid-configuration
-      accepted_audience: OIDC, vtp, srvfpabakus, srvfpoppdrag, srvfptilbake, srvk9-tilbake
 
 securitytokenservice:
   username: vtp
