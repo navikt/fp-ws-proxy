@@ -1,5 +1,14 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 
+import static no.nav.foreldrepenger.ws.proxy.util.StreamUtil.safeStream;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
+
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeFagområde;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Ompostering116Dto;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Oppdrag110Dto;
@@ -16,15 +25,6 @@ import no.nav.system.os.entiteter.typer.simpletypes.KodeStatusLinje;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.ObjectFactory;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.Oppdrag;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.Oppdragslinje;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.List;
-
-import static no.nav.foreldrepenger.ws.proxy.util.StreamUtil.safeStream;
 
 
 public class OppdragMapper {
@@ -91,7 +91,7 @@ public class OppdragMapper {
     private static List<Oppdragslinje> mapOppdragslinje150(List<Oppdragslinje150Dto> oppdragsLinje150Liste, KodeFagområde kodeFagområde, String saksbehId, String behandlingId) {
         return safeStream(oppdragsLinje150Liste)
             .map(oppdragsLinje150 -> mapOppdragslinje150(oppdragsLinje150, kodeFagområde, saksbehId, behandlingId))
-            .sorted(Comparator.comparing(opp150 -> Long.parseLong(opp150.getDelytelseId())))
+            .sorted(Comparator.comparing(opp150 -> opp150.getDelytelseId()))
             .toList();
     }
 
