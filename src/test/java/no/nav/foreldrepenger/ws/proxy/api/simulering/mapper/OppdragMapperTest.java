@@ -1,5 +1,24 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragMapper.DATE_TIME_FORMATTER;
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdrag110Dto;
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragESEnkel;
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragFPEnkel;
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragMedOmposteringEnkel;
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragOMPEnkel;
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragOMPRefusjonToPerioder;
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragPSBEnkel;
+import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.oppdragslinje150Dto;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.Test;
+
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeFagområde;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeKlassifik;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeStatusLinje;
@@ -11,20 +30,6 @@ import no.nav.system.os.entiteter.oppdragskjema.Attestant;
 import no.nav.system.os.entiteter.oppdragskjema.Oppdragslinje;
 import no.nav.system.os.entiteter.typer.simpletypes.FradragTillegg;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.Oppdrag;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragMapper.DATE_TIME_FORMATTER;
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdrag110Dto;
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragESEnkel;
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragFPEnkel;
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.lagOppdragMedOmposteringEnkel;
-import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.OppdragTestdataGenerator.oppdragslinje150Dto;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class OppdragMapperTest {
 
@@ -44,6 +49,36 @@ public class OppdragMapperTest {
         var oppdragskontroll = new OppdragskontrollDto("1000202", List.of(oppdrag110Dto));
 
         var oppdragXML = OppdragMapper.mapTilSimuleringOppdrag(oppdrag110Dto, oppdragskontroll.behandlingId());
+
+        verifiserAtMappingIkkeMisterNoeData(oppdrag110Dto, oppdragXML);
+    }
+
+    @Test
+    void test_skalMappePSBOppdrag110TilOppdrag() {
+        var oppdrag110Dto = lagOppdragPSBEnkel(LocalDate.now().minusMonths(2), LocalDate.now().minusMonths(1), false);
+
+        String behandlingId = UUID.randomUUID().toString();
+        var oppdragXML = OppdragMapper.mapTilSimuleringOppdrag(oppdrag110Dto, behandlingId);
+
+        verifiserAtMappingIkkeMisterNoeData(oppdrag110Dto, oppdragXML);
+    }
+
+    @Test
+    void test_skalMappeOMPOppdrag110TilOppdrag() {
+        var oppdrag110Dto = lagOppdragOMPEnkel(LocalDate.now().minusMonths(2), LocalDate.now().minusMonths(1), false);
+
+        String behandlingId = UUID.randomUUID().toString();
+        var oppdragXML = OppdragMapper.mapTilSimuleringOppdrag(oppdrag110Dto, behandlingId);
+
+        verifiserAtMappingIkkeMisterNoeData(oppdrag110Dto, oppdragXML);
+    }
+
+    @Test
+    void test_skalMappeFlerePerioderOMPOppdrag110TilOppdrag() {
+        var oppdrag110Dto = lagOppdragOMPRefusjonToPerioder();
+
+        String behandlingId = UUID.randomUUID().toString();
+        var oppdragXML = OppdragMapper.mapTilSimuleringOppdrag(oppdrag110Dto, behandlingId);
 
         verifiserAtMappingIkkeMisterNoeData(oppdrag110Dto, oppdragXML);
     }
