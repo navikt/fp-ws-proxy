@@ -53,7 +53,7 @@ public class SimuleringRequestMapper {
 
     private static List<SimulerBeregningRequest> finnRequestForBrukerOgSlåAvInntrekk(List<SimulerBeregningRequest> simuleringRequestListe, YtelseType ytelseType) {
         return simuleringRequestListe.stream()
-            .filter(s -> Fagområde.utledFra(ytelseType).name().equals(s.getRequest().getOppdrag().getKodeFagomraade()))
+            .filter(s -> Fagområde.utledForDirekteutbetalingFra(ytelseType).name().equals(s.getRequest().getOppdrag().getKodeFagomraade()))
             .filter(s -> s.getRequest().getOppdrag().getOppdragslinje() != null && !s.getRequest().getOppdrag().getOppdragslinje().isEmpty())
             .map(SimuleringRequestMapper::slåAvInntrekk)
             .toList();
