@@ -38,6 +38,10 @@ public enum Fagområde {
     OOP,
     /** pleiepenger_v1 til arbeidsgiver **/
     OOPREF,
+    /** frisinn **/
+    FRISINN,
+    /** ungdomsytelse **/
+    UNG,
     ;
 
     private static final Logger LOG = LoggerFactory.getLogger(Fagområde.class);
@@ -51,11 +55,17 @@ public enum Fagområde {
         }
     }
 
-    public static Fagområde utledFra(YtelseType ytelseType) {
+    public static Fagområde utledForDirekteutbetalingFra(YtelseType ytelseType) {
         return switch (ytelseType) {
             case FP -> Fagområde.FP;
             case SVP -> Fagområde.SVP;
             case ES -> Fagområde.REFUTG;
+            case PSB -> Fagområde.PB;
+            case PPN -> Fagområde.PN;
+            case OMP -> Fagområde.OM;
+            case OLP -> Fagområde.OPP;
+            case FRISINN -> Fagområde.FRISINN;
+            case UNG -> Fagområde.UNG;
             default -> throw new IllegalArgumentException("Utvikler-feil: Mangler mapping mellom ytelsetype og FagOmrådeKode for bruker. Ytelsetype=" + ytelseType);
         };
     }
