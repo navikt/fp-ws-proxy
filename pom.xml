@@ -40,7 +40,7 @@
         <token-validation-version>5.0.19</token-validation-version>
 
         <!-- Eksterne avhengigheter -->
-        <cxf.version>4.1.1</cxf.version>
+        <cxf.version>4.1.0</cxf.version>
         <sun.xml.jaxws.version>4.0.3</sun.xml.jaxws.version>
         <jaxws-maven-plugin.version>4.0.3</jaxws-maven-plugin.version>
         <jacoco.version>0.8.12</jacoco.version>
