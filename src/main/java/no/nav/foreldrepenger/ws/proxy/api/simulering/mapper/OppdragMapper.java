@@ -1,14 +1,5 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 
-import static no.nav.foreldrepenger.ws.proxy.util.StreamUtil.safeStream;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.List;
-
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeFagområde;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Ompostering116Dto;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.Oppdrag110Dto;
@@ -25,6 +16,15 @@ import no.nav.system.os.entiteter.typer.simpletypes.KodeStatusLinje;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.ObjectFactory;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.Oppdrag;
 import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.Oppdragslinje;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
+
+import static no.nav.foreldrepenger.ws.proxy.util.StreamUtil.safeStream;
 
 
 public class OppdragMapper {
@@ -57,7 +57,7 @@ public class OppdragMapper {
         oppdrag.setDatoOppdragGjelderFom(localdateTilString(DATO_OPPDRAG_GJELDER_FOM));
         oppdrag.setSaksbehId(oppdrag110.saksbehId());
         oppdrag.getEnhet().add(DEFAULT_ENHET);
-        oppdrag.getOppdragslinje().addAll(mapOppdragslinje150(oppdrag110.oppdragslinje150Liste(),  oppdrag110.kodeFagomrade(), oppdrag110.saksbehId(), behandlingId));
+        oppdrag.getOppdragslinje().addAll(mapOppdragslinje150(oppdrag110.oppdragslinje150Liste(), oppdrag110.kodeFagomrade(), oppdrag110.saksbehId(), behandlingId));
         if (oppdrag110.ompostering116() != null) {
             oppdrag.setOmpostering(mapOmpostering(oppdrag110.ompostering116(), oppdrag110.saksbehId()));
         }
@@ -91,8 +91,33 @@ public class OppdragMapper {
     private static List<Oppdragslinje> mapOppdragslinje150(List<Oppdragslinje150Dto> oppdragsLinje150Liste, KodeFagområde kodeFagområde, String saksbehId, String behandlingId) {
         return safeStream(oppdragsLinje150Liste)
             .map(oppdragsLinje150 -> mapOppdragslinje150(oppdragsLinje150, kodeFagområde, saksbehId, behandlingId))
-            .sorted(Comparator.comparing(opp150 -> opp150.getDelytelseId()))
+            .sorted(new DelytelseIdComparator())
             .toList();
+    }
+
+    private static class DelytelseIdComparator implements Comparator<Oppdragslinje> {
+
+        @Override
+        public int compare(Oppdragslinje a, Oppdragslinje b) {
+            if (a.getDelytelseId().contains("-") && b.getDelytelseId().contains("-")) {
+                int prefixCompare = prefix(a.getDelytelseId()).compareTo(prefix(b.getDelytelseId()));
+                if (prefixCompare != 0) {
+                    return prefixCompare;
+                }
+                return løpenummer(a.getDelytelseId()).compareTo(løpenummer(b.getDelytelseId()));
+            } else {
+                return a.getDelytelseId().compareTo(b.getDelytelseId());
+            }
+        }
+
+        private String prefix(String delytelesId) {
+            return delytelesId.substring(0, delytelesId.lastIndexOf("-"));
+        }
+
+        private Long løpenummer(String delytelseId) {
+            return Long.parseLong(delytelseId.substring(delytelseId.lastIndexOf("-") + 1));
+        }
+
     }
 
     private static Oppdragslinje mapOppdragslinje150(Oppdragslinje150Dto oppdragsLinje150, KodeFagområde kodeFagområde, String saksbehId, String behandlingId) {
