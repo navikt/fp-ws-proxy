@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeEndringLinje;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeFagområde;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeKlassifik;
@@ -10,6 +12,9 @@ import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.SatsDto;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.TypeSats;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.UtbetalingsgradDto;
 import no.nav.foreldrepenger.ws.proxy.api.SyntetiskTestData;
+import no.nav.foreldrepenger.ws.proxy.config.JacksonConfiguration;
+import no.nav.system.os.tjenester.simulerfpservice.simulerfpservicegrensesnitt.SimulerBeregningRequest;
+import no.nav.system.os.tjenester.simulerfpservice.simulerfpserviceservicetypes.Oppdragslinje;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -25,6 +30,81 @@ import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.YtelseType.FP
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SimuleringRequestMapperTest {
+
+    @Test
+    void skal_sortere_etter_løpenummer_på_delytelse_id() throws JsonProcessingException {
+        ObjectMapper om = new JacksonConfiguration().customObjectmapper();
+        OppdragskontrollDto dto = om.readValue("""
+                {
+                  "behandlingId": "111",
+                  "oppdrag": [
+                    {
+                      "kodeEndring": "UEND",
+                      "kodeFagomrade": "PBREF",
+                      "fagsystemId": "ABCDE-1",
+                      "oppdragGjelderId": "11111111111",
+                      "saksbehId": "Z000000",
+                      "ompostering116": null,
+                      "oppdragslinje150Liste": [
+                        {
+                          "kodeEndringLinje": "NY",
+                          "vedtakId": "2025-01-01",
+                          "delytelseId": "ABCDE-1-999",
+                          "kodeKlassifik": "PNBSREFAG-IOP",
+                          "vedtakPeriode": {
+                            "fomDate": "2025-01-01",
+                            "tomDate": "2025-01-01"
+                          },
+                          "sats": 1000,
+                          "typeSats": "DAG",
+                          "utbetalingsgrad": 100,
+                          "kodeStatusLinje": null,
+                          "datoStatusFom": null,
+                          "utbetalesTilId": null,
+                          "refDelytelseId": "ABCDE-1-998",
+                          "refFagsystemId": "ABCDE-1",
+                          "refusjonsinfo156": {
+                            "maksDato": "2025-01-31",
+                            "refunderesId": "00111111111",
+                            "datoFom": "2025-01-01"
+                          }
+                        },
+                        {
+                          "kodeEndringLinje": "NY",
+                          "vedtakId": "2025-01-01",
+                          "delytelseId": "ABCDE-1-1000",
+                          "kodeKlassifik": "PNBSREFAG-IOP",
+                          "vedtakPeriode": {
+                            "fomDate": "2025-01-02",
+                            "tomDate": "2025-01-02"
+                          },
+                          "sats": 100,
+                          "typeSats": "DAG",
+                          "utbetalingsgrad": 10,
+                          "kodeStatusLinje": null,
+                          "datoStatusFom": null,
+                          "utbetalesTilId": null,
+                          "refDelytelseId": "ABCDE-1-999",
+                          "refFagsystemId": "ABCDE-1",
+                          "refusjonsinfo156": {
+                            "maksDato": "2025-01-31",
+                            "refunderesId": "00111111111",
+                            "datoFom": "2025-01-01"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+                """,
+            OppdragskontrollDto.class);
+
+        List<SimulerBeregningRequest> simulerBeregningRequests = SimuleringRequestMapper.tilSimulerBeregingsRequester(dto, YtelseType.PSB, false);
+
+        List<Oppdragslinje> oppdragslinjer = simulerBeregningRequests.get(0).getRequest().getOppdrag().getOppdragslinje();
+        assertThat(oppdragslinjer.get(0).getDelytelseId()).isEqualTo("ABCDE-1-999");
+        assertThat(oppdragslinjer.get(1).getDelytelseId()).isEqualTo("ABCDE-1-1000");
+    }
 
     @Test
     void verifiserAtUnmarshallingAvXMLStrengIkkeMinsterNoeData() {
