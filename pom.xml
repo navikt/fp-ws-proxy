@@ -36,8 +36,8 @@
 
         <!-- Interne avhengigheter -->
         <boot-conditionals.version>5.1.7</boot-conditionals.version>
-        <fp-kontrakter.version>9.3.0</fp-kontrakter.version>
-        <token-validation-version>5.0.25</token-validation-version>
+        <fp-kontrakter.version>9.3.2</fp-kontrakter.version>
+        <token-validation-version>5.0.27</token-validation-version>
 
         <!-- Eksterne avhengigheter -->
         <cxf.version>4.1.0</cxf.version>
