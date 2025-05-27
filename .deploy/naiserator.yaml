@@ -16,13 +16,13 @@ spec:
         thresholdPercentage: 80
   liveness:
     path: /fpwsproxy/actuator/health/liveness
-    initialDelay: 5
+    initialDelay: 15
     timeout: 5
     periodSeconds: 10
     failureThreshold: 27
   readiness:
     path: /fpwsproxy/actuator/health/readiness
-    initialDelay: 5
+    initialDelay: 15
     timeout: 5
     periodSeconds: 10
     failureThreshold: 27
