@@ -36,6 +36,17 @@ spec:
     requests:
       cpu: "{{requests.cpu}}"
       memory: "{{requests.mem}}"
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: java
+      destinations:
+        - id: "grafana-lgtm"
+        - id: "elastic-apm"
+    logging:
+      destinations:
+        - id: loki
+        - id: elastic
   secureLogs:
     enabled: true
   vault:
