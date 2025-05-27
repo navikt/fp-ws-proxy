@@ -59,6 +59,10 @@ spec:
       enabled: true
   {{#if AZURE_IAC_RULES}}
   accessPolicy:
+    outbound:
+      rules:
+      - application: logging
+        namespace: nais-system
     inbound:
       rules:
       {{#each AZURE_IAC_RULES}}
