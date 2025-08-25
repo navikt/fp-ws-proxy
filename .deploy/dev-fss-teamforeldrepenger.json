@@ -40,6 +40,11 @@
             "app": "k9-abakus",
             "namespace": "k9saksbehandling",
             "cluster": "dev-fss"
+        },
+        {
+            "app": "ung-tilbake",
+            "namespace": "k9saksbehandling",
+            "cluster": "dev-gcp"
         }
     ]
 }
