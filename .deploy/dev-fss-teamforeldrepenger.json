@@ -10,6 +10,9 @@
         "cpu": "100m",
         "mem": "512Mi"
     },
+    "ingresses": [
+        "https://fpwsproxy.dev-fss-pub.nais.io"
+    ],
     "AZURE_IAC_RULES": [
         {
             "app": "fpabakus",
