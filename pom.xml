@@ -36,7 +36,7 @@
 
         <!-- Interne avhengigheter -->
         <boot-conditionals.version>5.1.11</boot-conditionals.version>
-        <fp-kontrakter.version>9.4.2</fp-kontrakter.version>
+        <fp-kontrakter.version>9.4.3</fp-kontrakter.version>
         <token-validation-version>5.0.37</token-validation-version>
 
         <!-- Eksterne avhengigheter -->
