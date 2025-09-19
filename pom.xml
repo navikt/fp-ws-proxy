@@ -35,9 +35,9 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <!-- Interne avhengigheter -->
-        <boot-conditionals.version>5.1.10</boot-conditionals.version>
-        <fp-kontrakter.version>9.4.1</fp-kontrakter.version>
-        <token-validation-version>5.0.36</token-validation-version>
+        <boot-conditionals.version>5.1.11</boot-conditionals.version>
+        <fp-kontrakter.version>9.4.2</fp-kontrakter.version>
+        <token-validation-version>5.0.37</token-validation-version>
 
         <!-- Eksterne avhengigheter -->
         <cxf.version>4.1.0</cxf.version>
