@@ -1,4 +1,4 @@
-FROM ghcr.io/navikt/fp-baseimages/java:25
+FROM ghcr.io/navikt/fp-baseimages/java:21
 LABEL org.opencontainers.image.source=https://github.com/navikt/fp-ws-proxy
 
 ENV TZ=Europe/Oslo
