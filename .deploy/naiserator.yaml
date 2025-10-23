@@ -56,8 +56,8 @@ spec:
   vault:
     enabled: true
     paths:
-      - kvPath: {{serviceuserkv}}
-        mountPath: /var/run/secrets/nais.io/serviceuser/
+      - mountPath: {{vault.mountPath}}/serviceuser
+        kvPath: {{vault.serviceuser.secretsPath}}
   azure:
     application:
       enabled: true

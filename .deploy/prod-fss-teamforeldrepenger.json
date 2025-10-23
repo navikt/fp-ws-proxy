@@ -1,5 +1,10 @@
 {
-    "serviceuserkv": "/serviceuser/data/prod/srvfpwsproxy",
+    "vault": {
+        "mountPath": "/var/run/secrets/nais.io",
+        "serviceuser": {
+            "secretsPath": "serviceuser/data/prod/srvfpwsproxy"
+        }
+    },
     "minReplicas": "2",
     "maxReplicas": "3",
     "limits": {
