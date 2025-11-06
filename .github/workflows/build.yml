@@ -8,7 +8,6 @@ on:
       - '**.MD'
       - '.gitignore'
       - '.editorconfig'
-      - '.java-version'
       - 'LICENCE'
       - 'CODEOWNERS'
 
@@ -25,6 +24,7 @@ jobs:
       build-image: ${{ github.ref_name == 'master' }} # default: true
       push-image: ${{ github.ref_name == 'master' }} # default: false
       use-reader: true
+      java-version: '25'
     secrets: inherit
 
   deploy-dev:

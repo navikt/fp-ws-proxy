@@ -37,3 +37,4 @@ application-dev.properties
 .loadpath
 .recommenders
 .DS_Store
+.java-version
