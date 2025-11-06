@@ -1,13 +1,12 @@
 package no.nav.foreldrepenger.ws.proxy;
 
+import no.nav.foreldrepenger.ws.proxy.util.ClusterUtil;
 import no.nav.foreldrepenger.ws.proxy.util.NaisFileIntoSystemPropertyInitializer;
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.cache.annotation.EnableCaching;
-
-import static no.nav.boot.conditionals.Cluster.profiler;
 
 @EnableCaching
 @EnableJwtTokenValidation
@@ -21,7 +20,7 @@ public class FpWsProxyApplication {
             .initializers(
                 new NaisFileIntoSystemPropertyInitializer("SYSTEMBRUKER_USERNAME", vaultMountPath + "username"),
                 new NaisFileIntoSystemPropertyInitializer("SYSTEMBRUKER_PASSWORD", vaultMountPath + "password"))
-            .profiles(profiler())
+            .profiles(ClusterUtil.profiler())
             .run(args);
     }
 }

@@ -35,7 +35,6 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <!-- Interne avhengigheter -->
-        <boot-conditionals.version>5.1.11</boot-conditionals.version>
         <fp-kontrakter.version>9.4.3</fp-kontrakter.version>
         <token-validation-version>5.0.39</token-validation-version>
 
@@ -59,11 +58,6 @@
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
             <artifactId>fp-ws-proxy-v1</artifactId>
             <version>${fp-kontrakter.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.boot</groupId>
-            <artifactId>boot-conditionals</artifactId>
-            <version>${boot-conditionals.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.security</groupId>

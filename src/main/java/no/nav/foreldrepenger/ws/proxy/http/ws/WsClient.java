@@ -14,7 +14,7 @@ import org.apache.neethi.Policy;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import static no.nav.boot.conditionals.EnvUtil.isDevOrLocal;
+import static no.nav.foreldrepenger.ws.proxy.util.EnvUtil.isDevOrLocal;
 import static org.apache.cxf.rt.security.SecurityConstants.CACHE_ISSUED_TOKEN_IN_ENDPOINT;
 import static org.apache.cxf.rt.security.SecurityConstants.STS_CLIENT;
 
