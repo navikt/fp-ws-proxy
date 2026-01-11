@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.ws.proxy.api.simulering.mapper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeEndringLinje;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeFagområde;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.KodeKlassifik;
@@ -30,8 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class SimuleringRequestMapperTest {
 
     @Test
-    void skal_sortere_etter_løpenummer_på_delytelse_id() {
-        var om = new JacksonConfiguration().customObjectmapper();
+    void skal_sortere_etter_løpenummer_på_delytelse_id() throws JsonProcessingException {
+        ObjectMapper om = new JacksonConfiguration().customObjectmapper();
         OppdragskontrollDto dto = om.readValue("""
                 {
                   "behandlingId": "111",
