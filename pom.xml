@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.7</version>
+        <version>3.5.9</version>
         <relativePath/>
     </parent>
 
@@ -22,7 +22,7 @@
     </licenses>
 
     <properties>
-        <java.version>25</java.version>
+        <java.version>21</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,8 +35,8 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <!-- Interne avhengigheter -->
-        <fp-kontrakter.version>9.4.3</fp-kontrakter.version>
-        <token-validation-version>5.0.39</token-validation-version>
+        <fp-kontrakter.version>9.4.21</fp-kontrakter.version>
+        <token-validation-version>5.0.40</token-validation-version>
 
         <!-- Eksterne avhengigheter -->
         <cxf.version>4.1.4</cxf.version>
