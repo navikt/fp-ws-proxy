@@ -61,10 +61,12 @@
         <logger name="org.springframework.web.method.HandlerMethod" level="info" />
         <logger name="org.springframework.web.server.adapter.HttpWebHandlerAdapter" level="info" />
         <logger name="org.apache.cxf.services" level="debug" />
+        <logger name="net.shibboleth" level="error"/>
     </springProfile>
 
     <springProfile name="prod">
         <logger name="org.apache" level="ERROR"/>
+        <logger name="net.shibboleth" level="ERROR"/>
         <logger name="org.apache.http" level="INFO"/>
     </springProfile>
 

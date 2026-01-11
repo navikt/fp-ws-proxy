@@ -12,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.respons.BeløpDto;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.respons.FagsystemDto;
@@ -31,17 +30,17 @@ import no.nav.foreldrepenger.ws.proxy.config.JacksonConfiguration;
 class MeldekortUtbetalingsgrunnlagSakDtoSeraliseringOgDeseraliseringTest {
 
     @Autowired
-    private ObjectMapper MAPPER;
+    private JsonMapper MAPPER;
 
     @Test
-    void konsistenstestForÅSjekkeAtDeseraliseringFungereUavhengigAvSeralisering() throws JsonProcessingException {
+    void konsistenstestForÅSjekkeAtDeseraliseringFungereUavhengigAvSeralisering() {
         var seralisertStreng = hardkodetSeralisertStreng();
         var testA = MAPPER.readValue(seralisertStreng, MeldekortUtbetalingsgrunnlagSakDto.class);
         assertThat(testA).isEqualTo(getMeldekortUtbetalingsgrunnlagSakDto());
     }
 
     @Test
-    void konsistenstestForÅSjekkeAtSeraliseringFungereUavhengigAvDeseralisering() throws JsonProcessingException {
+    void konsistenstestForÅSjekkeAtSeraliseringFungereUavhengigAvDeseralisering() {
         var meldekortUtbetalingsgrunnlagSakDto = getMeldekortUtbetalingsgrunnlagSakDto();
         var seralized = MAPPER.writeValueAsString(meldekortUtbetalingsgrunnlagSakDto);
         assertThat(seralized).isEqualToIgnoringWhitespace(hardkodetSeralisertStreng().replaceAll("[\n\r ]", ""));
