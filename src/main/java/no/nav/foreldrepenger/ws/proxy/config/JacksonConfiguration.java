@@ -1,46 +1,40 @@
 package no.nav.foreldrepenger.ws.proxy.config;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import tools.jackson.databind.DeserializationFeature;
-import tools.jackson.databind.MapperFeature;
-import tools.jackson.databind.cfg.EnumFeature;
-import tools.jackson.databind.json.JsonMapper;
-
-import java.util.TimeZone;
 
 @Configuration
 public class JacksonConfiguration {
 
     @Bean
     @Primary
-    public JsonMapper customObjectmapper() {
+    public ObjectMapper customObjectmapper() {
         return JsonMapper.builder()
-            .defaultTimeZone(TimeZone.getTimeZone("Europe/Oslo"))
-            .changeDefaultPropertyInclusion(a -> a
-                .withValueInclusion(JsonInclude.Include.NON_ABSENT)
-                .withContentInclusion(JsonInclude.Include.NON_ABSENT))
+            .addModule(new Jdk8Module())
+            .addModule(new JavaTimeModule())
+            .addModule(new ParameterNamesModule(JsonCreator.Mode.DEFAULT))
+            .defaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_ABSENT, JsonInclude.Include.NON_ABSENT))
             .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
             .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
-            .enable(EnumFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
+            .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
             .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+            // Spring boot defaults
+            .disable(MapperFeature.DEFAULT_VIEW_INCLUSION)
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
             .build();
     }
-
-    @Bean
-    public JsonMapperBuilderCustomizer jacksonCustomizer() {
-        return builder -> builder.defaultTimeZone(TimeZone.getTimeZone("Europe/Oslo"))
-            .changeDefaultPropertyInclusion(a -> a
-                .withValueInclusion(JsonInclude.Include.NON_ABSENT)
-                .withContentInclusion(JsonInclude.Include.NON_ABSENT))
-            .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-            .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
-            .enable(EnumFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
-            .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
-    }
-
-
 }
