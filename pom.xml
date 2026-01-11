@@ -35,7 +35,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <!-- Interne avhengigheter -->
-        <fp-kontrakter.version>9.4.21</fp-kontrakter.version>
+        <fp-kontrakter.version>9.4.3</fp-kontrakter.version> <!-- La stå til Java 25 OK. Oppdateres sammen med Java version -->
         <token-validation-version>5.0.40</token-validation-version>
 
         <!-- Eksterne avhengigheter -->
