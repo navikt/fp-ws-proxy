@@ -51,8 +51,6 @@ spec:
       destinations:
         - id: loki
         - id: elastic
-  secureLogs:
-    enabled: true
   vault:
     enabled: true
     paths:
