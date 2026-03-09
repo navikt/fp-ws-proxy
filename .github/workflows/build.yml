@@ -20,7 +20,6 @@ jobs:
        id-token: write
     uses: navikt/fp-gha-workflows/.github/workflows/build-app-no-db.yml@main
     with:
-      sonar-scan: false
       build-image: ${{ github.ref_name == 'master' }} # default: true
       push-image: ${{ github.ref_name == 'master' }} # default: false
       use-reader: true
