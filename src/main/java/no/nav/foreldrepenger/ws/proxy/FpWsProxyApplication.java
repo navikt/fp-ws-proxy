@@ -14,7 +14,9 @@ import org.springframework.cache.annotation.EnableCaching;
 @SpringBootApplication
 public class FpWsProxyApplication {
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
+        System.clearProperty("logback.configurationFile");
+
         var vaultMountPath = "/var/run/secrets/nais.io/serviceuser/";
         new SpringApplicationBuilder(FpWsProxyApplication.class)
             .initializers(
