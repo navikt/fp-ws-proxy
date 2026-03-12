@@ -11,6 +11,8 @@ updates:
     directory: "/"
     schedule:
       interval: daily
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 10
   - package-ecosystem: maven
     directory: "/"
@@ -35,3 +37,7 @@ updates:
           - "no.nav.*"
         exclude-patterns:
           - "no.nav.folketrygdloven.*"
+    cooldown:
+      default-days: 7
+      exclude:
+        - "no.nav.*"
