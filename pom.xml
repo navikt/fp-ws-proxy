@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.3</version>
+        <version>4.0.4</version>
         <relativePath/>
     </parent>
 
@@ -39,8 +39,8 @@
         <token-validation-version>6.0.4</token-validation-version>
 
         <!-- Eksterne avhengigheter -->
-        <cxf.version>4.1.0</cxf.version>
-        <sun.xml.jaxws.version>4.0.3</sun.xml.jaxws.version>
+        <cxf.version>4.2.0</cxf.version>
+        <sun.xml.jaxws.version>4.0.4</sun.xml.jaxws.version>
         <jaxws-maven-plugin.version>4.0.4</jaxws-maven-plugin.version>
         <jacoco.version>0.8.14</jacoco.version>
         <logstash-logback-encoder.version>9.0</logstash-logback-encoder.version>
