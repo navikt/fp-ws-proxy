@@ -1,58 +1,57 @@
 {
-    "vault": {
-        "mountPath": "/var/run/secrets/nais.io",
-        "serviceuser": {
-            "secretsPath": "serviceuser/data/prod/srvfpwsproxy"
-        }
+  "vault": {
+    "mountPath": "/var/run/secrets/nais.io",
+    "serviceuser": {
+      "secretsPath": "serviceuser/data/prod/srvfpwsproxy"
+    }
+  },
+  "minReplicas": "2",
+  "maxReplicas": "3",
+  "limits": {
+    "mem": "1000Mi"
+  },
+  "requests": {
+    "cpu": "100m",
+    "mem": "800Mi"
+  },
+  "ingresses": [
+    "https://fpwsproxy.prod-fss-pub.nais.io"
+  ],
+  "AZURE_IAC_RULES": [
+    {
+      "app": "fpabakus",
+      "namespace": "teamforeldrepenger",
+      "cluster": "prod-fss"
     },
-    "minReplicas": "2",
-    "maxReplicas": "3",
-    "limits": {
-        "cpu": "2",
-        "mem": "2048Mi"
+    {
+      "app": "fpoppdrag",
+      "namespace": "teamforeldrepenger",
+      "cluster": "prod-fss"
     },
-    "requests": {
-        "cpu": "200m",
-        "mem": "1024Mi"
+    {
+      "app": "fptilbake",
+      "namespace": "teamforeldrepenger",
+      "cluster": "prod-fss"
     },
-    "ingresses": [
-        "https://fpwsproxy.prod-fss-pub.nais.io"
-    ],
-    "AZURE_IAC_RULES": [
-        {
-            "app": "fpabakus",
-            "namespace": "teamforeldrepenger",
-            "cluster": "prod-fss"
-        },
-        {
-            "app": "fpoppdrag",
-            "namespace": "teamforeldrepenger",
-            "cluster": "prod-fss"
-        },
-        {
-            "app": "fptilbake",
-            "namespace": "teamforeldrepenger",
-            "cluster": "prod-fss"
-        },
-        {
-            "app": "k9-oppdrag",
-            "namespace": "k9saksbehandling",
-            "cluster": "prod-fss"
-        },
-        {
-            "app": "k9-tilbake",
-            "namespace": "k9saksbehandling",
-            "cluster": "prod-fss"
-        },
-        {
-            "app": "k9-abakus",
-            "namespace": "k9saksbehandling",
-            "cluster": "prod-fss"
-        },
-        {
-            "app": "ung-tilbake",
-            "namespace": "k9saksbehandling",
-            "cluster": "prod-gcp"
-        }
-    ]
+    {
+      "app": "k9-oppdrag",
+      "namespace": "k9saksbehandling",
+      "cluster": "prod-fss"
+    },
+    {
+      "app": "k9-tilbake",
+      "namespace": "k9saksbehandling",
+      "cluster": "prod-fss"
+    },
+    {
+      "app": "k9-abakus",
+      "namespace": "k9saksbehandling",
+      "cluster": "prod-fss"
+    },
+    {
+      "app": "ung-tilbake",
+      "namespace": "k9saksbehandling",
+      "cluster": "prod-gcp"
+    }
+  ]
 }
