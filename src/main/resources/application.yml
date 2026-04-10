@@ -38,7 +38,7 @@ meldekortutbetalingsgrunnlag:
 
 oppdrag:
   service:
-    url: https://wasapp.adeo.no/cics/services/simulerFpServiceWSBinding
+    url: https://cics.adeo.no/oppdrag/simulerFpServiceWSBinding
 
 tilbakekreving:
   v1:
