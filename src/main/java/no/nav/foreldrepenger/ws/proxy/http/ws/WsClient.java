@@ -68,15 +68,15 @@ public abstract class WsClient<T> {
         var client = ClientProxy.getClient(port);
         client.getOutInterceptors().add(new CallIdHeaderInterceptor());
 
-        if (isDevOrLocal(env)) {
+        //if (isDevOrLocal(env)) {
             var loggingInInterceptor = new LoggingInInterceptor();
             loggingInInterceptor.setPrettyLogging(true);
-            var loggingOutInterceptor = new LoggingOutInterceptor();
-            loggingOutInterceptor.setPrettyLogging(true);
+          //  var loggingOutInterceptor = new LoggingOutInterceptor();
+          //  loggingOutInterceptor.setPrettyLogging(true);
             client.getInInterceptors().add(loggingInInterceptor);
             client.getInFaultInterceptors().add(loggingInInterceptor);
-            client.getOutInterceptors().add(loggingOutInterceptor);
-            client.getOutFaultInterceptors().add(loggingOutInterceptor);
-        }
+          //  client.getOutInterceptors().add(loggingOutInterceptor);
+          //  client.getOutFaultInterceptors().add(loggingOutInterceptor);
+        //}
     }
 }
