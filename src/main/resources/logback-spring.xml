@@ -48,6 +48,7 @@
     <springProfile name="prod">
         <logger name="org.apache" level="ERROR"/>
         <logger name="org.apache.http" level="INFO"/>
+        <logger name="org.apache.cxf.services" level="INFO"/>
     </springProfile>
 
     <logger name="secureLogger" level="info" additivity="false">
