@@ -24,6 +24,6 @@ public class SimuleringConfiguration extends WsClient<SimulerFpService> {
         jaxWsProxyFactoryBean.setAddress(Objects.requireNonNull(serviceUrl));
         jaxWsProxyFactoryBean.setServiceClass(SimulerFpService.class);
         var port = (SimulerFpService) jaxWsProxyFactoryBean.create();
-        return configureClientForSystemUser(port);
+        return configureClientForSystemUser(port, true);
     }
 }

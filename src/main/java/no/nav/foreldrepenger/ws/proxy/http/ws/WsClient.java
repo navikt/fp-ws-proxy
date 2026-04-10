@@ -32,7 +32,11 @@ public abstract class WsClient<T> {
     }
 
     public T configureClientForSystemUser(T port) {
-        configureClientWithLoggingAndCallId(port);
+        return configureClientForSystemUser(port, false);
+    }
+
+    public T configureClientForSystemUser(T port, boolean prodRespons) {
+        configureClientWithLoggingAndCallId(port, prodRespons);
         configureRequestSamlToken(port);
         return port;
     }
@@ -64,19 +68,24 @@ public abstract class WsClient<T> {
         policyEngine.setClientEndpointPolicy(endpointInfo, endpointPolicy.updatePolicy(policy, message));
     }
 
-    private void configureClientWithLoggingAndCallId(T port) {
+    private void configureClientWithLoggingAndCallId(T port, boolean logProdRespons) {
         var client = ClientProxy.getClient(port);
         client.getOutInterceptors().add(new CallIdHeaderInterceptor());
 
-        //if (isDevOrLocal(env)) {
+        if (isDevOrLocal(env)) {
             var loggingInInterceptor = new LoggingInInterceptor();
             loggingInInterceptor.setPrettyLogging(true);
-          //  var loggingOutInterceptor = new LoggingOutInterceptor();
-          //  loggingOutInterceptor.setPrettyLogging(true);
+            var loggingOutInterceptor = new LoggingOutInterceptor();
+            loggingOutInterceptor.setPrettyLogging(true);
             client.getInInterceptors().add(loggingInInterceptor);
             client.getInFaultInterceptors().add(loggingInInterceptor);
-          //  client.getOutInterceptors().add(loggingOutInterceptor);
-          //  client.getOutFaultInterceptors().add(loggingOutInterceptor);
-        //}
+            client.getOutInterceptors().add(loggingOutInterceptor);
+            client.getOutFaultInterceptors().add(loggingOutInterceptor);
+        } else if (logProdRespons) {
+            var loggingInInterceptor = new LoggingInInterceptor();
+            loggingInInterceptor.setPrettyLogging(true);
+            client.getInInterceptors().add(loggingInInterceptor);
+            client.getInFaultInterceptors().add(loggingInInterceptor);
+        }
     }
 }
