@@ -32,11 +32,7 @@ public abstract class WsClient<T> {
     }
 
     public T configureClientForSystemUser(T port) {
-        return configureClientForSystemUser(port, false);
-    }
-
-    public T configureClientForSystemUser(T port, boolean prodRespons) {
-        configureClientWithLoggingAndCallId(port, prodRespons);
+        configureClientWithLoggingAndCallId(port);
         configureRequestSamlToken(port);
         return port;
     }
@@ -68,7 +64,7 @@ public abstract class WsClient<T> {
         policyEngine.setClientEndpointPolicy(endpointInfo, endpointPolicy.updatePolicy(policy, message));
     }
 
-    private void configureClientWithLoggingAndCallId(T port, boolean logProdRespons) {
+    private void configureClientWithLoggingAndCallId(T port) {
         var client = ClientProxy.getClient(port);
         client.getOutInterceptors().add(new CallIdHeaderInterceptor());
 
@@ -81,11 +77,6 @@ public abstract class WsClient<T> {
             client.getInFaultInterceptors().add(loggingInInterceptor);
             client.getOutInterceptors().add(loggingOutInterceptor);
             client.getOutFaultInterceptors().add(loggingOutInterceptor);
-        } else if (logProdRespons) {
-            var loggingInInterceptor = new LoggingInInterceptor();
-            loggingInInterceptor.setPrettyLogging(true);
-            client.getInInterceptors().add(loggingInInterceptor);
-            client.getInFaultInterceptors().add(loggingInInterceptor);
         }
     }
 }
