@@ -52,6 +52,28 @@
         <tag>HEAD</tag>
     </scm>
 
+    <!-- Mens vi venter på Wss4j 4.0.2 og en CXF med riktig Wss4j (det jobbes med saken ...) -->
+    <!-- Når vi oppdaterer CXF/Wss4j - sjekk  mvn dependency:tree -Dincludes="org......" uten denne seksjonen -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>1.84</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpkix-jdk18on</artifactId>
+                <version>1.84</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcutil-jdk18on</artifactId>
+                <version>1.84</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <!--    NAV INTERNE AVHENGIGHETER    -->
         <dependency>
