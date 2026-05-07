@@ -36,7 +36,7 @@
 
         <!-- Interne avhengigheter -->
         <fp-kontrakter.version>9.4.33</fp-kontrakter.version>
-        <token-validation-version>6.0.6</token-validation-version>
+        <token-validation-version>6.0.7</token-validation-version>
 
         <!-- Eksterne avhengigheter -->
         <cxf.version>4.1.0</cxf.version>
