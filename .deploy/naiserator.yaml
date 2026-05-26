@@ -17,7 +17,7 @@ spec:
     max: {{maxReplicas}}
     scalingStrategy:
       cpu:
-        thresholdPercentage: 80
+        thresholdPercentage: 50
   liveness:
     path: /fpwsproxy/actuator/health/liveness
     initialDelay: 15
@@ -25,6 +25,12 @@ spec:
     periodSeconds: 10
     failureThreshold: 27
   readiness:
+    path: /fpwsproxy/actuator/health/readiness
+    initialDelay: 15
+    timeout: 5
+    periodSeconds: 10
+    failureThreshold: 27
+  startup:
     path: /fpwsproxy/actuator/health/readiness
     initialDelay: 15
     timeout: 5
