@@ -11,7 +11,6 @@ import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.MangledeKravgrunn
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.UkjentFeilIKvitteringFraOSException;
 import no.nav.security.token.support.core.exceptions.JwtTokenValidatorException;
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException;
-import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +26,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static no.nav.foreldrepenger.kontrakter.fpwsproxy.error.FeilType.GENERELL_FEIL;
@@ -142,7 +142,7 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private String getFeltNavn(Path propertyPath) {
-        return propertyPath instanceof PathImpl pi ? pi.getLeafNode().toString() : null;
+        return Optional.ofNullable(propertyPath).map(Path::toString).orElse("null");
     }
 
     private ResponseEntity<Object> logAndRespond(HttpStatusCode status, Exception e, WebRequest req) {
