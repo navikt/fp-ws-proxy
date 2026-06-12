@@ -42,7 +42,7 @@
         <cxf.version>4.1.0</cxf.version>
         <sun.xml.jaxws.version>4.0.4</sun.xml.jaxws.version>
         <jaxws-maven-plugin.version>4.0.4</jaxws-maven-plugin.version>
-        <jacoco.version>0.8.14</jacoco.version>
+        <jacoco.version>0.8.15</jacoco.version>
         <logstash-logback-encoder.version>9.0</logstash-logback-encoder.version>
     </properties>
 
