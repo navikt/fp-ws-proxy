@@ -17,6 +17,11 @@ spring:
   mvc:
     log-request-details: true
 
+# Mute deprecation warnings from Shibboleth libraries until wss4j later than 4.0.1 released
+logging:
+  level:
+    net.shibboleth.shared.primitive.DeprecationSupport: ERROR
+
 ## SIKKERHET ##
 no.nav.security.jwt:
   issuer:
