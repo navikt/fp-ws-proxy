@@ -20,7 +20,7 @@ spring:
 # Mute deprecation warnings from Shibboleth libraries until wss4j later than 4.0.1 released
 logging:
   level:
-    net.shibboleth.shared.primitive.DeprecationSupport: ERROR
+    DEPRECATED: ERROR
 
 ## SIKKERHET ##
 no.nav.security.jwt:
