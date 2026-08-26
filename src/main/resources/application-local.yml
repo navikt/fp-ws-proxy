@@ -9,12 +9,13 @@ management:
 server:
   port: 8292
 
-no.nav.security.jwt:
-  issuer:
-    aad:
-      discovery_url: http://vtp:8060/rest/azuread/.well-known/openid-configuration
-      accepted_audience: api://vtp, vtp, api://vtp.teamforeldrepenger.vtp/.default
-      proxy-url: http://vtp:8060
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://vtp:8060/rest/azuread
+          audiences: api://vtp, vtp, api://vtp.teamforeldrepenger.vtp/.default
 
 securitytokenservice:
   username: vtp

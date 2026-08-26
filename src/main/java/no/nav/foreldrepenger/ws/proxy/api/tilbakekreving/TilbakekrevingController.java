@@ -11,17 +11,13 @@ import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.MangledeKravgrunn
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.UkjentFeilIKvitteringFraOSException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.ØkonomiKvitteringTolk;
 import no.nav.foreldrepenger.ws.proxy.error.GenerellSoapFaultException;
-import no.nav.foreldrepenger.ws.proxy.http.ProtectedRestController;
-import no.nav.tilbakekreving.kravgrunnlag.detalj.v1.DetaljertKravgrunnlagDto;
+import no.nav.foreldrepenger.ws.proxy.http.DefaultRestController;
 import no.nav.tilbakekreving.typer.v1.MmelDto;
-import no.nav.tilbakekreving.typer.v1.PeriodeDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.stream.Collectors;
 
 import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.ØkonomiKvitteringTilStrengMapper.formaterKvittering;
 import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.mapper.AnnullerKravgrunnlagRequestMapper.tilKravgrunnlagAnnulerRequest;
@@ -34,7 +30,7 @@ import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.util.Tilbakekrev
  * Skal på sikt ersatte WS kall fra fptilbake til økonomi som gjøres i
  * https://github.com/navikt/fptilbake/blob/master/integrasjontjenester/oekonomi-tilbakekreving-klient/src/main/java/no/nav/foreldrepenger/tilbakekreving/integrasjon/økonomi/ØkonomiConsumerImpl.java
  */
-@ProtectedRestController(value = "/tilbakekreving")
+@DefaultRestController(value = "/tilbakekreving")
 public class TilbakekrevingController {
 
     private static final Logger LOG = LoggerFactory.getLogger(TilbakekrevingController.class);

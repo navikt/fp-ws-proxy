@@ -9,13 +9,12 @@ import no.nav.foreldrepenger.ws.proxy.api.simulering.error.OppdragNedetidExcepti
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.KravgrunnlagErSperretException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.MangledeKravgrunnlagException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.UkjentFeilIKvitteringFraOSException;
-import no.nav.security.token.support.core.exceptions.JwtTokenValidatorException;
-import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -97,17 +96,9 @@ public class GenerellExceptionHandler extends ResponseEntityExceptionHandler {
      * Håndtering av ulike custom REST exceptions
      */
     @ExceptionHandler
-    public ResponseEntity<Object> handleJwtUnauthorizedException(JwtTokenUnauthorizedException e, WebRequest req) {
-        return logAndRespond(UNAUTHORIZED, MANGLER_TILGANG_FEIL, e, req);
+    public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException e, WebRequest req) {
+        return logAndRespond(FORBIDDEN, MANGLER_TILGANG_FEIL, e, req);
     }
-
-    @ExceptionHandler
-    public ResponseEntity<Object> handleUnauthenticatedOIDCException(JwtTokenValidatorException e, WebRequest req) {
-        Collection<FeltFeilDto> feilene = new ArrayList<>();
-        feilene.add(new FeltFeilDto("Token utløper", e.getExpiryDate().toString()));
-        return logAndRespond(FORBIDDEN, MANGLER_TILGANG_FEIL, e, req, feilene);
-    }
-
 
     /**
      * Håndtering av generelle REST exceptions
