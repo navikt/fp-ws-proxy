@@ -25,4 +25,3 @@ jobs:
       gar: true
       image: ${{ inputs.image }}
       cluster: ${{ inputs.environment }}-fss
-    secrets: inherit
