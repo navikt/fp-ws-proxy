@@ -36,7 +36,6 @@
 
         <!-- Interne avhengigheter -->
         <fp-kontrakter.version>9.4.37</fp-kontrakter.version>
-        <token-validation-version>6.0.12</token-validation-version>
 
         <!-- Eksterne avhengigheter -->
         <cxf.version>4.2.3</cxf.version>
@@ -44,6 +43,7 @@
         <jaxws-maven-plugin.version>4.0.5</jaxws-maven-plugin.version>
         <jacoco.version>0.8.15</jacoco.version>
         <logstash-logback-encoder.version>9.0</logstash-logback-encoder.version>
+        <mock-oauth2-server.version>6.0.2</mock-oauth2-server.version>
     </properties>
 
     <scm>
@@ -81,16 +81,14 @@
             <artifactId>fp-ws-proxy-v1</artifactId>
             <version>${fp-kontrakter.version}</version>
         </dependency>
-        <dependency>
-            <groupId>no.nav.security</groupId>
-            <artifactId>token-validation-spring</artifactId>
-            <version>${token-validation-version}</version>
-        </dependency>
-
         <!-- EKSTERNE AVHENGIGHETER -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -181,8 +179,24 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.ws</groupId>
             <artifactId>spring-ws-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.security</groupId>
+            <artifactId>mock-oauth2-server</artifactId>
+            <version>${mock-oauth2-server.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -243,7 +257,23 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>resolve-mockito-agent</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

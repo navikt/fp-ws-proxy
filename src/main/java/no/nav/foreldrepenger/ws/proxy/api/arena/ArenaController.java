@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.request.ArenaRequestDto;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.arena.respons.MeldekortUtbetalingsgrunnlagSakDto;
 import no.nav.foreldrepenger.ws.proxy.api.arena.mapper.ArenaMapperWS;
-import no.nav.foreldrepenger.ws.proxy.http.ProtectedRestController;
+import no.nav.foreldrepenger.ws.proxy.http.DefaultRestController;
 import no.nav.tjeneste.virksomhet.meldekortutbetalingsgrunnlag.v1.meldinger.FinnMeldekortUtbetalingsgrunnlagListeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,8 @@ import java.util.Optional;
 
 import static no.nav.foreldrepenger.ws.proxy.api.arena.mapper.ArenaMapperWS.tilWSRequest;
 
-@ProtectedRestController(value = "/arena")
+
+@DefaultRestController(value = "/arena")
 public class ArenaController {
     private static final Logger LOG = LoggerFactory.getLogger(ArenaController.class);
 

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.request.OppdragskontrollDto;
 import no.nav.foreldrepenger.kontrakter.fpwsproxy.simulering.respons.BeregningDto;
 import no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.YtelseType;
-import no.nav.foreldrepenger.ws.proxy.http.ProtectedRestController;
+import no.nav.foreldrepenger.ws.proxy.http.DefaultRestController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.bind.DefaultValue;
@@ -18,7 +18,7 @@ import java.util.List;
 import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.SimuleringRequestMapper.tilSimulerBeregingsRequester;
 import static no.nav.foreldrepenger.ws.proxy.api.simulering.mapper.SimuleringResponsMapper.tilBeregningDtoListe;
 
-@ProtectedRestController(value = "/simulering")
+@DefaultRestController(value = "/simulering")
 public class SimuleringController {
     private static final Logger LOG = LoggerFactory.getLogger(SimuleringController.class);
     private static final Logger SECURE_LOG = LoggerFactory.getLogger("secureLogger");
