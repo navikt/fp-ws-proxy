@@ -38,6 +38,8 @@
         <fp-kontrakter.version>9.4.38</fp-kontrakter.version>
 
         <!-- Eksterne avhengigheter -->
+        <!-- Overstyrer Spring Boot 4.1.1 sin tomcat-embed-core 11.0.24 som har kjent sårbarhet. Fjern når parent oppgraderer. -->
+        <tomcat.version>11.0.25</tomcat.version>
         <cxf.version>4.2.3</cxf.version>
         <sun.xml.jaxws.version>4.0.5</sun.xml.jaxws.version>
         <jaxws-maven-plugin.version>4.0.5</jaxws-maven-plugin.version>
