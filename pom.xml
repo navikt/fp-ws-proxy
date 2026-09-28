@@ -45,7 +45,7 @@
         <jaxws-maven-plugin.version>4.0.5</jaxws-maven-plugin.version>
         <jacoco.version>0.8.15</jacoco.version>
         <logstash-logback-encoder.version>9.0</logstash-logback-encoder.version>
-        <mock-oauth2-server.version>6.0.2</mock-oauth2-server.version>
+        <mock-oauth2-server.version>6.0.3</mock-oauth2-server.version>
     </properties>
 
     <scm>
