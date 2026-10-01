@@ -18,7 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-    private static final String[] UNPROTECTED_ENDPOINTS = {
+    static final String[] UNPROTECTED_ENDPOINTS = {
         "/actuator/**"
     };
 
