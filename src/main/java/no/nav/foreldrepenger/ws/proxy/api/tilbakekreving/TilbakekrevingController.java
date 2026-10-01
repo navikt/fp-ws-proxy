@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.KravgrunnlagErSpe
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.MangledeKravgrunnlagException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.UkjentFeilIKvitteringFraOSException;
 import no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.error.ØkonomiKvitteringTolk;
+import no.nav.foreldrepenger.ws.proxy.config.security.EntraCCRequired;
 import no.nav.foreldrepenger.ws.proxy.error.GenerellSoapFaultException;
 import no.nav.foreldrepenger.ws.proxy.http.DefaultRestController;
 import no.nav.tilbakekreving.typer.v1.MmelDto;
@@ -31,6 +32,7 @@ import static no.nav.foreldrepenger.ws.proxy.api.tilbakekreving.util.Tilbakekrev
  * https://github.com/navikt/fptilbake/blob/master/integrasjontjenester/oekonomi-tilbakekreving-klient/src/main/java/no/nav/foreldrepenger/tilbakekreving/integrasjon/økonomi/ØkonomiConsumerImpl.java
  */
 @DefaultRestController(value = "/tilbakekreving")
+@EntraCCRequired
 public class TilbakekrevingController {
 
     private static final Logger LOG = LoggerFactory.getLogger(TilbakekrevingController.class);
