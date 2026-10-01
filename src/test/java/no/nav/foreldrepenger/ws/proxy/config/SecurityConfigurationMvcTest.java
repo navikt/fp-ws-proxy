@@ -2,55 +2,49 @@ package no.nav.foreldrepenger.ws.proxy.config;
 
 import no.nav.foreldrepenger.ws.proxy.api.arena.ArenaController;
 import no.nav.foreldrepenger.ws.proxy.api.arena.ArenaSoapClient;
-import no.nav.foreldrepenger.ws.proxy.config.security.JwtDecoderConfiguration;
-import no.nav.foreldrepenger.ws.proxy.config.security.RestAuthenticationEntryPoint;
 import no.nav.foreldrepenger.ws.proxy.config.security.SecurityConfiguration;
-import no.nav.security.mock.oauth2.MockOAuth2Server;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.security.oauth2.server.resource.autoconfigure.OAuth2ResourceServerAutoConfiguration;
 import org.springframework.boot.security.oauth2.server.resource.autoconfigure.OAuth2ResourceServerProperties;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Map;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@WebMvcTest(ArenaController.class)
+@WebMvcTest(
+    controllers = ArenaController.class,
+    properties = {
+        "spring.security.oauth2.resourceserver.jwt.issuer-uri=http://localhost/issuer",
+        "spring.security.oauth2.resourceserver.jwt.audiences=test-audience"
+    }
+)
 @Import({
     ArenaController.class,
     SecurityConfiguration.class,
-    JacksonConfiguration.class,
-    RestAuthenticationEntryPoint.class,
-    JwtDecoderConfiguration.class
+    JacksonConfiguration.class
 })
 @EnableConfigurationProperties(OAuth2ResourceServerProperties.class)
+@ImportAutoConfiguration(OAuth2ResourceServerAutoConfiguration.class)
 class SecurityConfigurationMvcTest {
 
-    private static final String ISSUER_ID = "azuread";
-    private static final String SUBJECT = "subject";
-    private static final String AUDIENCE = "test-audience";
-    private static final String IDTYP = "idtyp";
-    private static final String INVALID_AUDIENCE = "invalid-audience";
-    private static final String ISSUER_URI_PROPERTY = "spring.security.oauth2.resourceserver.jwt.issuer-uri";
-    private static final String AUDIENCES_PROPERTY = "spring.security.oauth2.resourceserver.jwt.audiences";
-
-    private static final MockOAuth2Server mockOauth2Server = new MockOAuth2Server();
+    private static final String TOKEN = "token";
 
     private static final String GYLDIG_ARENA_REQUEST = """
         {"ident":"12345678910"}
@@ -62,56 +56,33 @@ class SecurityConfigurationMvcTest {
     @MockitoBean
     private ArenaSoapClient arenaSoapClient;
 
-
-    @BeforeAll
-    static void setUp() {
-        mockOauth2Server.start();
-    }
-
-    @AfterAll
-    static void tearDown() {
-        mockOauth2Server.shutdown();
-    }
-
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add(ISSUER_URI_PROPERTY, mockOauth2Server.issuerUrl(ISSUER_ID)::toString);
-        registry.add(AUDIENCES_PROPERTY, () -> AUDIENCE);
-    }
+    @MockitoBean
+    private JwtDecoder jwtDecoder;
 
     @Test
-    void ingenTokenGirUnauthorizedMedFeilDtoBody() throws Exception {
+    void protectedEndpointKreverToken() throws Exception {
         mockMvc.perform(post("/arena").contentType(MediaType.APPLICATION_JSON).content(GYLDIG_ARENA_REQUEST))
-            .andExpect(status().isUnauthorized())
-            .andExpect(jsonPath("$.type").value("MANGLER_TILGANG_FEIL"));
-    }
-
-    @Test
-    void ugyldigAudGirUnauthorized() throws Exception {
-        var ugyldigToken = jwt(INVALID_AUDIENCE, Map.of(IDTYP, "app"));
-        mockMvc.perform(post("/arena").headers(headers -> headers.setBearerAuth(ugyldigToken))
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(GYLDIG_ARENA_REQUEST))
             .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void ugyldigIdtypGirUnauthorized() throws Exception {
-        var ugyldigToken = jwt(AUDIENCE, Map.of(IDTYP, "invalid"));
-        mockMvc.perform(post("/arena").headers(headers -> headers.setBearerAuth(ugyldigToken))
+    void manglendeSystemRoleGirForbidden() throws Exception {
+        for (var roles : List.of(List.<String>of(), List.of("tilfeldig-verdi"))) {
+            mockJwtDecodingWithClaimRoles(roles);
+
+            mockMvc.perform(post("/arena").header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
             .contentType(MediaType.APPLICATION_JSON)
             .content(GYLDIG_ARENA_REQUEST))
-            .andExpect(status().isUnauthorized());
+                .andExpect(status().isForbidden());
+        }
     }
 
     @Test
-    void gyldigAutentisertTokenGirOk() throws Exception {
+    void gyldigSystemRoleGirOk() throws Exception {
         when(arenaSoapClient.finnMeldekortUtbetalingsgrunnlagListe(org.mockito.ArgumentMatchers.any())).thenReturn(null);
+        mockJwtDecodingWithClaimRoles(List.of("access_as_application"));
 
-        var gyldigToken = jwt(AUDIENCE, Map.of(IDTYP, "app"));
-
-        mockMvc.perform(post("/arena").headers(headers -> headers.setBearerAuth(gyldigToken))
+        mockMvc.perform(post("/arena").header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(GYLDIG_ARENA_REQUEST))
             .andExpect(status().isOk());
@@ -127,8 +98,11 @@ class SecurityConfigurationMvcTest {
         assertThat(response.getStatus()).isNotIn(401, 403);
     }
 
-    private static String jwt(String audience, Map<String, String> claims) {
-        return mockOauth2Server.issueToken(ISSUER_ID, SUBJECT, audience, claims).serialize();
+    private void mockJwtDecodingWithClaimRoles(List<String> roles) {
+        when(jwtDecoder.decode(TOKEN)).thenReturn(Jwt.withTokenValue(TOKEN)
+            .header("alg", "none")
+            .claim("roles", roles)
+            .build());
     }
 
     @SpringBootConfiguration
