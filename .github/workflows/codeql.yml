@@ -9,12 +9,14 @@ on:
     - cron: '0 0 * * 0,4'
 
 jobs:
-  codeql:
-   name: CodeQl
-   permissions:
-     actions: read
-     contents: read
-     security-events: write
-   uses: navikt/fp-gha-workflows/.github/workflows/codeql.yml@main
-   with:
-     sonar: false
+  statisk-analyse:
+    name: Statisk kode analyse
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    uses: navikt/fp-gha-workflows/.github/workflows/codeql.yml@main
+    with:
+      t-2c: '-T 2C'
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

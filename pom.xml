@@ -45,6 +45,11 @@
         <jaxws-maven-plugin.version>4.0.5</jaxws-maven-plugin.version>
         <jacoco.version>0.8.15</jacoco.version>
         <logstash-logback-encoder.version>9.0</logstash-logback-encoder.version>
+
+        <!-- sonar -->
+        <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
+        <sonar.projectName>fp-ws-proxy</sonar.projectName>
+        <sonar.projectKey>navikt_fp-ws-proxy</sonar.projectKey>
     </properties>
 
     <scm>
