@@ -40,8 +40,10 @@ public enum Fagområde {
     OOPREF,
     /** frisinn **/
     FRISINN,
-    /** ungdomsytelse **/
+    /** ungdomsprogramytelse **/
     UNG,
+    /** aktivitetspenger **/
+    AKTIVUNG,
     ;
 
     private static final Logger LOG = LoggerFactory.getLogger(Fagområde.class);
@@ -66,6 +68,7 @@ public enum Fagområde {
             case OLP -> Fagområde.OPP;
             case FRISINN -> Fagområde.FRISINN;
             case UNG -> Fagområde.UNG;
+            case AKT -> Fagområde.AKTIVUNG;
             default -> throw new IllegalArgumentException("Utvikler-feil: Mangler mapping mellom ytelsetype og FagOmrådeKode for bruker. Ytelsetype=" + ytelseType);
         };
     }
