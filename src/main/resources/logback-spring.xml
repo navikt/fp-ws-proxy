@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                <maxLength>13000</maxLength>
+                <maxDepthPerThrowable>200</maxDepthPerThrowable>
+                <shortenedClassNameLength>70</shortenedClassNameLength>
+                <exclude>org\.springframework</exclude>
+                <exclude>org\.apache\.catalina</exclude>
+                <exclude>jdk\.internal\.reflect</exclude>
+                <exclude>java\.lang\.reflect</exclude>
+                <rootCauseFirst>false</rootCauseFirst>
+            </throwableConverter>
+        </encoder>
     </appender>
 
     <springProfile name="prod | dev">
@@ -13,16 +24,6 @@
             <encoder class="net.logstash.logback.encoder.LogstashEncoder">
                 <customFields>{"google_cloud_project":"${GOOGLE_CLOUD_PROJECT}","nais_namespace_name":"${NAIS_NAMESPACE}","nais_pod_name":"${HOSTNAME}","nais_container_name":"${NAIS_APP_NAME}"}</customFields>
                 <includeContext>false</includeContext>
-                <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
-                    <maxLength>13000</maxLength>
-                    <maxDepthPerThrowable>200</maxDepthPerThrowable>
-                    <shortenedClassNameLength>70</shortenedClassNameLength>
-                    <exclude>org\.springframework</exclude>
-                    <exclude>org\.apache\.catalina</exclude>
-                    <exclude>jdk\.internal\.reflect</exclude>
-                    <exclude>java\.lang\.reflect</exclude>
-                    <rootCauseFirst>false</rootCauseFirst>
-                </throwableConverter>
             </encoder>
         </appender>
     </springProfile>
