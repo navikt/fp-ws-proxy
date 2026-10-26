@@ -69,6 +69,7 @@ public enum Fagområde {
             case FRISINN -> Fagområde.FRISINN;
             case UNG -> Fagområde.UNG;
             case AKT -> Fagområde.AKTIVUNG;
+            case AVP -> Fagområde.AKTIVUNG;
             default -> throw new IllegalArgumentException("Utvikler-feil: Mangler mapping mellom ytelsetype og FagOmrådeKode for bruker. Ytelsetype=" + ytelseType);
         };
     }
