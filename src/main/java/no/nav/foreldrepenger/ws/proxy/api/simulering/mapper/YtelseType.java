@@ -11,5 +11,7 @@ public enum YtelseType {
     OLP,
     FRISINN,
     UNG,
+    @Deprecated(forRemoval = true, since = "26.okt.2026")
     AKT,
+    AVP,
 }
